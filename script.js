@@ -1,3 +1,29 @@
+document.addEventListener("DOMContentLoaded", function() {
+  // Get today's date
+  const today = new Date();
+
+  // Calculate dates for the next two weeks
+  for (let i = 1; i <= 14; i++) {
+      const futureDate = new Date(today);
+      futureDate.setDate(today.getDate() + i);
+
+      // Format the date as "WEEKDAY, MM/DD/YYYY"
+      const formattedDate = futureDate.toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+      });
+
+      // Update the content of the corresponding element
+      const dayElement = document.getElementById("day" + i);
+      if (dayElement) {
+          dayElement.textContent = formattedDate;
+      }
+  }
+});
+
+
 const input = document.getElementById('itemInput');
 const button = document.getElementById('addBtn');
 
