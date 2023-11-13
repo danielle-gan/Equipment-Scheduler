@@ -27,7 +27,7 @@ header h1 {
 
 .grid {
     display: grid;
-    grid-template-columns: 200px repeat(14, 13rem);
+    grid-template-columns: 200px repeat(14, 12.5rem);
     grid-template-rows: 100px repeat(6, 120px);
     height: 780px;
     grid-column-gap: 7px;
@@ -147,7 +147,7 @@ header h1 {
     margin-left: 1%;
     height: 18px;
     border: 3px dotted var(--navy);
-    width: 195px;
+    width: 190px;
     margin-top: 1px;
   }
 
