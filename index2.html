@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Save to XML</title>
+</head>
+<body>
+
+<div id="div1">
+  <input id="textInput" placeholder="Enter text"></input>
+</div>
+
+<button onclick="saveToXML()">Save to XML</button>
+
+<script>
+function saveToXML() {
+  // Get the input value from the user
+  var userInput = document.getElementById('textInput').value;
+
+  // Create XML content with the user input
+  var xmlContent = '<data>' + userInput + '</data>';
+
+  // Create a Blob with the XML content
+  var blob = new Blob([xmlContent], { type: 'application/xml' });
+
+  // Create a download link and trigger download
+  var downloadLink = document.createElement('a');
+  downloadLink.href = window.URL.createObjectURL(blob);
+  downloadLink.download = 'savedData.xml';
+  downloadLink.click();
+}
+</script>
+
+</body>
+</html>
