@@ -213,8 +213,8 @@ function parseXML(xmlContent) {
 
   columns.forEach(function (columnContent, index) {
     // Adjusted to use zero-based indexing for consistency
-    var columnIndex = index + 2;
-    var correspondingColumn = document.querySelector('.col:not(.fixed):nth-child(' + (columnIndex + 1) + ')');
+    var columnIndex = index + 1;
+    var correspondingColumn = document.querySelector('.col:not(.fixed):nth-child(' + (columnIndex + 2) + ')');
 
     if (correspondingColumn) {
       correspondingColumn.innerHTML = columnContent.textContent;
