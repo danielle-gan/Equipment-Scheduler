@@ -1,25 +1,25 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   // Get today's date
   const today = new Date();
 
   // Calculate dates for the next two weeks
   for (let i = 1; i <= 14; i++) {
-      const futureDate = new Date(today);
-      futureDate.setDate(today.getDate() + i);
+    const futureDate = new Date(today);
+    futureDate.setDate(today.getDate() + i);
 
-      // Format the date as "WEEKDAY, MM/DD/YYYY"
-      const formattedDate = futureDate.toLocaleDateString('en-US', {
-          weekday: 'long',
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-      });
+    // Format the date as "WEEKDAY, MM/DD/YYYY"
+    const formattedDate = futureDate.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
 
-      // Update the content of the corresponding element
-      const dayElement = document.getElementById("day" + i);
-      if (dayElement) {
-          dayElement.textContent = formattedDate;
-      }
+    // Update the content of the corresponding element
+    const dayElement = document.getElementById("day" + i);
+    if (dayElement) {
+      dayElement.textContent = formattedDate;
+    }
   }
 
 });
@@ -35,8 +35,8 @@ const flex = document.getElementById('itemStage');
 
 
 input.addEventListener('input', () => {
-  if(input.value.length > 0) {
-    button.disabled = false; 
+  if (input.value.length > 0) {
+    button.disabled = false;
   } else {
     button.disabled = true;
   }
@@ -98,19 +98,31 @@ function removeDragOver(event) {
 
 function drop(event) {
   event.preventDefault();
-  event.target.classList.remove('drag-over');
 
-  if (event.target.classList.contains('dragInto')) {
-    // Retrieve the dragged element using the stored ID
-    const draggedId = event.dataTransfer.getData('text/plain');
-    const draggedBlock = document.getElementById(draggedId);
+  // Check if event.target is a valid element
+  if (event.target && event.target.classList) {
+    event.target.classList.remove('drag-over');
 
-    // Append the dragged element to the drop target
-    event.target.appendChild(draggedBlock);
+    if (event.target.classList.contains('dragInto')) {
+      const draggedId = event.dataTransfer.getData('text/plain');
+
+      // Log the draggedId to identify the issue
+      console.log('draggedId:', draggedId);
+
+      const draggedBlock = document.getElementById(draggedId);
+
+      // Check if draggedBlock is a valid node before appending
+      if (draggedBlock instanceof Node) {
+        event.target.appendChild(draggedBlock);
+        draggedBlock.classList.add('dragged');
+      } else {
+        console.error('Invalid node or not found:', draggedBlock);
+      }
+    }
+  } else {
+    console.error('Invalid event target:', event.target);
   }
-  draggedBlock.classList.add('dragged');
 }
-
 
 
 // DELETE BUTTON
@@ -123,7 +135,7 @@ deleteBtn.addEventListener('click', () => {
   const dragDivs = document.querySelectorAll('.dragMe');
 
   // Loop through and remove
-  for(let i = 0; i < dragDivs.length; i++) {
+  for (let i = 0; i < dragDivs.length; i++) {
     dragDivs[i].remove();
   }
 
@@ -142,9 +154,9 @@ function saveToXML() {
   var columns = document.querySelectorAll('.col:not(.fixed)'); // Select all columns except the fixed one
   var xmlContent = '<data>';
 
-  columns.forEach(function(column, index) {
+  columns.forEach(function (column, index) {
     var columnContent = column.innerHTML;
-    xmlContent += '<column' + (index + 1) + '><![CDATA[' + columnContent + ']]></column' + (index + 1) + '>';
+    xmlContent += '<column>' + wrapInCDATA(columnContent) + '</column>';
   });
 
   xmlContent += '</data>';
@@ -156,6 +168,11 @@ function saveToXML() {
   downloadLink.download = 'savedData.xml';
   downloadLink.click();
 }
+
+function wrapInCDATA(content) {
+  return '<![CDATA[' + content + ']]>';
+}
+
 
 // LOAD BUTTON 
 const loadBtn = document.getElementById('load-btn');
@@ -170,13 +187,13 @@ function loadFromXML() {
   fileInput.type = 'file';
   fileInput.accept = '.xml';
 
-  fileInput.addEventListener('change', function(event) {
+  fileInput.addEventListener('change', function (event) {
     var file = event.target.files[0];
 
     if (file) {
       var reader = new FileReader();
 
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         var xmlContent = e.target.result;
         parseXML(xmlContent);
       };
@@ -194,16 +211,22 @@ function parseXML(xmlContent) {
 
   var columns = xmlDoc.querySelectorAll('data > *');
 
-  columns.forEach(function(column, index) {
-    var columnIndex = index + 1;
-    var columnContent = column.textContent;
-    var correspondingColumn = document.querySelector('.col:not(.fixed):nth-child(' + columnIndex + ')');
+  columns.forEach(function (columnContent, index) {
+    // Adjusted to use zero-based indexing for consistency
+    var columnIndex = index + 2;
+    var correspondingColumn = document.querySelector('.col:not(.fixed):nth-child(' + (columnIndex + 1) + ')');
 
     if (correspondingColumn) {
-      correspondingColumn.innerHTML = columnContent;
+      correspondingColumn.innerHTML = columnContent.textContent;
+
+      // Remove and reattach event listeners to prevent duplicates
+      correspondingColumn.removeEventListener('drop', drop);
+      correspondingColumn.removeEventListener('dragover', allowDrop);
+      correspondingColumn.removeEventListener('dragleave', removeDragOver);
+
       correspondingColumn.addEventListener('drop', drop);
       correspondingColumn.addEventListener('dragover', allowDrop);
-      correspondingColumn.addEventListener('dragleave', removeDragOver)
+      correspondingColumn.addEventListener('dragleave', removeDragOver);
     }
   });
 }
