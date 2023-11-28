@@ -3,32 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Save to XML</title>
+  <title>Load from XML</title>
 </head>
 <body>
 
-<div id="div1">
-  <input id="textInput" placeholder="Enter text"></input>
+<div id="inputsContainer">
+  <div>
+    <label for="input1">Row 1:</label>
+    <input id="input1" placeholder="Enter text"></input>
+  </div>
+  <div>
+    <label for="input2">Row 2:</label>
+    <input id="input2" placeholder="Enter text"></input>
+  </div>
+  <!-- Add more divs as needed for additional rows -->
 </div>
 
 <button onclick="saveToXML()">Save to XML</button>
+<button onclick="loadFromXML()">Load from XML</button>
 
 <script>
 function saveToXML() {
-  // Get the input value from the user
-  var userInput = document.getElementById('textInput').value;
+  var inputsContainer = document.getElementById('inputsContainer');
+  var inputElements = inputsContainer.querySelectorAll('input');
 
-  // Create XML content with the user input
-  var xmlContent = '<data>' + userInput + '</data>';
+  var xmlContent = '<data>';
 
-  // Create a Blob with the XML content
+  inputElements.forEach(function(input, index) {
+    var rowNumber = index + 1;
+    var inputValue = input.value;
+    xmlContent += '<row' + rowNumber + '>' + inputValue + '</row' + rowNumber + '>';
+  });
+
+  xmlContent += '</data>';
+
   var blob = new Blob([xmlContent], { type: 'application/xml' });
 
-  // Create a download link and trigger download
   var downloadLink = document.createElement('a');
   downloadLink.href = window.URL.createObjectURL(blob);
   downloadLink.download = 'savedData.xml';
   downloadLink.click();
+}
+
+function loadFromXML() {
+  var fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.xml';
+
+  fileInput.addEventListener('change', function(event) {
+    var file = event.target.files[0];
+
+    if (file) {
+      var reader = new FileReader();
+
+      reader.onload = function(e) {
+        var xmlContent = e.target.result;
+        parseXML(xmlContent);
+      };
+
+      reader.readAsText(file);
+    }
+  });
+
+  fileInput.click();
+}
+
+function parseXML(xmlContent) {
+  var parser = new DOMParser();
+  var xmlDoc = parser.parseFromString(xmlContent, 'application/xml');
+
+  var inputsContainer = document.getElementById('inputsContainer');
+  var inputElements = inputsContainer.querySelectorAll('input');
+
+  xmlDoc.querySelectorAll('data > *').forEach(function(row, index) {
+    var rowNumber = index + 1;
+    var inputValue = row.textContent;
+    var correspondingInput = inputsContainer.querySelector('#input' + rowNumber);
+
+    if (correspondingInput) {
+      correspondingInput.value = inputValue;
+    }
+  });
 }
 </script>
 

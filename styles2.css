@@ -122,6 +122,19 @@ header h1 {
     margin-left: 20px;
     margin-top: 1%;
   }
+
+  .button-load {
+    background-color: var(--navy);
+    color: #fff;
+    font-size: 1.2rem;
+    padding: 12px 24px; 
+    border: none;
+    border-radius: 30px;
+    transition: .3s;
+    margin-left: 20px;
+    margin-top: 1%;
+  }
+  
   
   .button-add:hover {
     background-color:black;
@@ -134,6 +147,8 @@ header h1 {
   .button-save:hover {
     background-color:black;
   }
+
+
 
   .input {
     font-size: 1.2rem;
