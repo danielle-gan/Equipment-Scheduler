@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+window.onload = () => {
   // Get today's date
   const today = new Date();
 
@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const futureDate = new Date(today);
     futureDate.setDate(today.getDate() + i);
 
-    // Format the date as "WEEKDAY, MM/DD/YYYY"
     const formattedDate = futureDate.toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
@@ -15,22 +14,16 @@ document.addEventListener("DOMContentLoaded", function () {
       day: '2-digit'
     });
 
-    // Update the content of the corresponding element
     const dayElement = document.getElementById("day" + i);
     if (dayElement) {
       dayElement.textContent = formattedDate;
     }
   }
-
-});
-
-
+};
 
 const input = document.getElementById('itemInput');
 const button = document.getElementById('addBtn');
-
 const dragMe = document.getElementById('dragMe');
-
 const flex = document.getElementById('itemStage');
 
 
@@ -87,7 +80,6 @@ function dragStart(event) {
   event.dataTransfer.setData('text/plain', event.target.id);
 }
 
-
 function allowDrop(event) {
   event.preventDefault();
 }
@@ -99,19 +91,14 @@ function removeDragOver(event) {
 function drop(event) {
   event.preventDefault();
 
-  // Check if event.target is a valid element
   if (event.target && event.target.classList) {
     event.target.classList.remove('drag-over');
 
     if (event.target.classList.contains('dragInto')) {
       const draggedId = event.dataTransfer.getData('text/plain');
 
-      // Log the draggedId to identify the issue
-      console.log('draggedId:', draggedId);
-
       const draggedBlock = document.getElementById(draggedId);
 
-      // Check if draggedBlock is a valid node before appending
       if (draggedBlock instanceof Node) {
         event.target.appendChild(draggedBlock);
         draggedBlock.classList.add('dragged');
@@ -124,27 +111,17 @@ function drop(event) {
   }
 }
 
-
 // DELETE BUTTON
 const deleteBtn = document.getElementById('delete-btn');
-
-// Handle click
 deleteBtn.addEventListener('click', () => {
-
-  // Get dragDivs
   const dragDivs = document.querySelectorAll('.dragMe');
-
-  // Loop through and remove
   for (let i = 0; i < dragDivs.length; i++) {
     dragDivs[i].remove();
   }
-
 });
 
 // SAVE BUTTON 
 const saveBtn = document.getElementById('save-btn');
-
-// handle click
 saveBtn.addEventListener('click', () => {
   saveToXML();
 })
@@ -162,7 +139,6 @@ function saveToXML() {
   xmlContent += '</data>';
 
   var blob = new Blob([xmlContent], { type: 'application/xml' });
-
   var downloadLink = document.createElement('a');
   downloadLink.href = window.URL.createObjectURL(blob);
   downloadLink.download = 'savedData.xml';
@@ -173,11 +149,8 @@ function wrapInCDATA(content) {
   return '<![CDATA[' + content + ']]>';
 }
 
-
 // LOAD BUTTON 
 const loadBtn = document.getElementById('load-btn');
-
-// handle click
 loadBtn.addEventListener('click', () => {
   loadFromXML();
 })
@@ -201,7 +174,6 @@ function loadFromXML() {
       reader.readAsText(file);
     }
   });
-
   fileInput.click();
 }
 
@@ -212,21 +184,11 @@ function parseXML(xmlContent) {
   var columns = xmlDoc.querySelectorAll('data > *');
 
   columns.forEach(function (columnContent, index) {
-    // Adjusted to use zero-based indexing for consistency
     var columnIndex = index + 1;
     var correspondingColumn = document.querySelector('.col:not(.fixed):nth-child(' + (columnIndex + 2) + ')');
 
     if (correspondingColumn) {
       correspondingColumn.innerHTML = columnContent.textContent;
-
-      // Remove and reattach event listeners to prevent duplicates
-      correspondingColumn.removeEventListener('drop', drop);
-      correspondingColumn.removeEventListener('dragover', allowDrop);
-      correspondingColumn.removeEventListener('dragleave', removeDragOver);
-
-      correspondingColumn.addEventListener('drop', drop);
-      correspondingColumn.addEventListener('dragover', allowDrop);
-      correspondingColumn.addEventListener('dragleave', removeDragOver);
     }
   });
 }
