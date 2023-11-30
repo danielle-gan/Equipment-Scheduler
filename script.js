@@ -1,9 +1,8 @@
+// on load, load dates on the top row
 window.onload = () => {
-  // Get today's date
   const today = new Date();
 
-  // Calculate dates for the next two weeks
-  for (let i = 1; i <= 14; i++) {
+  for (let i = 0; i <= 14; i++) {
     const futureDate = new Date(today);
     futureDate.setDate(today.getDate() + i);
 
@@ -184,8 +183,8 @@ function parseXML(xmlContent) {
   var columns = xmlDoc.querySelectorAll('data > *');
 
   columns.forEach(function (columnContent, index) {
-    var columnIndex = index + 1;
-    var correspondingColumn = document.querySelector('.col:not(.fixed):nth-child(' + (columnIndex + 2) + ')');
+    var columnIndex = index;
+    var correspondingColumn = document.querySelector('.col:not(.fixed):nth-child(' + (columnIndex + 5) + ')');
 
     if (correspondingColumn) {
       correspondingColumn.innerHTML = columnContent.textContent;
