@@ -186,14 +186,12 @@ function parseXML(xmlContent) {
 
   columns.forEach(function (columnContent, index) {
     var columnIndex = index;
-    var correspondingColumn = document.querySelector('.col:not(.fixed):nth-child(' + (columnIndex + 5) + ')');
+    var correspondingColumn = document.querySelector('.col:not(.fixed):nth-child(' + (columnIndex + 3) + ')');
 
     if (correspondingColumn) {
       correspondingColumn.innerHTML = columnContent.textContent;
     }
   });
-
-
 }
 
 function makeDivsDraggable() {
