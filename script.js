@@ -168,12 +168,14 @@ function loadFromXML() {
       reader.onload = function (e) {
         var xmlContent = e.target.result;
         parseXML(xmlContent);
+        makeDivsDraggable();
       };
 
       reader.readAsText(file);
     }
   });
   fileInput.click();
+  
 }
 
 function parseXML(xmlContent) {
@@ -190,4 +192,18 @@ function parseXML(xmlContent) {
       correspondingColumn.innerHTML = columnContent.textContent;
     }
   });
+
+
+}
+
+function makeDivsDraggable() {
+  var draggables = document.querySelectorAll('.dragMe');
+
+  draggables.forEach(function(draggable) {
+    draggable.draggable = true;
+
+    draggable.addEventListener('dragstart', function(event) {
+      event.dataTransfer.setData('text/plain', draggable.id);
+    });
+  })
 }
