@@ -19,6 +19,25 @@ window.onload = () => {
       dayElement.textContent = formattedDate;
     }
   }
+
+  function isToday(textContent) {
+    const todayDate = today;
+    return textContent.includes(todayDate);
+  }
+  
+  // Highlight the <p> tag with today's date
+  function highlightToday() {
+    const paragraphs = document.querySelectorAll('p[id^="day"]');
+  
+    paragraphs.forEach(paragraph => {
+      if (isToday(paragraph.textContent.trim())) {
+        paragraph.classList.add('highlight');
+      }
+    });
+  }
+
+  highlightToday();
+
 };
 
 const input = document.getElementById('itemInput');
