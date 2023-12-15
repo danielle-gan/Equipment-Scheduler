@@ -1,6 +1,7 @@
 // on load, load dates on the top row
 window.onload = () => {
   const today = new Date();
+  today.setDate(today.getDate() - 1); // Start from yesterday
 
   for (let i = 0; i <= 14; i++) {
     const futureDate = new Date(today);
@@ -127,7 +128,7 @@ saveBtn.addEventListener('click', () => {
 
 
 function saveToXML() {
-  var columns = document.querySelectorAll('.col:not(.fixed)'); // Select all columns except the fixed one
+  var columns = document.querySelectorAll('.col'); 
   var xmlContent = '<data>';
 
   columns.forEach(function (column, index) {
@@ -186,7 +187,7 @@ function parseXML(xmlContent) {
 
   columns.forEach(function (columnContent, index) {
     var columnIndex = index;
-    var correspondingColumn = document.querySelector('.col:not(.fixed):nth-child(' + (columnIndex + 3) + ')');
+    var correspondingColumn = document.querySelector('.col:nth-child(' + (columnIndex + 1) + ')');
 
     if (correspondingColumn) {
       correspondingColumn.innerHTML = columnContent.textContent;
@@ -204,4 +205,9 @@ function makeDivsDraggable() {
       event.dataTransfer.setData('text/plain', draggable.id);
     });
   })
+}
+
+
+function toggleEditMode(element) {
+  element.contentEditable = !element.isContentEditable;
 }
