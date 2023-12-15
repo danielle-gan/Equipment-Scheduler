@@ -111,12 +111,12 @@ function drop(event) {
   }
 }
 
-// DELETE BUTTON
-const deleteBtn = document.getElementById('delete-btn');
-deleteBtn.addEventListener('click', () => {
-  const dragDivs = document.querySelectorAll('.dragMe');
-  for (let i = 0; i < dragDivs.length; i++) {
-    dragDivs[i].remove();
+// RESET BUTTON
+document.getElementById('delete-btn').addEventListener('click', function() {
+  const isConfirmed = confirm('Are you sure you want to reset the schedule?');
+
+  if (isConfirmed) {
+    location.reload();
   }
 });
 
