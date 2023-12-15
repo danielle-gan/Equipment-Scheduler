@@ -6,13 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipment Scheduler</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://kit.fontawesome.com/32fe51259e.js" crossorigin="anonymous"></script>
     <script src="script.js" defer></script>
 </head>
 
 <body>
 
     <header>
-        <h1>Equipment Scheduler</h1>
+        <div class="flex-container start">
+            <h1>Equipment Scheduler</h1>
+            <button class="button-delete" id="delete-btn">Delete All</button>
+            <button class="button-save" id="save-btn">Save All</button>
+            <button class="button-load" id="load-btn">Load Schedule</button>
+        </div>
     </header>
 
     <div class="grid">
@@ -28,7 +34,7 @@
         <div class="col day-label">
             <p id="day2">Day 2</p>
         </div>
-        
+
         <div class="col day-label">
             <p id="day3">Day 3</p>
         </div>
@@ -83,33 +89,47 @@
             <p class="editable" contenteditable="true" ondblclick="toggleEditMode(this)">Machine 1</p>
         </div>
 
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
 
         <!-- ROW 3 -->
@@ -118,33 +138,47 @@
             <p class="editable" contenteditable="true" ondblclick="toggleEditMode(this)">Machine 2</p>
         </div>
 
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
-        </div>    
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
+        </div>
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
 
         <!-- ROW 4 -->
@@ -152,33 +186,47 @@
             <p class="editable" contenteditable="true" ondblclick="toggleEditMode(this)">Machine 3</p>
         </div>
 
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
-        </div>        
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
+        </div>
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
 
         <!-- Row 5 -->
@@ -187,33 +235,47 @@
             <p class="editable" contenteditable="true" ondblclick="toggleEditMode(this)">Machine 4</p>
         </div>
 
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
 
         <!-- ROW 6 -->
@@ -222,47 +284,58 @@
             <p class="editable" contenteditable="true" ondblclick="toggleEditMode(this)">Machine 5</p>
         </div>
 
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
-        </div>  
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
-        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="removeDragOver(event)">
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
+        </div>
+        <div class="col dragInto" ondrop="drop(event)" ondragover="allowDrop(event)"
+            ondragleave="removeDragOver(event)">
         </div>
     </div>
 
-<!-- END GRID, START BUTTONS FOR ADDING MATERIALS-->
+    <!-- END GRID, START BUTTONS FOR ADDING MATERIALS-->
 
-<div class = flex-container id="itemStage">
-    <input type="text" maxlength="20" class="input" id="itemInput" placeholder="type your material here" style="font-style:italic">
-    <button class="button-add" id="addBtn" disabled>Add An Item</button>
-</div>
-<div class ="flex-container">
-    <button class="button-delete" id="delete-btn">Delete All</button>
-    <button class="button-save" id="save-btn">Save All</button>
-    <button class="button-load" id="load-btn">Load Schedule</button>
-</div>
+    <div class=flex-container id="itemStage">
+        <div id="trash-can" ondragover="allowDrop(event)" ondrop="drop(event)"><i class="fas fa-trash-alt"></i></div>
+        <input type="text" maxlength="20" class="input" id="itemInput" placeholder="type your material here"
+            style="font-style:italic">
+        <button class="button-add" id="addBtn" disabled>Add An Item</button>
+    </div>
 
 </body>
 

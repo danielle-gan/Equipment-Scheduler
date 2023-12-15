@@ -20,29 +20,7 @@ window.onload = () => {
     }
   }
 
-  function isToday(textContent) {
-    const todayDate = new Date(); // Get today's date
-    const formattedToday = todayDate.toLocaleDateString('en-US', {
-      weekday: 'long',
-      // year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
-    return textContent.includes(formattedToday);
-  }
-  
-  // Highlight the <p> tag with today's date
-  function highlightToday() {
-    const paragraphs = document.querySelectorAll('p[id^="day"]');
-  
-    paragraphs.forEach(paragraph => {
-      if (isToday(paragraph.textContent.trim())) {
-        paragraph.classList.add('highlight');
-      }
-    });
-  }
 
-  highlightToday();
 
 };
 
@@ -194,7 +172,7 @@ function loadFromXML() {
       reader.onload = function (e) {
         var xmlContent = e.target.result;
         parseXML(xmlContent);
-        makeDivsDraggable();
+        
       };
 
       reader.readAsText(file);
@@ -218,6 +196,9 @@ function parseXML(xmlContent) {
       correspondingColumn.innerHTML = columnContent.textContent;
     }
   });
+
+  makeDivsDraggable();
+  highlightToday();
 }
 
 function makeDivsDraggable() {
@@ -232,7 +213,29 @@ function makeDivsDraggable() {
   })
 }
 
-
 function toggleEditMode(element) {
   element.contentEditable = !element.isContentEditable;
 }
+
+function isToday(textContent) {
+  const todayDate = new Date(); // Get today's date
+  const formattedToday = todayDate.toLocaleDateString('en-US', {
+    weekday: 'long',
+    // year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+  return textContent.includes(formattedToday);
+}
+
+// Highlight the <p> tag with today's date
+function highlightToday() {
+  const paragraphs = document.querySelectorAll('p[id^="day"]');
+
+  paragraphs.forEach(paragraph => {
+    if (isToday(paragraph.textContent.trim())) {
+      paragraph.classList.add('highlight');
+    }
+  });
+}
+

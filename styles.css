@@ -27,9 +27,9 @@ header h1 {
 
 .grid {
   display: grid;
-  grid-template-columns: 200px repeat(14, 12.5rem);
-  grid-template-rows: 100px repeat(6, 120px);
-  height: 780px;
+  grid-template-columns: 200px repeat(14, 20rem);
+  grid-template-rows: 120px repeat(6, 100px);
+  height: 700px;
   grid-column-gap: 7px;
   grid-row-gap: 7px;
   overflow-x: auto;
@@ -104,6 +104,15 @@ header h1 {
   align-items: center;
 }
 
+.start {
+  justify-content: start;
+  align-items: baseline;
+}
+
+.start > * {
+  margin-right: 10px;
+}
+
 .button-add {
   background-color: var(--navy);
   color: #fff;
@@ -123,6 +132,7 @@ header h1 {
   border-radius: 30px;
   transition: .3s;
   margin-top: 1%;
+  margin-left: 25%;
 }
 
 .button-save {
@@ -138,8 +148,8 @@ header h1 {
 }
 
 .button-load {
-  background-color: var(--navy);
-  color: #fff;
+  background-color: white;
+  color: var(--navy);
   font-size: 1.2rem;
   padding: 12px 24px;
   border: none;
@@ -162,8 +172,6 @@ header h1 {
   background-color: black;
 }
 
-
-
 .input {
   font-size: 1.2rem;
   margin-right: 1%;
@@ -176,7 +184,7 @@ header h1 {
   margin-left: 1%;
   height: 18px;
   border: 3px dotted var(--navy);
-  width: 190px;
+  width: 305px;
   margin-top: 1px;
 }
 
