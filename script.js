@@ -20,8 +20,6 @@ window.onload = () => {
     }
   }
 
-
-
 };
 
 const input = document.getElementById('itemInput');
@@ -70,7 +68,6 @@ button.addEventListener('click', () => {
   // Append new div  
   flex.appendChild(dragDiv);
 
-  // Attach drag-and-drop events to the newly created div
   dragDiv.addEventListener('dragstart', dragStart);
 
   input.value = '';
@@ -218,7 +215,7 @@ function toggleEditMode(element) {
 }
 
 function isToday(textContent) {
-  const todayDate = new Date(); // Get today's date
+  const todayDate = new Date();
   const formattedToday = todayDate.toLocaleDateString('en-US', {
     weekday: 'long',
     // year: 'numeric',
@@ -228,7 +225,7 @@ function isToday(textContent) {
   return textContent.includes(formattedToday);
 }
 
-// Highlight the <p> tag with today's date
+// Highlight today's date
 function highlightToday() {
   const paragraphs = document.querySelectorAll('p[id^="day"]');
 
@@ -237,5 +234,16 @@ function highlightToday() {
       paragraph.classList.add('highlight');
     }
   });
+}
+
+// On dropping into the trash can
+function deleteDraggedElement(event) {
+  event.preventDefault();
+  const draggedId = event.dataTransfer.getData('text/plain');
+  const draggedElement = document.getElementById(draggedId);
+
+  if (draggedElement) {
+    draggedElement.remove();
+  }
 }
 

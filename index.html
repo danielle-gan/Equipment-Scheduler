@@ -15,7 +15,7 @@
     <header>
         <div class="flex-container start">
             <h1>Equipment Scheduler</h1>
-            <button class="button-delete" id="delete-btn">Delete All</button>
+            <button class="button-delete" id="delete-btn">Reset Schedule</button>
             <button class="button-save" id="save-btn">Save All</button>
             <button class="button-load" id="load-btn">Load Schedule</button>
         </div>
@@ -331,10 +331,10 @@
     <!-- END GRID, START BUTTONS FOR ADDING MATERIALS-->
 
     <div class=flex-container id="itemStage">
-        <div id="trash-can" ondragover="allowDrop(event)" ondrop="drop(event)"><i class="fas fa-trash-alt"></i></div>
+        <div class="flex-container" id="trash-can" ondragover="allowDrop(event)" ondrop="deleteDraggedElement(event)"><i class="fas fa-trash-alt"></i></div>
         <input type="text" maxlength="20" class="input" id="itemInput" placeholder="type your material here"
             style="font-style:italic">
-        <button class="button-add" id="addBtn" disabled>Add An Item</button>
+        <button class="button-add" id="addBtn" disabled><i class="fas fa-plus"></i></button>
     </div>
 
 </body>
