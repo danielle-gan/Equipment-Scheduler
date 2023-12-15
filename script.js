@@ -9,7 +9,7 @@ window.onload = () => {
 
     const formattedDate = futureDate.toLocaleDateString('en-US', {
       weekday: 'long',
-      year: 'numeric',
+      // year: 'numeric',
       month: '2-digit',
       day: '2-digit'
     });
