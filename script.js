@@ -21,8 +21,14 @@ window.onload = () => {
   }
 
   function isToday(textContent) {
-    const todayDate = today;
-    return textContent.includes(todayDate);
+    const todayDate = new Date(); // Get today's date
+    const formattedToday = todayDate.toLocaleDateString('en-US', {
+      weekday: 'long',
+      // year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    return textContent.includes(formattedToday);
   }
   
   // Highlight the <p> tag with today's date
