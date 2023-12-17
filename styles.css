@@ -179,6 +179,10 @@ header h1 {
 .input {
   font-size: 1.2rem;
   margin-right: 1%;
+  width: 100%;
+  max-width: 300px;
+  box-sizing: border-box;
+  resize: vertical;
 }
 
 .dragMe {

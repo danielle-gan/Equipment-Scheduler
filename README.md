@@ -6,4 +6,4 @@ To do:
 - Shorten/lengthen the grid more? 
 - Add more rows for NH and take out a row for CT
 - Highlight current date with something other than a yellow background lol
-- 
+- Rework enter button so it also adds a new item! 
