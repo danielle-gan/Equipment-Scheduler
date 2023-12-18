@@ -19,6 +19,8 @@ window.onload = () => {
       dayElement.textContent = formattedDate;
     }
   }
+  
+  highlightToday();
 
 };
 
@@ -26,7 +28,6 @@ const input = document.getElementById('itemInput');
 const button = document.getElementById('addBtn');
 const dragMe = document.getElementById('dragMe');
 const flex = document.getElementById('itemStage');
-
 
 input.addEventListener('input', () => {
   if (input.value.length > 0) {
@@ -78,7 +79,7 @@ input.addEventListener('keypress', function (event) {
   }
 });
 
-
+// Drag and Drop Functionality
 let draggedBlock;
 
 function dragStart(event) {
@@ -131,7 +132,6 @@ const saveBtn = document.getElementById('save-btn');
 saveBtn.addEventListener('click', () => {
   saveToXML();
 })
-
 
 function saveToXML() {
   var fileName = prompt('Enter a filename:', 'ScheduleData.xml');
@@ -211,6 +211,7 @@ function parseXML(xmlContent) {
   highlightToday();
 }
 
+// Function to make divs draggable AGAIN after loading them in 
 function makeDivsDraggable() {
   var draggables = document.querySelectorAll('.dragMe');
 
@@ -227,6 +228,7 @@ function toggleEditMode(element) {
   element.contentEditable = !element.isContentEditable;
 }
 
+// Checks if it's today's date
 function isToday(textContent) {
   const todayDate = new Date();
   const formattedToday = todayDate.toLocaleDateString('en-US', {
@@ -249,7 +251,7 @@ function highlightToday() {
   });
 }
 
-// Remove highlights
+// Remove old highlights from previous saves
 function removeHighlights() {
   const paragraphs = document.querySelectorAll('p[id^="day"]');
   paragraphs.forEach(paragraph => {
