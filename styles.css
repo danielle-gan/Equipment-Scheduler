@@ -206,7 +206,10 @@ header h1 {
 }
 
 .highlight {
-  background-color: yellow;
+  background-color: var(--red);
+  font-weight: bold;
+  padding: 10px;
+  box-shadow: -5px 5px var(--navy);
 }
 
 #trash-can {

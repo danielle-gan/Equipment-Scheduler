@@ -50,28 +50,34 @@ function findMaxId() {
   return maxId;
 }
 
-button.addEventListener('click', () => {
+// Add an Item
+function createAndAppendDiv() {
   const text = input.value;
 
-  // Create new div
   const dragDiv = document.createElement('div');
   dragDiv.classList.add('dragMe');
 
-  // Find the maximum ID and increment it
   const maxId = findMaxId();
   dragDiv.id = `drag${maxId + 1}`;
 
   dragDiv.innerHTML += text;
   dragDiv.draggable = true;
-  dragDiv.ondragstart = dragStart;
 
-  // Append new div  
+  // Add div to screen
   flex.appendChild(dragDiv);
 
   dragDiv.addEventListener('dragstart', dragStart);
+}
 
-  input.value = '';
+button.addEventListener('click', createAndAppendDiv);
+
+input.addEventListener('keypress', function (event) {
+  if (event.key === 'Enter') {
+    createAndAppendDiv();
+    input.value = '';
+  }
 });
+
 
 let draggedBlock;
 
@@ -128,21 +134,27 @@ saveBtn.addEventListener('click', () => {
 
 
 function saveToXML() {
-  var columns = document.querySelectorAll('.col'); 
-  var xmlContent = '<data>';
+  var fileName = prompt('Enter a filename:', 'ScheduleData.xml');
 
-  columns.forEach(function (column, index) {
-    var columnContent = column.innerHTML;
-    xmlContent += '<column>' + wrapInCDATA(columnContent) + '</column>';
-  });
+  if (fileName !== null) {
+    var columns = document.querySelectorAll('.col'); 
+    var xmlContent = '<data>';
 
-  xmlContent += '</data>';
+    columns.forEach(function (column, index) {
+      var columnContent = column.innerHTML;
+      xmlContent += '<column>' + wrapInCDATA(columnContent) + '</column>';
+    });
 
-  var blob = new Blob([xmlContent], { type: 'application/xml' });
-  var downloadLink = document.createElement('a');
-  downloadLink.href = window.URL.createObjectURL(blob);
-  downloadLink.download = 'savedData.xml';
-  downloadLink.click();
+    xmlContent += '</data>';
+
+    var blob = new Blob([xmlContent], { type: 'application/xml' });
+    var downloadLink = document.createElement('a');
+    
+    downloadLink.download = fileName + '.xml';
+
+    downloadLink.href = window.URL.createObjectURL(blob);
+    downloadLink.click();
+  }
 }
 
 function wrapInCDATA(content) {
@@ -195,6 +207,7 @@ function parseXML(xmlContent) {
   });
 
   makeDivsDraggable();
+  removeHighlights();
   highlightToday();
 }
 
@@ -233,6 +246,14 @@ function highlightToday() {
     if (isToday(paragraph.textContent.trim())) {
       paragraph.classList.add('highlight');
     }
+  });
+}
+
+// Remove highlights
+function removeHighlights() {
+  const paragraphs = document.querySelectorAll('p[id^="day"]');
+  paragraphs.forEach(paragraph => {
+    paragraph.classList.remove('highlight');
   });
 }
 
