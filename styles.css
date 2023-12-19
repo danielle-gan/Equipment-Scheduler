@@ -19,6 +19,7 @@ header {
   height: 90px;
   background-color: var(--navy);
   color: white;
+  z-index: 9999;
 }
 
 header h1 {
@@ -131,7 +132,7 @@ header h1 {
   border-radius: 30px;
   transition: .3s;
   margin-top: 1%;
-  margin-left: 18%;
+  margin-left: 23%;
 }
 
 .button-save {
@@ -176,23 +177,26 @@ header h1 {
 }
 
 .input {
-  font-size: 1.2rem;
+  font-size: 1rem;
   margin-right: 1%;
   width: 100%;
-  max-width: 300px;
+  max-width: 305px;
   box-sizing: border-box;
-  resize: vertical;
+  resize: none;
 }
 
 .dragMe {
-  /* display: none; */
+  display: flex;
+  font-family: monospace;
+  font-size: 1rem;
   justify-content: center;
-  text-align: center;
+  align-items: center;
+  word-break: break-word;
   margin-left: 1%;
-  height: 18px;
+  height: 36px;
   border: 3px dotted var(--navy);
   width: 305px;
-  margin-top: 1px;
+  /* margin-top: 1%; */
 }
 
 .dragInto.drag-over {

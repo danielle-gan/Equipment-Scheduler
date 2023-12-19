@@ -68,6 +68,7 @@ function createAndAppendDiv() {
   flex.appendChild(dragDiv);
 
   dragDiv.addEventListener('dragstart', dragStart);
+  input.value = ''
 }
 
 button.addEventListener('click', createAndAppendDiv);
@@ -75,7 +76,6 @@ button.addEventListener('click', createAndAppendDiv);
 input.addEventListener('keypress', function (event) {
   if (event.key === 'Enter') {
     createAndAppendDiv();
-    input.value = '';
   }
 });
 
