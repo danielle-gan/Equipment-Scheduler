@@ -94,12 +94,12 @@ button.addEventListener('click', function(event) {
   resetForm();
 });
 
-dollarValue.addEventListener('keypress', function (event) {
-  if (event.key === 'Enter') {
-    createAndAppendDiv();
-    resetForm();
-  }
-});
+// dollarValue.addEventListener('keypress', function (event) {
+//   if (event.key === 'Enter') {
+//     createAndAppendDiv();
+//     resetForm();
+//   }
+// });
 
 function resetForm() {
 jobNumber.value = '';
