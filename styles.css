@@ -230,3 +230,16 @@ header h1 {
   font-size: 2rem;
   color: var(--red);
 }
+
+.grid-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: baseline;
+}
