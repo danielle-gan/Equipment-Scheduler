@@ -55,6 +55,8 @@ function findMaxId() {
   return maxId;
 }
 
+let details = '';
+
 // Add an Item
 function createAndAppendDiv() {
   const text = `<p>${jobNumber.value} | ${generalDescription.value} | ${numPrintCopies.value} </p>`;
@@ -82,18 +84,49 @@ function createAndAppendDiv() {
 
   dragDiv.addEventListener('dragstart', dragStart);
   // input.value = ''
+  dragDiv.dataset.details = details;
+  dragDiv.addEventListener('click', () => showModal(dragDiv.dataset.details));
 }
 
 button.addEventListener('click', function(event) {
   event.preventDefault();
   createAndAppendDiv();
+  resetForm();
 });
 
 dollarValue.addEventListener('keypress', function (event) {
   if (event.key === 'Enter') {
     createAndAppendDiv();
+    resetForm();
   }
 });
+
+function resetForm() {
+jobNumber.value = '';
+generalDescription.value = '';
+numPrintCopies.value = '';
+customerName.value = '';
+shipDate.value = '';
+linearFootage.value = '';
+runTime.value = '';
+numColors.value = '';
+dollarValue.value = '';
+}
+
+function showModal(details) {
+  // Create modal
+  const modal = document.createElement('div');
+  modal.classList.add('modal');
+  modal.innerHTML = details;
+
+  // Append modal to body
+  document.body.appendChild(modal);
+
+  // Add close event to modal
+  modal.addEventListener('click', () => {
+    modal.remove(); // Remove modal on click
+  });
+}
 
 // Drag and Drop Functionality
 let draggedBlock;
@@ -236,6 +269,10 @@ function makeDivsDraggable() {
 
     draggable.addEventListener('dragstart', function(event) {
       event.dataTransfer.setData('text/plain', draggable.id);
+    });
+
+    draggable.addEventListener('click', function() {
+      showModal(draggable.dataset.details);
     });
   })
 }
