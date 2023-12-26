@@ -63,7 +63,7 @@ function createAndAppendDiv() {
   details = `<p>Job Number: ${jobNumber.value} </p>
              <p>General Description: ${generalDescription.value} </p>
              <p>Number of Printed Copies: ${numPrintCopies.value} </p>
-             <p>Run Time: ${jobNumber.value} </p>
+             <p>Run Time: ${runTime.value} </p>
              <p>Customer: ${customerName.value} </p>
              <p>Ship Date: ${shipDate.value} </p>
              <p>Linear Footage: ${linearFootage.value} </p>
