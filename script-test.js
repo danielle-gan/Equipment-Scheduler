@@ -39,8 +39,6 @@ window.onload = () => {
 
 };
 
-// const input = document.getElementById('itemInput');
-
 // Form Inputs
 const jobNumber = document.getElementById('jobNumber');
 const generalDescription = document.getElementById('generalDescription');
@@ -75,15 +73,15 @@ let details = '';
 // Add an Item
 function createAndAppendDiv() {
   const text = `<p>${jobNumber.value} | ${generalDescription.value} | ${numPrintCopies.value} </p>`;
-  details = `<p>Job Number: ${jobNumber.value} </p>
-             <p>General Description: ${generalDescription.value} </p>
-             <p>Number of Printed Copies: ${numPrintCopies.value} </p>
-             <p>Run Time: ${runTime.value} </p>
-             <p>Customer: ${customerName.value} </p>
-             <p>Ship Date: ${shipDate.value} </p>
-             <p>Linear Footage: ${linearFootage.value} </p>
-             <p>Number of Colors: ${numColors.value} </p>
-             <p>Dollar Value: ${dollarValue.value} </p>`;
+  details = `<p><span>Job Number:</span> ${jobNumber.value} </p>
+             <p><span>General Description:</span> ${generalDescription.value} </p>
+             <p><span>Number of Printed Copies:</span> ${numPrintCopies.value} </p>
+             <p><span>Run Time:</span> ${runTime.value} </p>
+             <p><span>Customer:</span> ${customerName.value} </p>
+             <p><span>Ship Date:</span> ${shipDate.value} </p>
+             <p><span>Linear Footage:</span> ${linearFootage.value} </p>
+             <p><span>Number of Colors:</span> ${numColors.value} </p>
+             <p><span>Dollar Value:</span> ${dollarValue.value} </p>`;
 
   const dragDiv = document.createElement('div');
   dragDiv.classList.add('dragMe');
@@ -109,13 +107,6 @@ button.addEventListener('click', function(event) {
   resetForm();
 });
 
-// dollarValue.addEventListener('keypress', function (event) {
-//   if (event.key === 'Enter') {
-//     createAndAppendDiv();
-//     resetForm();
-//   }
-// });
-
 function resetForm() {
 jobNumber.value = '';
 generalDescription.value = '';
@@ -129,15 +120,12 @@ dollarValue.value = '';
 }
 
 function showModal(details) {
-  // Create modal
   const modal = document.createElement('div');
   modal.classList.add('modal');
-  modal.innerHTML = details;
+  modal.innerHTML += details;
 
-  // Append modal to body
   document.body.appendChild(modal);
 
-  // Add close event to modal
   modal.addEventListener('click', () => {
     modal.remove(); // Remove modal on click
   });
