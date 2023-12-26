@@ -22,6 +22,21 @@ window.onload = () => {
   
   highlightToday();
 
+  const formInputs = document.querySelectorAll('form input');
+
+  formInputs.forEach(function (input, index, inputs) {
+    input.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') {
+        // Prevent the default behavior of the "Enter" key (submitting the form)
+        event.preventDefault();
+
+        // Focus on the next form input
+        const nextIndex = (index + 1) % inputs.length;
+        inputs[nextIndex].focus();
+      }
+    });
+  });
+
 };
 
 // const input = document.getElementById('itemInput');
