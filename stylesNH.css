@@ -17,3 +17,9 @@
 .button-delete {
   margin-left: 16%;
 }
+
+.fixed-r {
+  position: sticky;
+  top: 0%;
+  z-index: 1;
+}
