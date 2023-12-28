@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="stylesCT.css">
     <script src="https://kit.fontawesome.com/32fe51259e.js" crossorigin="anonymous"></script>
-    <script src="script.js" defer></script>
+    <script src="script-test.js" defer></script>
 </head>
 
 <body>
@@ -332,9 +332,36 @@
     <!-- END GRID, START BUTTONS FOR ADDING MATERIALS-->
 
     <div class=flex-container id="itemStage">
-        <div class="flex-container" id="trash-can" ondragover="allowDrop(event)" ondrop="deleteDraggedElement(event)"><i class="fas fa-trash-alt"></i></div>
-        <textarea class="input" id="itemInput" placeholder="Type your material here" style="font-style: italic" maxlength="68" rows="2"></textarea>
-        <button class="button-add" id="addBtn" disabled><i class="fas fa-plus"></i></button>
+        <div class="flex-container" id="trash-can" ondragover="allowDrop(event)" ondrop="deleteDraggedElement(event)">
+            <i class="fas fa-trash-alt"></i>
+        </div>
+        <form class="grid-form">
+            <div class="form-column">
+                <label for="jobNumber">Job Number:</label>
+                <label for="generalDescription">General Description:</label>
+                <label for="numPrintCopies">Number of Print Copies:</label>
+                <label for="customerName">Customer Name:</label>
+                <label for="shipDate">Ship Date:</label>
+                <label for="linearFootage">Linear Footage:</label>
+                <label for="runTime">Run Time:</label>
+                <label for="numColors">Number of Colors:</label>
+                <label for="dollarValue">Dollar Value of Job:</label>
+            </div>
+            <div class="form-column">
+                <input type="text" id="jobNumber" name="jobNumber" required>
+                <input type="text" id="generalDescription" name="generalDescription" required>
+                <input type="number" id="numPrintCopies" name="numPrintCopies" required>
+                <input type="text" id="customerName" name="customerName" required>
+                <input type="text" id="shipDate" name="shipDate" required>
+                <input type="number" id="linearFootage" name="linearFootage" required>
+                <input type="text" id="runTime" name="runTime" required>
+                <input type="number" id="numColors" name="numColors" required>
+                <input type="text" id="dollarValue" name="dollarValue" required>
+            </div>
+            <div class="form-column">
+                <button class="button-add" id="addBtn"><i class="fas fa-plus"></i></button>
+            </div>
+        </form>
     </div>
 
 </body>
