@@ -186,7 +186,7 @@ saveBtn.addEventListener('click', () => {
 })
 
 function saveToXML() {
-  var fileName = prompt('Enter a filename:', 'ScheduleData.xml');
+  var fileName = prompt('Enter a filename:', 'ScheduleData');
 
   if (fileName !== null) {
     var columns = document.querySelectorAll('.col'); 
