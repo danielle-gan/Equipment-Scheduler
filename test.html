@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test XML Scheduler</title>
+</head>
+<body>
+    
+    <form id="dataForm">
+        <label for="jobNumber">Job Number:</label>
+        <input type="text" id="jobNumber" name="jobNumber" required>
+    
+        <label for="customerName">Customer Name:</label>
+        <input type="text" id="customerName" name="customerName" required>
+    
+        <!-- Add more input fields as needed -->
+    
+        <button type="button" onclick="addJob()">Add Job</button>
+        <button type="button" onclick="saveToXML()">Save to XML</button>
+      </form>
+    
+      <ul id="jobList"></ul>
+      
+      <script src="xml.js"></script>
+
+</body>
+</html>

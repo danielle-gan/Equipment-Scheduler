@@ -219,7 +219,7 @@ function makeDivsDraggable() {
     draggable.draggable = true;
 
     draggable.addEventListener('dragstart', function(event) {
-      event.dataTransfer.setData('text/plain', draggable.id);
+      event.dataTransfer.setData('text/plain', draggable.id);   
     });
   })
 }
