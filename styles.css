@@ -267,3 +267,7 @@ form label {
 .modal p span {
   font-weight: bold;
 }
+
+.editable {
+  padding: 20px;
+}
