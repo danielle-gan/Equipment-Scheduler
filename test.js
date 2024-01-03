@@ -61,13 +61,21 @@ const runTime = document.getElementById('RunTime');
 const shipDate = document.getElementById('ShipDate');
 const schedDate = document.getElementById('SchedDate');
 const machine = document.getElementById('Machine');
+const description = document.getElementById('GeneralDesc');
+const numCopies = document.getElementById('NumCopies');
+const linearFootage = document.getElementById('LinearFootage');
+const numColors = document.getElementById('NumColors');
+const dollarValue = document.getElementById('DollarValue');
+const printCyl = document.getElementById('PrintCylinder');
+const toolCyl = document.getElementById('ToolCylinder');
 
 const button = document.getElementById('addBtn');
 const dragMe = document.getElementById('dragMe');
 const flex = document.getElementById('itemStage');
 
+let details = '';
 
-function createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, machine) {
+function createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl) {
   // Create a draggable div
   var dragDiv = document.createElement('div');
   dragDiv.classList.add('dragMe');
@@ -79,12 +87,30 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, mach
   dragDiv.setAttribute('data-ship-date', shipDate.value);
   dragDiv.setAttribute('data-sched-date', "");
   dragDiv.setAttribute('data-machine', "");
+  dragDiv.setAttribute('data-general-desc', description.value);
+  dragDiv.setAttribute('data-num-copies', numCopies.value);
+  dragDiv.setAttribute('data-linear-footage', linearFootage.value);
+  dragDiv.setAttribute('data-num-colors', numColors.value);
+  dragDiv.setAttribute('data-dollar-value', dollarValue.value);
+  dragDiv.setAttribute('data-print-cyl', printCyl.value);
+  dragDiv.setAttribute('data-tool-cyl', toolCyl.value);
+
+const label = `${jobNum.value} | ${customer.value} | ${runTime.value} | ${shipDate.value}`
+const details = ` <p>Job Number: ${jobNum.value}</p>
+                  <p>Customer: ${customer.value}</p>
+                  <p>Run Time: ${runTime.value}</p>
+                  <p>Ship Date: ${shipDate.value}</p>
+                  <p>Description: ${description.value}</p>
+                  <p>Number Of Copies: ${numCopies.value}</p>
+                  <p>Linear Footage: ${linearFootage.value}</p>
+                  <p>Number Of Colors: ${numColors.value}</p>
+                  <p>Dollar Value Of Job: ${dollarValue.value}</p>
+                  <p>Print Cylinder Size: ${printCyl.value}</p>
+                  <p>Tool Cylinder Size: ${toolCyl.value}</p>
+                `
 
   // Display relevant information in the div
-  dragDiv.innerHTML += `<p>Job Number: ${jobNum.value}</p>
-                       <p>Customer: ${customer.value}</p>
-                       <p>Run Time: ${runTime.value}</p>
-                       <p>Ship Date: ${shipDate.value}</p> `
+  dragDiv.innerHTML += label
 
   const maxId = findMaxId();
   dragDiv.id = `drag${maxId + 1}`;
@@ -97,11 +123,25 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, mach
 
   dragDiv.addEventListener('dragstart', dragStart);
 
+  dragDiv.dataset.details = details;
+  dragDiv.addEventListener('click', () => showModal(dragDiv.dataset.details));
+}
+
+function showModal(details) {
+  const modal = document.createElement('div');
+  modal.classList.add('modal');
+  modal.innerHTML += details;
+
+  document.body.appendChild(modal);
+
+  modal.addEventListener('click', () => {
+    modal.remove(); // Remove modal on click
+  });
 }
 
 button.addEventListener('click', function (event) {
   event.preventDefault();
-  createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, machine);
+  createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl);
 })
 
 
@@ -115,14 +155,19 @@ function saveToXML() {
     dragDivs.forEach(function (dragDiv) {
       xmlContent += '<job>';
 
-      // Assuming data attributes are used
       xmlContent += '<JobNum>' + dragDiv.getAttribute('data-job-num') + '</JobNum>';
       xmlContent += '<Customer>' + dragDiv.getAttribute('data-customer') + '</Customer>';
       xmlContent += '<RunTime>' + dragDiv.getAttribute('data-run-time') + '</RunTime>';
       xmlContent += '<ShipDate>' + dragDiv.getAttribute('data-ship-date') + '</ShipDate>';
       xmlContent += '<SchedDate>' + dragDiv.getAttribute('data-sched-date') + '</SchedDate>';
       xmlContent += '<Machine>' + dragDiv.getAttribute('data-machine') + '</Machine>';
-
+      xmlContent += '<Description>' + dragDiv.getAttribute('data-general-desc') + '</Description>';
+      xmlContent += '<NumCopies>' + dragDiv.getAttribute('data-num-copies') + '</NumCopies>';
+      xmlContent += '<LinearFootage>' + dragDiv.getAttribute('data-linear-footage') + '</LinearFootage>';
+      xmlContent += '<NumColors>' + dragDiv.getAttribute('data-num-colors') + '</NumColors>';
+      xmlContent += '<DollarValue>' + dragDiv.getAttribute('data-ship-date') + '</DollarValue>';
+      xmlContent += '<PrintCyl>' + dragDiv.getAttribute('data-print-cyl') + '</PrintCyl>';
+      xmlContent += '<ToolCyl>' + dragDiv.getAttribute('data-tool-cyl') + '</ToolCyl>';
 
       xmlContent += '</job>';
     });
@@ -139,6 +184,31 @@ function saveToXML() {
   }
 }
 
+function loadFromXML() {
+  var fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.xml';
+
+  fileInput.addEventListener('change', function (event) {
+    var file = event.target.files[0];
+
+    if (file) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        var xmlContent = e.target.result;
+        parseXML(xmlContent);
+        
+      };
+
+      reader.readAsText(file);
+    }
+  });
+  fileInput.click();
+  
+}
+
+
 function parseXML(xmlContent) {
   var parser = new DOMParser();
   var xmlDoc = parser.parseFromString(xmlContent, 'application/xml');
@@ -146,16 +216,23 @@ function parseXML(xmlContent) {
   var jobs = xmlDoc.querySelectorAll('job');
 
   jobs.forEach(function (job) {
-    // Assuming that you have elements inside each <job> for JobNum, Customer, RunTime, ShipDate, SchedDate, and Machine
+
     var jobNum = job.querySelector('JobNum').textContent;
     var customer = job.querySelector('Customer').textContent;
     var runTime = job.querySelector('RunTime').textContent;
     var shipDate = job.querySelector('ShipDate').textContent;
     var schedDate = job.querySelector('SchedDate').textContent;
     var machine = job.querySelector('Machine').textContent;
+    var description = job.querySelector('Description').textContent;
+    var numCopies = job.querySelector('NumCopies').textContent;
+    var linearFootage = job.querySelector('LinearFootage').textContent;
+    var numColors = job.querySelector('NumColors').textContent;
+    var dollarValue = job.querySelector('Machine').textContent;
+    var printCyl = job.querySelector('Machine').textContent;
+    var toolCyl = job.querySelector('Machine').textContent;
 
     // Now you can use these values to create and append your div to the page
-    createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, machine);
+    createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl);
   });
 
   makeDivsDraggable();
