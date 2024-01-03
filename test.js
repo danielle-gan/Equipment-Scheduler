@@ -29,6 +29,8 @@ function drop(event) {
         event.target.appendChild(draggedBlock);
         draggedBlock.classList.add('dragged');
         console.log('Parent ID:', draggedBlock.parentElement.id);
+        draggedBlock.setAttribute('data-sched-date', draggedBlock.parentElement.id);
+        draggedBlock.setAttribute('data-machine', draggedBlock.parentElement.id);
       } else {
         console.error('Invalid node or not found:', draggedBlock);
       }
@@ -75,17 +77,14 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, mach
   dragDiv.setAttribute('data-customer', customer.value);
   dragDiv.setAttribute('data-run-time', runTime.value);
   dragDiv.setAttribute('data-ship-date', shipDate.value);
-  dragDiv.setAttribute('data-sched-date', schedDate.value);
-  dragDiv.setAttribute('data-machine', machine.value);
+  dragDiv.setAttribute('data-sched-date', "");
+  dragDiv.setAttribute('data-machine', "");
 
   // Display relevant information in the div
   dragDiv.innerHTML += `<p>Job Number: ${jobNum.value}</p>
                        <p>Customer: ${customer.value}</p>
                        <p>Run Time: ${runTime.value}</p>
-                       <p>Ship Date: ${shipDate.value}</p>
-                       <p>Sched Date: ${schedDate.value}</p>
-                       <p>Machine: ${machine.value}</p>`;
-
+                       <p>Ship Date: ${shipDate.value}</p> `
 
   const maxId = findMaxId();
   dragDiv.id = `drag${maxId + 1}`;
