@@ -232,10 +232,39 @@ function parseXML(xmlContent) {
     var toolCyl = job.querySelector('Machine').textContent;
 
     // Now you can use these values to create and append your div to the page
-    createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl);
+    placeDivOnGrid(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl);
+    makeDivsDraggable();
   });
 
-  makeDivsDraggable();
+
+}
+
+function placeDivOnGrid(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl) {
+  // Create a draggable div
+  const dragDiv = document.createElement('div');
+  dragDiv.classList.add('dragMe');
+  dragDiv.classList.add('dragged');
+
+  // Set the content of the div
+  dragDiv.innerHTML = `${jobNum} | ${customer} | ${runTime} | ${shipDate}`;
+
+  // Set the draggable attribute
+  dragDiv.draggable = true;
+
+  // Add the div to the corresponding grid cell based on schedDate
+  const gridCell = document.getElementById(schedDate);
+  if (gridCell) {
+    gridCell.appendChild(dragDiv);
+  } else {
+    console.error(`Grid cell with ID ${schedDate} not found.`);
+  }
+
+  // Add event listeners
+  dragDiv.addEventListener('dragstart', dragStart);
+  dragDiv.addEventListener('click', showDetails);
+
+  dragDiv.dataset.details = details;
+  dragDiv.addEventListener('click', () => showModal(dragDiv.dataset.details));
 }
 
 // SAVE BUTTON 
