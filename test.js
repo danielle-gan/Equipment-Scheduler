@@ -28,6 +28,7 @@ function drop(event) {
       if (draggedBlock instanceof Node) {
         event.target.appendChild(draggedBlock);
         draggedBlock.classList.add('dragged');
+        console.log('Parent ID:', draggedBlock.parentElement.id);
       } else {
         console.error('Invalid node or not found:', draggedBlock);
       }
@@ -70,12 +71,12 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, mach
   dragDiv.classList.add('dragMe');
 
   // Set attributes based on job data
-  dragDiv.setAttribute('data-job-num', jobNum);
-  dragDiv.setAttribute('data-customer', customer);
-  dragDiv.setAttribute('data-run-time', runTime);
-  dragDiv.setAttribute('data-ship-date', shipDate);
-  dragDiv.setAttribute('data-sched-date', schedDate);
-  dragDiv.setAttribute('data-machine', machine);
+  dragDiv.setAttribute('data-job-num', jobNum.value);
+  dragDiv.setAttribute('data-customer', customer.value);
+  dragDiv.setAttribute('data-run-time', runTime.value);
+  dragDiv.setAttribute('data-ship-date', shipDate.value);
+  dragDiv.setAttribute('data-sched-date', schedDate.value);
+  dragDiv.setAttribute('data-machine', machine.value);
 
   // Display relevant information in the div
   dragDiv.innerHTML += `<p>Job Number: ${jobNum.value}</p>
@@ -99,7 +100,7 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, mach
 
 }
 
-button.addEventListener('click', function(event) {
+button.addEventListener('click', function (event) {
   event.preventDefault();
   createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, machine);
 })
@@ -114,14 +115,15 @@ function saveToXML() {
 
     dragDivs.forEach(function (dragDiv) {
       xmlContent += '<job>';
-      
-      // Assuming JobNum, Customer, RunTime, ShipDate, SchedDate, and Machine are the IDs of your div elements
-      xmlContent += '<JobNum>' + wrapInCDATA(dragDiv.querySelector('#JobNum').textContent) + '</JobNum>';
-      xmlContent += '<Customer>' + wrapInCDATA(dragDiv.querySelector('#Customer').textContent) + '</Customer>';
-      xmlContent += '<RunTime>' + wrapInCDATA(dragDiv.querySelector('#RunTime').textContent) + '</RunTime>';
-      xmlContent += '<ShipDate>' + wrapInCDATA(dragDiv.querySelector('#ShipDate').textContent) + '</ShipDate>';
-      xmlContent += '<SchedDate>' + wrapInCDATA(dragDiv.querySelector('#SchedDate').textContent) + '</SchedDate>';
-      xmlContent += '<Machine>' + wrapInCDATA(dragDiv.querySelector('#Machine').textContent) + '</Machine>';
+
+      // Assuming data attributes are used
+      xmlContent += '<JobNum>' + dragDiv.getAttribute('data-job-num') + '</JobNum>';
+      xmlContent += '<Customer>' + dragDiv.getAttribute('data-customer') + '</Customer>';
+      xmlContent += '<RunTime>' + dragDiv.getAttribute('data-run-time') + '</RunTime>';
+      xmlContent += '<ShipDate>' + dragDiv.getAttribute('data-ship-date') + '</ShipDate>';
+      xmlContent += '<SchedDate>' + dragDiv.getAttribute('data-sched-date') + '</SchedDate>';
+      xmlContent += '<Machine>' + dragDiv.getAttribute('data-machine') + '</Machine>';
+
 
       xmlContent += '</job>';
     });
@@ -130,14 +132,13 @@ function saveToXML() {
 
     var blob = new Blob([xmlContent], { type: 'application/xml' });
     var downloadLink = document.createElement('a');
-    
+
     downloadLink.download = fileName + '.xml';
 
     downloadLink.href = window.URL.createObjectURL(blob);
     downloadLink.click();
   }
 }
-
 
 function parseXML(xmlContent) {
   var parser = new DOMParser();
@@ -161,12 +162,6 @@ function parseXML(xmlContent) {
   makeDivsDraggable();
 }
 
-
-function wrapInCDATA(content) {
-  return '<![CDATA[' + content + ']]>';
-}
-
-
 // SAVE BUTTON 
 const saveBtn = document.getElementById('save-btn');
 saveBtn.addEventListener('click', () => {
@@ -184,14 +179,14 @@ loadBtn.addEventListener('click', () => {
 function makeDivsDraggable() {
   var draggables = document.querySelectorAll('.dragMe');
 
-  draggables.forEach(function(draggable) {
+  draggables.forEach(function (draggable) {
     draggable.draggable = true;
 
-    draggable.addEventListener('dragstart', function(event) {
+    draggable.addEventListener('dragstart', function (event) {
       event.dataTransfer.setData('text/plain', draggable.id);
     });
 
-    draggable.addEventListener('click', function() {
+    draggable.addEventListener('click', function () {
       showModal(draggable.dataset.details);
     });
   })
