@@ -258,7 +258,7 @@ function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCell, machine, 
   var gridCellId = 'c' + colIndex + 'r' + rowIndex;
   var gridRowHeader = 'c1' + 'r' + rowIndex;
   var gridColHeader = 'c'+ colIndex + 'r1'
-  var gridNode = document.getElementById(gridCellId);
+  var gridParent = document.getElementById(gridCellId);
 
   var testDate = document.getElementById(gridColHeader);
   console.log(testDate);
@@ -272,7 +272,7 @@ var columnHeaders = Array.from(document.getElementsByClassName('day-label'));
 columnHeaders.forEach(function (e) {
   if (testDate.textContent == e.textContent) {
     console.log(testDate.textContent);
-    createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCell, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, gridNode);
+    createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCell, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, gridParent);
   } 
   else {
     console.log("not this one!");
