@@ -75,12 +75,14 @@ const flex = document.getElementById('itemStage');
 
 let details = '';
 
-function createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl) {
+function createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, appendTarget) {
   // Create a draggable div
   var dragDiv = document.createElement('div');
   dragDiv.classList.add('dragMe');
+  dragDiv.classList.add('dragged');
 
   // Set attributes based on job data
+  if (appendTarget.value = flex) {
   dragDiv.setAttribute('data-job-num', jobNum.value);
   dragDiv.setAttribute('data-customer', customer.value);
   dragDiv.setAttribute('data-run-time', runTime.value);
@@ -94,6 +96,7 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, mach
   dragDiv.setAttribute('data-dollar-value', dollarValue.value);
   dragDiv.setAttribute('data-print-cyl', printCyl.value);
   dragDiv.setAttribute('data-tool-cyl', toolCyl.value);
+}
 
 const label = `${jobNum.value} | ${customer.value} | ${runTime.value} | ${shipDate.value}`
 const details = ` <p>Job Number: ${jobNum.value}</p>
@@ -108,7 +111,6 @@ const details = ` <p>Job Number: ${jobNum.value}</p>
                   <p>Print Cylinder Size: ${printCyl.value}</p>
                   <p>Tool Cylinder Size: ${toolCyl.value}</p>
                 `
-
   // Display relevant information in the div
   dragDiv.innerHTML += label
 
@@ -117,14 +119,14 @@ const details = ` <p>Job Number: ${jobNum.value}</p>
 
   dragDiv.draggable = true;
 
-  // Add div to screen
-  var flex = document.getElementById('itemStage');
-  flex.appendChild(dragDiv);
+  appendTarget.appendChild(dragDiv);
 
   dragDiv.addEventListener('dragstart', dragStart);
 
   dragDiv.dataset.details = details;
   dragDiv.addEventListener('click', () => showModal(dragDiv.dataset.details));
+
+  makeDivsDraggable();
 }
 
 function showModal(details) {
@@ -141,7 +143,7 @@ function showModal(details) {
 
 button.addEventListener('click', function (event) {
   event.preventDefault();
-  createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl);
+  createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, flex);
 })
 
 
@@ -231,41 +233,84 @@ function parseXML(xmlContent) {
     var printCyl = job.querySelector('Machine').textContent;
     var toolCyl = job.querySelector('Machine').textContent;
 
-    // Now you can use these values to create and append your div to the page
     placeDivOnGrid(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl);
-    makeDivsDraggable();
   });
-
-
+  makeDivsDraggable();
 }
 
 function placeDivOnGrid(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl) {
+  // Construct the ID of the grid cell based on SchedDate
+  var colIndex = schedDate.substring(1, schedDate.indexOf('r'));
+  var rowIndex = schedDate.substring(schedDate.indexOf('r') + 1);
+
+  // Find the corresponding grid cell
+  var gridCellId = 'c' + colIndex + 'r' + rowIndex;
+  var gridCell = document.getElementById(gridCellId);
+
+  if (gridCell) {
+    // Create and append the div to the corresponding grid cell
+    console.log(jobNum);
+    createAndAppendDiv2(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, gridCell);
+  } else {
+    console.error('Grid cell not found for SchedDate: ' + schedDate);
+  }
+}
+
+function createAndAppendDiv2(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, appendTarget) {
   // Create a draggable div
-  const dragDiv = document.createElement('div');
+  var dragDiv = document.createElement('div');
   dragDiv.classList.add('dragMe');
   dragDiv.classList.add('dragged');
 
-  // Set the content of the div
-  dragDiv.innerHTML = `${jobNum} | ${customer} | ${runTime} | ${shipDate}`;
+  // Set attributes based on job data
+  if (appendTarget.value = flex) {
+  dragDiv.setAttribute('data-job-num', jobNum.value);
+  dragDiv.setAttribute('data-customer', customer.value);
+  dragDiv.setAttribute('data-run-time', runTime.value);
+  dragDiv.setAttribute('data-ship-date', shipDate.value);
+  dragDiv.setAttribute('data-sched-date', "");
+  dragDiv.setAttribute('data-machine', "");
+  dragDiv.setAttribute('data-general-desc', description.value);
+  dragDiv.setAttribute('data-num-copies', numCopies.value);
+  dragDiv.setAttribute('data-linear-footage', linearFootage.value);
+  dragDiv.setAttribute('data-num-colors', numColors.value);
+  dragDiv.setAttribute('data-dollar-value', dollarValue.value);
+  dragDiv.setAttribute('data-print-cyl', printCyl.value);
+  dragDiv.setAttribute('data-tool-cyl', toolCyl.value);
+}
 
-  // Set the draggable attribute
+const label = `${jobNum} | ${customer} | ${runTime} | ${shipDate}`
+const details = ` <p>Job Number: ${jobNum}</p>
+                  <p>Customer: ${customer}</p>
+                  <p>Run Time: ${runTime}</p>
+                  <p>Ship Date: ${shipDate}</p>
+                  <p>Description: ${description}</p>
+                  <p>Number Of Copies: ${numCopies}</p>
+                  <p>Linear Footage: ${linearFootage}</p>
+                  <p>Number Of Colors: ${numColors}</p>
+                  <p>Dollar Value Of Job: ${dollarValue}</p>
+                  <p>Print Cylinder Size: ${printCyl}</p>
+                  <p>Tool Cylinder Size: ${toolCyl}</p>
+                `
+  // Display relevant information in the div
+  dragDiv.innerHTML += label
+
+  const maxId = findMaxId();
+  dragDiv.id = `drag${maxId + 1}`;
+
   dragDiv.draggable = true;
 
-  // Add the div to the corresponding grid cell based on schedDate
-  const gridCell = document.getElementById(schedDate);
-  if (gridCell) {
-    gridCell.appendChild(dragDiv);
-  } else {
-    console.error(`Grid cell with ID ${schedDate} not found.`);
-  }
+  appendTarget.appendChild(dragDiv);
 
-  // Add event listeners
   dragDiv.addEventListener('dragstart', dragStart);
-  dragDiv.addEventListener('click', showDetails);
 
   dragDiv.dataset.details = details;
   dragDiv.addEventListener('click', () => showModal(dragDiv.dataset.details));
+
+  makeDivsDraggable();
 }
+
+
 
 // SAVE BUTTON 
 const saveBtn = document.getElementById('save-btn');
