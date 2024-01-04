@@ -83,23 +83,23 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, schedDate, mach
 
   // Set attributes based on job data
   if (appendTarget.value = flex) {
-  dragDiv.setAttribute('data-job-num', jobNum.value);
-  dragDiv.setAttribute('data-customer', customer.value);
-  dragDiv.setAttribute('data-run-time', runTime.value);
-  dragDiv.setAttribute('data-ship-date', shipDate.value);
-  dragDiv.setAttribute('data-sched-date', "");
-  dragDiv.setAttribute('data-machine', "");
-  dragDiv.setAttribute('data-general-desc', description.value);
-  dragDiv.setAttribute('data-num-copies', numCopies.value);
-  dragDiv.setAttribute('data-linear-footage', linearFootage.value);
-  dragDiv.setAttribute('data-num-colors', numColors.value);
-  dragDiv.setAttribute('data-dollar-value', dollarValue.value);
-  dragDiv.setAttribute('data-print-cyl', printCyl.value);
-  dragDiv.setAttribute('data-tool-cyl', toolCyl.value);
-}
+    dragDiv.setAttribute('data-job-num', jobNum.value);
+    dragDiv.setAttribute('data-customer', customer.value);
+    dragDiv.setAttribute('data-run-time', runTime.value);
+    dragDiv.setAttribute('data-ship-date', shipDate.value);
+    dragDiv.setAttribute('data-sched-date', "");
+    dragDiv.setAttribute('data-machine', "");
+    dragDiv.setAttribute('data-general-desc', description.value);
+    dragDiv.setAttribute('data-num-copies', numCopies.value);
+    dragDiv.setAttribute('data-linear-footage', linearFootage.value);
+    dragDiv.setAttribute('data-num-colors', numColors.value);
+    dragDiv.setAttribute('data-dollar-value', dollarValue.value);
+    dragDiv.setAttribute('data-print-cyl', printCyl.value);
+    dragDiv.setAttribute('data-tool-cyl', toolCyl.value);
+  }
 
-const label = `${jobNum.value} | ${customer.value} | ${runTime.value} | ${shipDate.value}`
-const details = ` <p>Job Number: ${jobNum.value}</p>
+  const label = `${jobNum.value} | ${customer.value} | ${runTime.value} | ${shipDate.value}`
+  const details = ` <p>Job Number: ${jobNum.value}</p>
                   <p>Customer: ${customer.value}</p>
                   <p>Run Time: ${runTime.value}</p>
                   <p>Ship Date: ${shipDate.value}</p>
@@ -123,22 +123,27 @@ const details = ` <p>Job Number: ${jobNum.value}</p>
 
   dragDiv.addEventListener('dragstart', dragStart);
 
-  dragDiv.dataset.details = details;
+  dragDiv.dataset.details = details + dragDiv.id;
+
+  console.log(dragDiv.dataset.details);
   dragDiv.addEventListener('click', () => showModal(dragDiv.dataset.details));
 
   makeDivsDraggable();
 }
 
 function showModal(details) {
-  const modal = document.createElement('div');
-  modal.classList.add('modal');
-  modal.innerHTML += details;
+  if (!document.getElementById('modal')) {
 
-  document.body.appendChild(modal);
+    const modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.innerHTML += details;
 
-  modal.addEventListener('click', () => {
-    modal.remove(); // Remove modal on click
-  });
+    document.body.appendChild(modal);
+
+    modal.addEventListener('click', () => {
+      modal.remove(); // Remove modal on click
+    });
+  }
 }
 
 button.addEventListener('click', function (event) {
@@ -200,16 +205,14 @@ function loadFromXML() {
       reader.onload = function (e) {
         var xmlContent = e.target.result;
         parseXML(xmlContent);
-        
       };
 
       reader.readAsText(file);
     }
   });
   fileInput.click();
-  
-}
 
+}
 
 function parseXML(xmlContent) {
   var parser = new DOMParser();
@@ -245,15 +248,28 @@ function placeDivOnGrid(jobNum, customer, runTime, shipDate, schedDate, machine,
 
   // Find the corresponding grid cell
   var gridCellId = 'c' + colIndex + 'r' + rowIndex;
+  var gridRowHeader = 'c1' + 'r' + rowIndex;
+  var gridColHeader = 'c'+ colIndex + 'r1'
   var gridCell = document.getElementById(gridCellId);
 
-  if (gridCell) {
-    // Create and append the div to the corresponding grid cell
-    console.log(jobNum);
+  var testDate = document.getElementById(gridColHeader);
+  var machineNum = document.getElementById(gridRowHeader);
+
+  // console.log(testDate.textContent, machineNum.textContent);
+
+// TO DO: WRITE A FOR LOOP -- for each job in the xml where if schedDate matches the testDate, append it to it's corresponding machine row # 
+// It's close but now it needs to look at test Date and append to corresponding machine row number
+var columnHeaders = Array.from(document.getElementsByClassName('day-label'));
+columnHeaders.forEach(function (e) {
+  if (testDate.textContent == e.textContent) {
+    console.log(testDate.textContent);
     createAndAppendDiv2(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, gridCell);
-  } else {
-    console.error('Grid cell not found for SchedDate: ' + schedDate);
+  } 
+  else {
+    console.log("not this one!");
   }
+});
+
 }
 
 function createAndAppendDiv2(jobNum, customer, runTime, shipDate, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, appendTarget) {
@@ -264,23 +280,23 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, schedDate, mac
 
   // Set attributes based on job data
   if (appendTarget.value = flex) {
-  dragDiv.setAttribute('data-job-num', jobNum.value);
-  dragDiv.setAttribute('data-customer', customer.value);
-  dragDiv.setAttribute('data-run-time', runTime.value);
-  dragDiv.setAttribute('data-ship-date', shipDate.value);
-  dragDiv.setAttribute('data-sched-date', "");
-  dragDiv.setAttribute('data-machine', "");
-  dragDiv.setAttribute('data-general-desc', description.value);
-  dragDiv.setAttribute('data-num-copies', numCopies.value);
-  dragDiv.setAttribute('data-linear-footage', linearFootage.value);
-  dragDiv.setAttribute('data-num-colors', numColors.value);
-  dragDiv.setAttribute('data-dollar-value', dollarValue.value);
-  dragDiv.setAttribute('data-print-cyl', printCyl.value);
-  dragDiv.setAttribute('data-tool-cyl', toolCyl.value);
-}
+    dragDiv.setAttribute('data-job-num', jobNum.value);
+    dragDiv.setAttribute('data-customer', customer.value);
+    dragDiv.setAttribute('data-run-time', runTime.value);
+    dragDiv.setAttribute('data-ship-date', shipDate.value);
+    dragDiv.setAttribute('data-sched-date', "");
+    dragDiv.setAttribute('data-machine', "");
+    dragDiv.setAttribute('data-general-desc', description.value);
+    dragDiv.setAttribute('data-num-copies', numCopies.value);
+    dragDiv.setAttribute('data-linear-footage', linearFootage.value);
+    dragDiv.setAttribute('data-num-colors', numColors.value);
+    dragDiv.setAttribute('data-dollar-value', dollarValue.value);
+    dragDiv.setAttribute('data-print-cyl', printCyl.value);
+    dragDiv.setAttribute('data-tool-cyl', toolCyl.value);
+  }
 
-const label = `${jobNum} | ${customer} | ${runTime} | ${shipDate}`
-const details = ` <p>Job Number: ${jobNum}</p>
+  const label = `${jobNum} | ${customer} | ${runTime} | ${shipDate}`
+  const details = ` <p>Job Number: ${jobNum}</p>
                   <p>Customer: ${customer}</p>
                   <p>Run Time: ${runTime}</p>
                   <p>Ship Date: ${shipDate}</p>
@@ -292,25 +308,25 @@ const details = ` <p>Job Number: ${jobNum}</p>
                   <p>Print Cylinder Size: ${printCyl}</p>
                   <p>Tool Cylinder Size: ${toolCyl}</p>
                 `
-  // Display relevant information in the div
+  // Display main info
   dragDiv.innerHTML += label
 
   const maxId = findMaxId();
   dragDiv.id = `drag${maxId + 1}`;
 
+  // make the div draggable
   dragDiv.draggable = true;
 
+  //append to item stage (next to + button)
   appendTarget.appendChild(dragDiv);
 
   dragDiv.addEventListener('dragstart', dragStart);
 
+  //attach extra details to the div that display on click
   dragDiv.dataset.details = details;
   dragDiv.addEventListener('click', () => showModal(dragDiv.dataset.details));
-
   makeDivsDraggable();
 }
-
-
 
 // SAVE BUTTON 
 const saveBtn = document.getElementById('save-btn');
@@ -318,26 +334,19 @@ saveBtn.addEventListener('click', () => {
   saveToXML();
 })
 
-
 // LOAD BUTTON 
 const loadBtn = document.getElementById('load-btn');
 loadBtn.addEventListener('click', () => {
   loadFromXML();
 })
 
-
+//On loading in, divs are no longer draggable, hence why this function is necessary
 function makeDivsDraggable() {
   var draggables = document.querySelectorAll('.dragMe');
-
   draggables.forEach(function (draggable) {
     draggable.draggable = true;
-
     draggable.addEventListener('dragstart', function (event) {
       event.dataTransfer.setData('text/plain', draggable.id);
-    });
-
-    draggable.addEventListener('click', function () {
-      showModal(draggable.dataset.details);
     });
   })
 }
