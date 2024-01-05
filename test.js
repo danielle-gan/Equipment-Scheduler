@@ -30,10 +30,21 @@ function drop(event) {
         draggedBlock.classList.add('dragged');
         // console.log('Parent ID:', draggedBlock.parentElement.id);
         var gridCell = draggedBlock.parentElement.id;
-        // var gridRowHeader = 'c1' + 'r' + rowIndex;
-        // var gridColHeader = 'c'+ colIndex + 'r1'
+
+        var colIndex = gridCell.substring(1, gridCell.indexOf('r'));
+        var rowIndex = gridCell.substring(gridCell.indexOf('r') + 1);
+        
+        var gridRowHeaderID = 'c1' + 'r' + rowIndex;
+        var gridColHeaderID = 'c'+ colIndex + 'r1';
+
+        var gridRowHeader = document.getElementById(gridRowHeaderID).textContent;
+        var gridColHeader = document.getElementById(gridColHeaderID).textContent;
+
+        console.log(gridRowHeader, gridColHeader);
 
         draggedBlock.setAttribute('data-grid-cell', gridCell);
+        draggedBlock.setAttribute('data-grid-colheader', gridColHeader);
+        draggedBlock.setAttribute('data-grid-rowheader', gridRowHeader);
         draggedBlock.setAttribute('data-machine', draggedBlock.parentElement.id);
       } else {
         console.error('Invalid node or not found:', draggedBlock);
@@ -153,7 +164,7 @@ function showModal(details) {
 
 button.addEventListener('click', function (event) {
   event.preventDefault();
-  createAndAppendDiv(jobNum, customer, runTime, shipDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, flex);
+  createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, flex);
 })
 
 
@@ -172,10 +183,9 @@ function saveToXML() {
       xmlContent += '<RunTime>' + dragDiv.getAttribute('data-run-time') + '</RunTime>';
       xmlContent += '<ShipDate>' + dragDiv.getAttribute('data-ship-date') + '</ShipDate>';
       xmlContent += '<GridCell>' + dragDiv.getAttribute('data-grid-cell') + '</GridCell>';
-      xmlContent += '<GridCell>' + dragDiv.getAttribute('data-grid-colheader') + '</GridCell>';
-      xmlContent += '<GridCell>' + dragDiv.getAttribute('data-grid-rowheader') + '</GridCell>';
+      xmlContent += '<GridCol>' + dragDiv.getAttribute('data-grid-colheader') + '</GridCol>';
+      xmlContent += '<GridRow>' + dragDiv.getAttribute('data-grid-rowheader') + '</GridRow>';
 
-      xmlContent += '<Machine>' + dragDiv.getAttribute('data-machine') + '</Machine>';
       xmlContent += '<Description>' + dragDiv.getAttribute('data-general-desc') + '</Description>';
       xmlContent += '<NumCopies>' + dragDiv.getAttribute('data-num-copies') + '</NumCopies>';
       xmlContent += '<LinearFootage>' + dragDiv.getAttribute('data-linear-footage') + '</LinearFootage>';
@@ -235,7 +245,9 @@ function parseXML(xmlContent) {
     var runTime = job.querySelector('RunTime').textContent;
     var shipDate = job.querySelector('ShipDate').textContent;
     var gridCell = job.querySelector('GridCell').textContent;
-    var machine = job.querySelector('Machine').textContent;
+    var gridCol = job.querySelector('GridCol').textContent;
+    var gridRow = job.querySelector('GridRow').textContent;
+
     var description = job.querySelector('Description').textContent;
     var numCopies = job.querySelector('NumCopies').textContent;
     var linearFootage = job.querySelector('LinearFootage').textContent;
@@ -244,12 +256,15 @@ function parseXML(xmlContent) {
     var printCyl = job.querySelector('Machine').textContent;
     var toolCyl = job.querySelector('Machine').textContent;
 
-    placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCell, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl);
+    console.log(gridRow);
+    console.log(gridCol);
+
+    placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCell, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl);
   });
   makeDivsDraggable();
 }
 
-function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCell, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl) {
+function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCell, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl) {
   // Construct the ID of the grid cell based on gridCell
   var colIndex = gridCell.substring(1, gridCell.indexOf('r'));
   var rowIndex = gridCell.substring(gridCell.indexOf('r') + 1);
@@ -260,28 +275,45 @@ function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCell, machine, 
   var gridColHeader = 'c'+ colIndex + 'r1'
   var gridParent = document.getElementById(gridCellId);
 
-  var testDate = document.getElementById(gridColHeader);
-  console.log(testDate);
+  var schedDate = document.getElementById(gridColHeader);
   var machineNum = document.getElementById(gridRowHeader);
 
-  // console.log(testDate.textContent, machineNum.textContent);
+  var columnHeaders = Array.from(document.getElementsByClassName('day-label'));
+  var rowHeaders = Array.from(document.getElementsByClassName('editable'));
 
-// TO DO: WRITE A FOR LOOP -- for each job in the xml where if schedDate matches the testDate, append it to it's corresponding machine row # 
-// It's close but now it needs to look at test Date and append to corresponding machine row number
-var columnHeaders = Array.from(document.getElementsByClassName('day-label'));
-columnHeaders.forEach(function (e) {
-  if (testDate.textContent == e.textContent) {
-    console.log(testDate.textContent);
-    createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCell, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, gridParent);
-  } 
-  else {
-    console.log("not this one!");
-  }
-});
+  columnHeaders.forEach(function (e) {
+    if (gridCol == e.textContent) {
+      console.log(gridCol);
+      var colIndex = e.id.substring(1, e.indexOf('r'));
+      rowHeaders.forEach(function (f) {
+        if (gridRow == f.textContent) {
+          console.log(gridRow);
+          var rowIndex = e.id.substring(e.indexOf('r') + 1);
+          var newGridParentID = 'c'+colIndex+'r'+rowIndex;
+          createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCell, schedDate, machineNum, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, newGridParentID);
+        }
+      });
+    }
+  });
+
+  var newGridCellID = "";
+
+// TO DO: WRITE A FOR LOOP -- for each job in the xml where if schedDate matches the schedDate, append it to it's corresponding machine row # 
+// It's close but now it needs to look at sched Date and append to corresponding machine row number
+// I need to change gridParent
+
+// columnHeaders.forEach(function (e) {
+//   if (schedDate.textContent == e.textContent) {
+//     createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCell, schedDate, machineNum, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, gridParent);
+//   } 
+//   else {
+//     console.log("not this one!");
+//   }
+// });
 
 }
 
-function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCell, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, appendTarget) {
+function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCell, schedDate, machine, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, appendTarget) {
   // Create a draggable div
   var dragDiv = document.createElement('div');
   dragDiv.classList.add('dragMe');
