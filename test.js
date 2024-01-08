@@ -159,7 +159,7 @@ button.addEventListener('click', function (event) {
 })
 
 // Function to save XML content
-function saveToXML2() {
+function saveToXML() {
   var fileName = prompt('Enter a filename:', 'ScheduleData');
 
   if (fileName !== null) {
@@ -303,7 +303,6 @@ function loadFromXML() {
     }
   });
   fileInput.click();
-console.log("loaded");
 }
 
 function parseXML(xmlContent) {
@@ -313,7 +312,6 @@ function parseXML(xmlContent) {
   var jobs = xmlDoc.querySelectorAll('job');
 
   jobs.forEach(function (job) {
-    console.log(job.querySelector("jobNum").textContent);
 
     var jobNum = job.querySelector('jobNum').textContent;
     var customer = job.querySelector('customer').textContent;
@@ -418,7 +416,7 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, g
 // SAVE BUTTON 
 const saveBtn = document.getElementById('save-btn');
 saveBtn.addEventListener('click', () => {
-  saveToXML2();
+  saveToXML();
 })
 
 // LOAD BUTTON 
