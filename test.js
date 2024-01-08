@@ -28,7 +28,6 @@ function drop(event) {
       if (draggedBlock instanceof Node) {
         event.target.appendChild(draggedBlock);
         draggedBlock.classList.add('dragged');
-        // console.log('Parent ID:', draggedBlock.parentElement.id);
         var gridCell = draggedBlock.parentElement.id;
 
         var colIndex = gridCell.substring(1, gridCell.indexOf('r'));
@@ -40,12 +39,9 @@ function drop(event) {
         var gridRowHeader = document.getElementById(gridRowHeaderID).textContent;
         var gridColHeader = document.getElementById(gridColHeaderID).textContent;
 
-        console.log(gridRowHeader, gridColHeader);
-
         draggedBlock.setAttribute('data-grid-cell', gridCell);
         draggedBlock.setAttribute('data-grid-colheader', gridColHeader);
         draggedBlock.setAttribute('data-grid-rowheader', gridRowHeader);
-        draggedBlock.setAttribute('data-machine', draggedBlock.parentElement.id);
       } else {
         console.error('Invalid node or not found:', draggedBlock);
       }
@@ -74,7 +70,6 @@ const jobNum = document.getElementById('JobNum');
 const customer = document.getElementById('Customer');
 const runTime = document.getElementById('RunTime');
 const shipDate = document.getElementById('ShipDate');
-const machine = document.getElementById('Machine');
 const description = document.getElementById('GeneralDesc');
 const numCopies = document.getElementById('NumCopies');
 const linearFootage = document.getElementById('LinearFootage');
@@ -95,8 +90,6 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   dragDiv.classList.add('dragMe');
   dragDiv.classList.add('dragged');
 
-  console.log(jobNum);
-
   dragDiv.setAttribute('data-job-num', jobNum.value);
   dragDiv.setAttribute('data-customer', customer.value);
   dragDiv.setAttribute('data-run-time', runTime.value);
@@ -104,7 +97,6 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   dragDiv.setAttribute('data-grid-cell', ""); //initiate grid cell with empty string
   dragDiv.setAttribute('data-grid-colheader', "");
   dragDiv.setAttribute('data-grid-rowheader', "");
-  dragDiv.setAttribute('data-machine', "");
   dragDiv.setAttribute('data-general-desc', description.value);
   dragDiv.setAttribute('data-num-copies', numCopies.value);
   dragDiv.setAttribute('data-linear-footage', linearFootage.value);
@@ -141,7 +133,6 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
 
   dragDiv.dataset.details = details + dragDiv.id;
 
-  console.log(dragDiv.dataset.details);
   dragDiv.addEventListener('click', () => showModal(dragDiv.dataset.details));
 
   makeDivsDraggable();
@@ -229,7 +220,6 @@ function loadFromXML() {
     }
   });
   fileInput.click();
-
 }
 
 function parseXML(xmlContent) {
@@ -275,16 +265,18 @@ function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCell, gridCol, 
           var rowIndex = f.parentElement.id.substring(f.parentElement.id.indexOf('r') + 1);
           
           var newGridParentID = 'c'+ colIndex+'r'+rowIndex;
-          createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, newGridParentID);
+          createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, gridCol, gridRow, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, newGridParentID);
         }
       });
     }
   });
 }
 
-function createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, appendTarget) {
+function createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, gridCol, gridRow, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, appendTarget) {
   
   var appendTarget = document.getElementById(appendTarget);
+
+
   
   // Create a draggable div
   var dragDiv = document.createElement('div');
@@ -295,10 +287,9 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, n
   dragDiv.setAttribute('data-customer', customer);
   dragDiv.setAttribute('data-run-time', runTime);
   dragDiv.setAttribute('data-ship-date', shipDate);
-  dragDiv.setAttribute('data-grid-cell', ""); //initiate grid cell with empty string
-  dragDiv.setAttribute('data-grid-colheader', "");
-  dragDiv.setAttribute('data-grid-rowheader', "");
-  dragDiv.setAttribute('data-machine', "");
+  dragDiv.setAttribute('data-grid-cell', appendTarget.id); 
+  dragDiv.setAttribute('data-grid-colheader', gridCol);
+  dragDiv.setAttribute('data-grid-rowheader', gridRow);
   dragDiv.setAttribute('data-general-desc', description);
   dragDiv.setAttribute('data-num-copies', numCopies);
   dragDiv.setAttribute('data-linear-footage', linearFootage);
