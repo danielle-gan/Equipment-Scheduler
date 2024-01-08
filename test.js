@@ -1,3 +1,15 @@
+// Ask the user for a date input
+const userDateInput = prompt('Enter a date (MM/DD/YYYY):');
+const userDate = new Date(userDateInput);
+
+// Check if the user provided a valid date
+if (!isNaN(userDate.getTime())) {
+  // Populate "day-label" divs with the next two weeks of dates
+  populateDayLabels(userDate);
+} else {
+  alert('Invalid date input. Please enter a valid date.');
+}
+
 // Function to format a date as "MM/DD/YYYY"
 function formatDate(date) {
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -26,20 +38,6 @@ function populateDayLabels(selectedDate) {
     label.textContent = formatDate(nextTwoWeeks[index]);
   });
 }
-
-// Ask the user for a date input
-const userDateInput = prompt('Enter a date (MM/DD/YYYY):');
-const userDate = new Date(userDateInput);
-
-// Check if the user provided a valid date
-if (!isNaN(userDate.getTime())) {
-  // Populate "day-label" divs with the next two weeks of dates
-  populateDayLabels(userDate);
-} else {
-  alert('Invalid date input. Please enter a valid date.');
-}
-
-
 
 // Drag and Drop Functionality
 let draggedBlock;
@@ -82,7 +80,6 @@ function drop(event) {
         var gridRowHeader = document.getElementById(gridRowHeaderID).textContent;
         var gridColHeader = document.getElementById(gridColHeaderID).textContent;
 
-        // draggedBlock.setAttribute('data-grid-cell', gridCell);
         draggedBlock.setAttribute('data-grid-colheader', gridColHeader);
         draggedBlock.setAttribute('data-grid-rowheader', gridRowHeader);
       } else {
@@ -128,7 +125,6 @@ const flex = document.getElementById('itemStage');
 let details = '';
 
 function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, appendTarget) {
-  // Create a draggable div
   var dragDiv = document.createElement('div');
   dragDiv.classList.add('dragMe');
   dragDiv.classList.add('dragged');
@@ -137,7 +133,6 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   dragDiv.setAttribute('data-customer', customer.value);
   dragDiv.setAttribute('data-run-time', runTime.value);
   dragDiv.setAttribute('data-ship-date', shipDate.value);
-  // dragDiv.setAttribute('data-grid-cell', ""); //initiate grid cell with empty string
   dragDiv.setAttribute('data-grid-colheader', "");
   dragDiv.setAttribute('data-grid-rowheader', "");
   dragDiv.setAttribute('data-general-desc', description.value);
@@ -171,7 +166,6 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   dragDiv.draggable = true;
 
   appendTarget.appendChild(dragDiv);
-
   dragDiv.addEventListener('dragstart', dragStart);
 
   dragDiv.dataset.details = details + dragDiv.id;
@@ -275,7 +269,6 @@ function appendJobsToData(xmlDoc) {
     if (!jobExists) {
       var jobElement = xmlDoc.createElement('job');
 
-      // Append data attributes as child elements
       for (var attribute in dragDiv.dataset) {
         var attributeElement = xmlDoc.createElement(attribute);
         attributeElement.textContent = dragDiv.dataset[attribute];
