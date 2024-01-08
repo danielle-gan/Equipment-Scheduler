@@ -167,46 +167,106 @@ button.addEventListener('click', function (event) {
   createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, flex);
 })
 
-
-function saveToXML() {
+// Function to save XML content
+function saveToXML2() {
   var fileName = prompt('Enter a filename:', 'ScheduleData');
 
   if (fileName !== null) {
-    var dragDivs = document.querySelectorAll('.dragMe');
-    var xmlContent = '<data>';
+    var loadExisting = confirm('Do you want to load into a preexisting file?');
+    
+    if (loadExisting) {
+      // Load existing XML content
+      loadExistingXML(function (existingXmlString) {
+        // Parse the existing XML content
+        var parser = new DOMParser();
+        var xmlDoc = parser.parseFromString(existingXmlString, 'application/xml');
 
-    dragDivs.forEach(function (dragDiv) {
-      xmlContent += '<job>';
+        // Find or create the <data> element
+        var dataElement = xmlDoc.querySelector('data');
+        if (!dataElement) {
+          dataElement = xmlDoc.createElement('data');
+          xmlDoc.appendChild(dataElement);
+        }
 
-      xmlContent += '<JobNum>' + dragDiv.getAttribute('data-job-num') + '</JobNum>';
-      xmlContent += '<Customer>' + dragDiv.getAttribute('data-customer') + '</Customer>';
-      xmlContent += '<RunTime>' + dragDiv.getAttribute('data-run-time') + '</RunTime>';
-      xmlContent += '<ShipDate>' + dragDiv.getAttribute('data-ship-date') + '</ShipDate>';
-      xmlContent += '<GridCell>' + dragDiv.getAttribute('data-grid-cell') + '</GridCell>';
-      xmlContent += '<GridCol>' + dragDiv.getAttribute('data-grid-colheader') + '</GridCol>';
-      xmlContent += '<GridRow>' + dragDiv.getAttribute('data-grid-rowheader') + '</GridRow>';
+        // Append new <job> elements to the <data> element
+        appendJobsToData(xmlDoc);
 
-      xmlContent += '<Description>' + dragDiv.getAttribute('data-general-desc') + '</Description>';
-      xmlContent += '<NumCopies>' + dragDiv.getAttribute('data-num-copies') + '</NumCopies>';
-      xmlContent += '<LinearFootage>' + dragDiv.getAttribute('data-linear-footage') + '</LinearFootage>';
-      xmlContent += '<NumColors>' + dragDiv.getAttribute('data-num-colors') + '</NumColors>';
-      xmlContent += '<DollarValue>' + dragDiv.getAttribute('data-dollar-value') + '</DollarValue>';
-      xmlContent += '<PrintCyl>' + dragDiv.getAttribute('data-print-cyl') + '</PrintCyl>';
-      xmlContent += '<ToolCyl>' + dragDiv.getAttribute('data-tool-cyl') + '</ToolCyl>';
+        // Serialize the updated XML back to string
+        var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
 
-      xmlContent += '</job>';
-    });
+        // Create a Blob and a download link
+        var blob = new Blob([updatedXmlString], { type: 'application/xml' });
+        var downloadLink = document.createElement('a');
 
-    xmlContent += '</data>';
+        downloadLink.download = fileName + '.xml';
+        downloadLink.href = window.URL.createObjectURL(blob);
 
-    var blob = new Blob([xmlContent], { type: 'application/xml' });
-    var downloadLink = document.createElement('a');
+        // Trigger a click on the download link
+        downloadLink.click();
+      });
+    } else {
+      // Save as a fresh XML file
+      var xmlDoc = document.implementation.createDocument(null, 'data', null);
+      appendJobsToData(xmlDoc);
 
-    downloadLink.download = fileName + '.xml';
+      // Serialize the XML to string
+      var freshXmlString = new XMLSerializer().serializeToString(xmlDoc);
 
-    downloadLink.href = window.URL.createObjectURL(blob);
-    downloadLink.click();
+      // Create a Blob and a download link
+      var blob = new Blob([freshXmlString], { type: 'application/xml' });
+      var downloadLink = document.createElement('a');
+
+      downloadLink.download = fileName + '.xml';
+      downloadLink.href = window.URL.createObjectURL(blob);
+
+      // Trigger a click on the download link
+      downloadLink.click();
+    }
   }
+}
+
+// Function to append new <job> elements to the <data> element
+function appendJobsToData(xmlDoc) {
+  var dragDivs = document.querySelectorAll('.dragMe');
+  var dataElement = xmlDoc.querySelector('data');
+
+  dragDivs.forEach(function (dragDiv) {
+    var jobElement = xmlDoc.createElement('job');
+
+    // Append data attributes as child elements
+    for (var attribute in dragDiv.dataset) {
+      var attributeElement = xmlDoc.createElement(attribute);
+      attributeElement.textContent = dragDiv.dataset[attribute];
+      jobElement.appendChild(attributeElement);
+    }
+
+    dataElement.appendChild(jobElement);
+  });
+}
+
+function loadExistingXML(callback) {
+  var fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.xml';
+
+  fileInput.addEventListener('change', function (event) {
+    var file = event.target.files[0];
+
+    if (file) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        var xmlContent = e.target.result;
+        if (typeof callback === 'function') {
+          callback(xmlContent);
+        }
+      };
+
+      reader.readAsText(file);
+    }
+  });
+
+  fileInput.click();
 }
 
 function loadFromXML() {
@@ -229,7 +289,7 @@ function loadFromXML() {
     }
   });
   fileInput.click();
-
+console.log("loaded");
 }
 
 function parseXML(xmlContent) {
@@ -239,22 +299,22 @@ function parseXML(xmlContent) {
   var jobs = xmlDoc.querySelectorAll('job');
 
   jobs.forEach(function (job) {
+    console.log(job.querySelector("jobNum").textContent);
 
-    var jobNum = job.querySelector('JobNum').textContent;
-    var customer = job.querySelector('Customer').textContent;
-    var runTime = job.querySelector('RunTime').textContent;
-    var shipDate = job.querySelector('ShipDate').textContent;
-    var gridCell = job.querySelector('GridCell').textContent;
-    var gridCol = job.querySelector('GridCol').textContent;
-    var gridRow = job.querySelector('GridRow').textContent;
-
-    var description = job.querySelector('Description').textContent;
-    var numCopies = job.querySelector('NumCopies').textContent;
-    var linearFootage = job.querySelector('LinearFootage').textContent;
-    var numColors = job.querySelector('NumColors').textContent;
-    var dollarValue = job.querySelector('DollarValue').textContent;
-    var printCyl = job.querySelector('PrintCyl').textContent;
-    var toolCyl = job.querySelector('ToolCyl').textContent;
+    var jobNum = job.querySelector('jobNum').textContent;
+    var customer = job.querySelector('customer').textContent;
+    var runTime = job.querySelector('runTime').textContent;
+    var shipDate = job.querySelector('shipDate').textContent;
+    var gridCell = job.querySelector('gridCell').textContent;
+    var gridCol = job.querySelector('gridColheader').textContent;
+    var gridRow = job.querySelector('gridRowheader').textContent;
+    var description = job.querySelector('generalDesc').textContent;
+    var numCopies = job.querySelector('numCopies').textContent;
+    var linearFootage = job.querySelector('linearFootage').textContent;
+    var numColors = job.querySelector('numColors').textContent;
+    var dollarValue = job.querySelector('dollarValue').textContent;
+    var printCyl = job.querySelector('printCyl').textContent;
+    var toolCyl = job.querySelector('toolCyl').textContent;
 
     placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCell, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl);
   });
@@ -343,7 +403,7 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, n
 // SAVE BUTTON 
 const saveBtn = document.getElementById('save-btn');
 saveBtn.addEventListener('click', () => {
-  saveToXML();
+  saveToXML2();
 })
 
 // LOAD BUTTON 
