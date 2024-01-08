@@ -222,17 +222,40 @@ function appendJobsToData(xmlDoc) {
   var dataElement = xmlDoc.querySelector('data');
 
   dragDivs.forEach(function (dragDiv) {
-    var jobElement = xmlDoc.createElement('job');
+    // Check if a similar job already exists
+    var existingJobs = xmlDoc.querySelectorAll('job');
+    var jobExists = Array.from(existingJobs).some(function (existingJob) {
+      return compareJobs(existingJob, dragDiv);
+    });
 
-    // Append data attributes as child elements
-    for (var attribute in dragDiv.dataset) {
-      var attributeElement = xmlDoc.createElement(attribute);
-      attributeElement.textContent = dragDiv.dataset[attribute];
-      jobElement.appendChild(attributeElement);
+    // If the job doesn't already exist, append it
+    if (!jobExists) {
+      var jobElement = xmlDoc.createElement('job');
+
+      // Append data attributes as child elements
+      for (var attribute in dragDiv.dataset) {
+        var attributeElement = xmlDoc.createElement(attribute);
+        attributeElement.textContent = dragDiv.dataset[attribute];
+        jobElement.appendChild(attributeElement);
+      }
+
+      dataElement.appendChild(jobElement);
     }
-
-    dataElement.appendChild(jobElement);
   });
+}
+
+// Function to compare two job elements to check if they are similar
+function compareJobs(existingJob, dragDiv) {
+  for (var attribute in dragDiv.dataset) {
+    var attributeValue = dragDiv.dataset[attribute];
+    var existingValue = existingJob.querySelector(attribute)?.textContent;
+
+    if (attributeValue !== existingValue) {
+      return false; // Attributes are different
+    }
+  }
+
+  return true; // All attributes are the same
 }
 
 function loadExistingXML(callback) {
