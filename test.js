@@ -253,7 +253,6 @@ function saveToXML() {
   }
 }
 
-// Function to append new <job> elements to the <data> element
 function appendJobsToData(xmlDoc) {
   var dragDivs = document.querySelectorAll('.dragMe');
   var dataElement = xmlDoc.querySelector('data');
@@ -262,35 +261,47 @@ function appendJobsToData(xmlDoc) {
     // Check if a similar job already exists
     var existingJobs = xmlDoc.querySelectorAll('job');
     var jobExists = Array.from(existingJobs).some(function (existingJob) {
-      return compareJobs(existingJob, dragDiv);
+      console.group("Comparing Jobs");
+      var result = compareJobs(existingJob, dragDiv);
+      console.groupEnd();
+      return result;
     });
 
     // If the job doesn't already exist, append it
     if (!jobExists) {
+      console.group("Appending Job");
       var jobElement = xmlDoc.createElement('job');
 
       for (var attribute in dragDiv.dataset) {
+        console.log(`Attribute: ${attribute}, Value: ${dragDiv.dataset[attribute]}`);
         var attributeElement = xmlDoc.createElement(attribute);
-        attributeElement.textContent = dragDiv.dataset[attribute];
+        attributeElement.textContent = dragDiv.dataset[attribute].trim();
         jobElement.appendChild(attributeElement);
       }
 
       dataElement.appendChild(jobElement);
+      console.groupEnd();
     }
   });
 }
 
-// Function to compare two job elements to check if they are similar
 function compareJobs(existingJob, dragDiv) {
+  console.group("Comparing Attributes");
   for (var attribute in dragDiv.dataset) {
-    var attributeValue = dragDiv.dataset[attribute];
-    var existingValue = existingJob.querySelector(attribute)?.textContent;
 
-    if (attributeValue !== existingValue) {
+    var existingValue = existingJob.querySelector(attribute) ? existingJob.querySelector(attribute).textContent.trim() : null;
+
+    if (dragDiv.dataset[attribute] !== existingValue) {
+      console.log("Different attribute");
+      console.log(dragDiv.dataset[attribute], existingValue)
+      console.groupEnd();
       return false; // Attributes are different
     }
   }
 
+  console.log("Attributes are the same");
+  console.log(existingValue, attribute.value);
+  console.groupEnd();
   return true; // All attributes are the same
 }
 
@@ -427,7 +438,7 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, g
                   <p>Tool Cylinder Size: ${toolCyl}</p>
                 `
   // Display main info
-  dragDiv.innerHTML += label
+  dragDiv.innerHTML += label;
 
   const maxId = findMaxId();
   dragDiv.id = `drag${maxId + 1}`;
@@ -441,7 +452,7 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, g
   dragDiv.addEventListener('dragstart', dragStart);
 
   //attach extra details to the div that display on click
-  dragDiv.dataset.details = details;
+  dragDiv.dataset.details = details + dragDiv.id;
   dragDiv.addEventListener('click', () => showModal(dragDiv.dataset.details));
   makeDivsDraggable();
 }
