@@ -1,3 +1,46 @@
+// Function to format a date as "MM/DD/YYYY"
+function formatDate(date) {
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${month}/${day}/${year}`;
+}
+
+// Function to get the next two weeks of dates from a given start date
+function getNextTwoWeeks(startDate) {
+  const nextTwoWeeks = [];
+  for (let i = 0; i < 14; i++) {
+    const newDate = new Date(startDate);
+    newDate.setDate(startDate.getDate() + i);
+    nextTwoWeeks.push(newDate);
+  }
+  return nextTwoWeeks;
+}
+
+// Function to populate "day-label" divs with the next two weeks of dates
+function populateDayLabels(selectedDate) {
+  const dayLabels = document.querySelectorAll('.day-label');
+  const nextTwoWeeks = getNextTwoWeeks(selectedDate);
+
+  dayLabels.forEach((label, index) => {
+    label.textContent = formatDate(nextTwoWeeks[index]);
+  });
+}
+
+// Ask the user for a date input
+const userDateInput = prompt('Enter a date (MM/DD/YYYY):');
+const userDate = new Date(userDateInput);
+
+// Check if the user provided a valid date
+if (!isNaN(userDate.getTime())) {
+  // Populate "day-label" divs with the next two weeks of dates
+  populateDayLabels(userDate);
+} else {
+  alert('Invalid date input. Please enter a valid date.');
+}
+
+
+
 // Drag and Drop Functionality
 let draggedBlock;
 
@@ -39,7 +82,7 @@ function drop(event) {
         var gridRowHeader = document.getElementById(gridRowHeaderID).textContent;
         var gridColHeader = document.getElementById(gridColHeaderID).textContent;
 
-        draggedBlock.setAttribute('data-grid-cell', gridCell);
+        // draggedBlock.setAttribute('data-grid-cell', gridCell);
         draggedBlock.setAttribute('data-grid-colheader', gridColHeader);
         draggedBlock.setAttribute('data-grid-rowheader', gridRowHeader);
       } else {
@@ -94,7 +137,7 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   dragDiv.setAttribute('data-customer', customer.value);
   dragDiv.setAttribute('data-run-time', runTime.value);
   dragDiv.setAttribute('data-ship-date', shipDate.value);
-  dragDiv.setAttribute('data-grid-cell', ""); //initiate grid cell with empty string
+  // dragDiv.setAttribute('data-grid-cell', ""); //initiate grid cell with empty string
   dragDiv.setAttribute('data-grid-colheader', "");
   dragDiv.setAttribute('data-grid-rowheader', "");
   dragDiv.setAttribute('data-general-desc', description.value);
@@ -317,7 +360,7 @@ function parseXML(xmlContent) {
     var customer = job.querySelector('customer').textContent;
     var runTime = job.querySelector('runTime').textContent;
     var shipDate = job.querySelector('shipDate').textContent;
-    var gridCell = job.querySelector('gridCell').textContent;
+    // var gridCell = job.querySelector('gridCell').textContent;
     var gridCol = job.querySelector('gridColheader').textContent;
     var gridRow = job.querySelector('gridRowheader').textContent;
     var description = job.querySelector('generalDesc').textContent;
@@ -328,12 +371,12 @@ function parseXML(xmlContent) {
     var printCyl = job.querySelector('printCyl').textContent;
     var toolCyl = job.querySelector('toolCyl').textContent;
 
-    placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCell, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl);
+    placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl);
   });
   makeDivsDraggable();
 }
 
-function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCell, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl) {
+function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl) {
 
   var columnHeaders = Array.from(document.getElementsByClassName('day-label'));
   var rowHeaders = Array.from(document.getElementsByClassName('editable'));
@@ -345,7 +388,6 @@ function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCell, gridCol, 
         if (gridRow.trim() == f.textContent) {
 
           var rowIndex = f.parentElement.id.substring(f.parentElement.id.indexOf('r') + 1);
-          
           var newGridParentID = 'c'+ colIndex+'r'+rowIndex;
           createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, gridCol, gridRow, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, newGridParentID);
         }
@@ -358,8 +400,6 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, g
   
   var appendTarget = document.getElementById(appendTarget);
 
-
-  
   // Create a draggable div
   var dragDiv = document.createElement('div');
   dragDiv.classList.add('dragMe');
@@ -369,7 +409,7 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, g
   dragDiv.setAttribute('data-customer', customer);
   dragDiv.setAttribute('data-run-time', runTime);
   dragDiv.setAttribute('data-ship-date', shipDate);
-  dragDiv.setAttribute('data-grid-cell', appendTarget.id); 
+  // dragDiv.setAttribute('data-grid-cell', appendTarget.id); 
   dragDiv.setAttribute('data-grid-colheader', gridCol);
   dragDiv.setAttribute('data-grid-rowheader', gridRow);
   dragDiv.setAttribute('data-general-desc', description);

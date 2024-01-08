@@ -77,12 +77,13 @@ header h1 {
 }
 
 .red {
-  background-color: var(--red);
+  background-color: var(--navy);
+  color: var(--gray);
   font-weight: bold;
   border: 0px;
   display: flex;
   align-items: center;
-  box-shadow: -5px 5px var(--navy);
+  box-shadow: -5px 5px var(--gray);
 }
 
 .day-label {
