@@ -95,6 +95,8 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   dragDiv.classList.add('dragMe');
   dragDiv.classList.add('dragged');
 
+  console.log(jobNum);
+
   dragDiv.setAttribute('data-job-num', jobNum.value);
   dragDiv.setAttribute('data-customer', customer.value);
   dragDiv.setAttribute('data-run-time', runTime.value);
@@ -188,7 +190,7 @@ function saveToXML() {
       xmlContent += '<NumCopies>' + dragDiv.getAttribute('data-num-copies') + '</NumCopies>';
       xmlContent += '<LinearFootage>' + dragDiv.getAttribute('data-linear-footage') + '</LinearFootage>';
       xmlContent += '<NumColors>' + dragDiv.getAttribute('data-num-colors') + '</NumColors>';
-      xmlContent += '<DollarValue>' + dragDiv.getAttribute('data-ship-date') + '</DollarValue>';
+      xmlContent += '<DollarValue>' + dragDiv.getAttribute('data-dollar-value') + '</DollarValue>';
       xmlContent += '<PrintCyl>' + dragDiv.getAttribute('data-print-cyl') + '</PrintCyl>';
       xmlContent += '<ToolCyl>' + dragDiv.getAttribute('data-tool-cyl') + '</ToolCyl>';
 
@@ -250,11 +252,9 @@ function parseXML(xmlContent) {
     var numCopies = job.querySelector('NumCopies').textContent;
     var linearFootage = job.querySelector('LinearFootage').textContent;
     var numColors = job.querySelector('NumColors').textContent;
+    var dollarValue = job.querySelector('DollarValue').textContent;
     var printCyl = job.querySelector('PrintCyl').textContent;
     var toolCyl = job.querySelector('ToolCyl').textContent;
-
-    // console.log(gridRow);
-    // console.log(gridCol);
 
     placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCell, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl);
   });
@@ -262,18 +262,6 @@ function parseXML(xmlContent) {
 }
 
 function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCell, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl) {
-  // Construct the ID of the grid cell based on gridCell
-  // var colIndex = gridCell.substring(1, gridCell.indexOf('r'));
-  // var rowIndex = gridCell.substring(gridCell.indexOf('r') + 1);
-
-  // // Find the corresponding grid cell
-  // var gridCellId = 'c' + colIndex + 'r' + rowIndex;
-  // var gridRowHeader = 'c1' + 'r' + rowIndex;
-  // var gridColHeader = 'c'+ colIndex + 'r1'
-  // var gridParent = document.getElementById(gridCellId);
-
-  // var schedDate = document.getElementById(gridColHeader);
-  // var machineNum = document.getElementById(gridRowHeader);
 
   var columnHeaders = Array.from(document.getElementsByClassName('day-label'));
   var rowHeaders = Array.from(document.getElementsByClassName('editable'));
@@ -287,7 +275,6 @@ function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCell, gridCol, 
           var rowIndex = f.parentElement.id.substring(f.parentElement.id.indexOf('r') + 1);
           
           var newGridParentID = 'c'+ colIndex+'r'+rowIndex;
-          console.log(newGridParentID);
           createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, newGridParentID);
         }
       });
@@ -303,6 +290,22 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, n
   var dragDiv = document.createElement('div');
   dragDiv.classList.add('dragMe');
   dragDiv.classList.add('dragged');
+
+  dragDiv.setAttribute('data-job-num', jobNum);
+  dragDiv.setAttribute('data-customer', customer);
+  dragDiv.setAttribute('data-run-time', runTime);
+  dragDiv.setAttribute('data-ship-date', shipDate);
+  dragDiv.setAttribute('data-grid-cell', ""); //initiate grid cell with empty string
+  dragDiv.setAttribute('data-grid-colheader', "");
+  dragDiv.setAttribute('data-grid-rowheader', "");
+  dragDiv.setAttribute('data-machine', "");
+  dragDiv.setAttribute('data-general-desc', description);
+  dragDiv.setAttribute('data-num-copies', numCopies);
+  dragDiv.setAttribute('data-linear-footage', linearFootage);
+  dragDiv.setAttribute('data-num-colors', numColors);
+  dragDiv.setAttribute('data-dollar-value', dollarValue);
+  dragDiv.setAttribute('data-print-cyl', printCyl);
+  dragDiv.setAttribute('data-tool-cyl', toolCyl);
 
   const label = `${jobNum} | ${customer} | ${runTime} | ${shipDate}`
   const details = ` <p>Job Number: ${jobNum}</p>
