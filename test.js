@@ -81,7 +81,6 @@ function drop(event) {
 
     if (event.target.classList.contains('dragInto')) {
       const draggedId = event.dataTransfer.getData('text/plain');
-
       const draggedBlock = document.getElementById(draggedId);
 
       if (draggedBlock instanceof Node) {
@@ -100,6 +99,24 @@ function drop(event) {
 
         draggedBlock.setAttribute('data-grid-colheader', gridColHeader);
         draggedBlock.setAttribute('data-grid-rowheader', gridRowHeader);
+
+        // Retrieve existing XML content from localStorage
+        var loadedXML = localStorage.getItem('loadedXML');
+
+        if (loadedXML) {
+          // Parse the XML content
+          var parser = new DOMParser();
+          var xmlDoc = parser.parseFromString(loadedXML, 'application/xml');
+
+          // Append new job element to the XML
+          appendJobToXML(xmlDoc, draggedBlock);
+
+          // Serialize the updated XML back to string
+          var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
+
+          // Update localStorage with the new XML content
+          localStorage.setItem('loadedXML', updatedXmlString);
+        }
       } else {
         console.error('Invalid node or not found:', draggedBlock);
       }
@@ -108,6 +125,29 @@ function drop(event) {
     console.error('Invalid event target:', event.target);
   }
 }
+
+function appendJobToXML(xmlDoc, draggedBlock) {
+  // Create a new job element
+  var jobElement = xmlDoc.createElement('job');
+
+  // Extract data attributes from dragged block and set as attributes in job element
+  for (var attribute in draggedBlock.dataset) {
+    var attributeElement = xmlDoc.createElement(attribute);
+    attributeElement.textContent = draggedBlock.dataset[attribute];
+    jobElement.appendChild(attributeElement);
+  }
+
+  // Find or create the <data> element
+  var dataElement = xmlDoc.querySelector('data');
+  if (!dataElement) {
+    dataElement = xmlDoc.createElement('data');
+    xmlDoc.documentElement.appendChild(dataElement);
+  }
+
+  // Append the new job element to the <data> element
+  dataElement.appendChild(jobElement);
+}
+
 
 function findMaxId() {
   const dragDivs = document.querySelectorAll('.dragMe');
@@ -213,53 +253,17 @@ button.addEventListener('click', function (event) {
   createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, flex);
 })
 
+
 // Function to save XML content
 function saveToXML() {
   var fileName = prompt('Enter a filename:', 'ScheduleData');
 
   if (fileName !== null) {
-    var loadExisting = confirm('Do you want to load into a preexisting file?');
+    var xmlContent = localStorage.getItem('loadedXML');
 
-    if (loadExisting) {
-      // Load existing XML content
-      loadExistingXML(function (existingXmlString) {
-        // Parse the existing XML content
-        var parser = new DOMParser();
-        var xmlDoc = parser.parseFromString(existingXmlString, 'application/xml');
-
-        // Find or create the <data> element
-        var dataElement = xmlDoc.querySelector('data');
-        if (!dataElement) {
-          dataElement = xmlDoc.createElement('data');
-          xmlDoc.appendChild(dataElement);
-        }
-
-        // Append new <job> elements to the <data> element
-        appendJobsToData(xmlDoc);
-
-        // Serialize the updated XML back to string
-        var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
-
-        // Create a Blob and a download link
-        var blob = new Blob([updatedXmlString], { type: 'application/xml' });
-        var downloadLink = document.createElement('a');
-
-        downloadLink.download = fileName + '.xml';
-        downloadLink.href = window.URL.createObjectURL(blob);
-
-        // Trigger a click on the download link
-        downloadLink.click();
-      });
-    } else {
-      // Save as a fresh XML file
-      var xmlDoc = document.implementation.createDocument(null, 'data', null);
-      appendJobsToData(xmlDoc);
-
-      // Serialize the XML to string
-      var freshXmlString = new XMLSerializer().serializeToString(xmlDoc);
-
+    if (xmlContent) {
       // Create a Blob and a download link
-      var blob = new Blob([freshXmlString], { type: 'application/xml' });
+      var blob = new Blob([xmlContent], { type: 'application/xml' });
       var downloadLink = document.createElement('a');
 
       downloadLink.download = fileName + '.xml';
@@ -267,9 +271,70 @@ function saveToXML() {
 
       // Trigger a click on the download link
       downloadLink.click();
+    } else {
+      alert('No XML content to save.');
     }
   }
 }
+
+
+// // Function to save XML content
+// function saveToXML() {
+//   var fileName = prompt('Enter a filename:', 'ScheduleData');
+
+//   if (fileName !== null) {
+//     var loadExisting = confirm('Do you want to load into a preexisting file?');
+
+//     if (loadExisting) {
+//       // Load existing XML content
+//       loadExistingXML(function (existingXmlString) {
+//         // Parse the existing XML content
+//         var parser = new DOMParser();
+//         var xmlDoc = parser.parseFromString(existingXmlString, 'application/xml');
+
+//         // Find or create the <data> element
+//         var dataElement = xmlDoc.querySelector('data');
+//         if (!dataElement) {
+//           dataElement = xmlDoc.createElement('data');
+//           xmlDoc.appendChild(dataElement);
+//         }
+
+//         // Append new <job> elements to the <data> element
+//         appendJobsToData(xmlDoc);
+
+//         // Serialize the updated XML back to string
+//         var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
+
+//         // Create a Blob and a download link
+//         var blob = new Blob([updatedXmlString], { type: 'application/xml' });
+//         var downloadLink = document.createElement('a');
+
+//         downloadLink.download = fileName + '.xml';
+//         downloadLink.href = window.URL.createObjectURL(blob);
+
+//         // Trigger a click on the download link
+//         downloadLink.click();
+//       });
+//     } else {
+//       // Save as a fresh XML file
+//       var xmlDoc = document.implementation.createDocument(null, 'data', null);
+//       appendJobsToData(xmlDoc);
+
+//       // Serialize the XML to string
+//       var freshXmlString = new XMLSerializer().serializeToString(xmlDoc);
+
+//       // Create a Blob and a download link
+//       var blob = new Blob([freshXmlString], { type: 'application/xml' });
+//       var downloadLink = document.createElement('a');
+
+//       downloadLink.download = fileName + '.xml';
+//       downloadLink.href = window.URL.createObjectURL(blob);
+
+//       // Trigger a click on the download link
+//       downloadLink.click();
+//     }
+//   }
+// }
 
 function appendJobsToData(xmlDoc) {
   var dragDivs = document.querySelectorAll('.dragMe');
