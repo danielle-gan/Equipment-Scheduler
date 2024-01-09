@@ -1,43 +1,66 @@
-// Ask the user for a date input
-const userDateInput = prompt('Enter a date (MM/DD/YYYY):');
-const userDate = new Date(userDateInput);
+window.onload = function () {
+  // Ask the user for a date input
+  const userDateInput = prompt('Enter a date (MM/DD/YYYY):');
+  const userDate = new Date(userDateInput);
 
-// Check if the user provided a valid date
-if (!isNaN(userDate.getTime())) {
-  // Populate "day-label" divs with the next two weeks of dates
-  populateDayLabels(userDate);
-} else {
-  alert('Invalid date input. Please enter a valid date.');
-}
-
-// Function to format a date as "MM/DD/YYYY"
-function formatDate(date) {
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const year = date.getFullYear();
-  return `${month}/${day}/${year}`;
-}
-
-// Function to get the next two weeks of dates from a given start date
-function getNextTwoWeeks(startDate) {
-  const nextTwoWeeks = [];
-  for (let i = 0; i < 14; i++) {
-    const newDate = new Date(startDate);
-    newDate.setDate(startDate.getDate() + i);
-    nextTwoWeeks.push(newDate);
+  // Check if the user provided a valid date
+  if (!isNaN(userDate.getTime())) {
+    populateDayLabels(userDate);
+  } else {
+    alert('Invalid date input. Please enter a valid date.');
   }
-  return nextTwoWeeks;
-}
 
-// Function to populate "day-label" divs with the next two weeks of dates
-function populateDayLabels(selectedDate) {
-  const dayLabels = document.querySelectorAll('.day-label');
-  const nextTwoWeeks = getNextTwoWeeks(selectedDate);
+  highlightToday();
 
-  dayLabels.forEach((label, index) => {
-    label.textContent = formatDate(nextTwoWeeks[index]);
-  });
-}
+  // Function to format a date as "MM/DD/YYYY"
+  function formatDate(date) {
+    const options = { month: '2-digit', day: '2-digit', year: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  }
+
+  // Function to get the next two weeks of dates from a given start date
+  function getNextTwoWeeks(startDate) {
+    const nextTwoWeeks = [];
+    for (let i = 0; i < 14; i++) {
+      const newDate = new Date(startDate);
+      newDate.setDate(startDate.getDate() + i);
+      nextTwoWeeks.push(newDate);
+    }
+    return nextTwoWeeks;
+  }
+
+  // Function to populate "day-label" divs with the next two weeks of dates
+  function populateDayLabels(selectedDate) {
+    const dayLabels = document.querySelectorAll('.day-label');
+    const nextTwoWeeks = getNextTwoWeeks(selectedDate);
+
+    dayLabels.forEach((label, index) => {
+      label.textContent = formatDate(nextTwoWeeks[index]);
+    });
+  }
+
+  // Checks if it's today's date
+  function isToday(textContent) {
+    const todayDate = new Date();
+    const formattedToday = formatDate(todayDate);
+    console.log(formattedToday);
+    // Assuming textContent is in the format MM/DD/YYYY
+    return textContent === formattedToday;
+  }
+
+  // Highlight today's date
+  function highlightToday() {
+    const paragraphs = document.querySelectorAll('.day-label');
+
+    paragraphs.forEach(paragraph => {
+      if (isToday(paragraph.textContent.trim())) {
+        paragraph.classList.add('highlight');
+      }
+      console.log(paragraph.textContent.trim());
+    });
+  }
+};
+
 
 // Drag and Drop Functionality
 let draggedBlock;
@@ -73,9 +96,9 @@ function drop(event) {
 
         var colIndex = gridCell.substring(1, gridCell.indexOf('r'));
         var rowIndex = gridCell.substring(gridCell.indexOf('r') + 1);
-        
+
         var gridRowHeaderID = 'c1' + 'r' + rowIndex;
-        var gridColHeaderID = 'c'+ colIndex + 'r1';
+        var gridColHeaderID = 'c' + colIndex + 'r1';
 
         var gridRowHeader = document.getElementById(gridRowHeaderID).textContent;
         var gridColHeader = document.getElementById(gridColHeaderID).textContent;
@@ -201,7 +224,7 @@ function saveToXML() {
 
   if (fileName !== null) {
     var loadExisting = confirm('Do you want to load into a preexisting file?');
-    
+
     if (loadExisting) {
       // Load existing XML content
       loadExistingXML(function (existingXmlString) {
@@ -261,26 +284,29 @@ function appendJobsToData(xmlDoc) {
     // Check if a similar job already exists
     var existingJobs = xmlDoc.querySelectorAll('job');
     var jobExists = Array.from(existingJobs).some(function (existingJob) {
-      console.group("Comparing Jobs");
-      var result = compareJobs(existingJob, dragDiv);
-      console.groupEnd();
-      return result;
+      return compareJobs(existingJob, dragDiv);
     });
 
     // If the job doesn't already exist, append it
     if (!jobExists) {
-      console.group("Appending Job");
       var jobElement = xmlDoc.createElement('job');
 
+      // Append attributes to the <job> element
       for (var attribute in dragDiv.dataset) {
-        console.log(`Attribute: ${attribute}, Value: ${dragDiv.dataset[attribute]}`);
-        var attributeElement = xmlDoc.createElement(attribute);
-        attributeElement.textContent = dragDiv.dataset[attribute].trim();
-        jobElement.appendChild(attributeElement);
+        if (attribute !== 'details') {
+          var attributeElement = xmlDoc.createElement(attribute);
+          attributeElement.textContent = dragDiv.dataset[attribute].trim();
+          jobElement.appendChild(attributeElement);
+        }
       }
 
+      // Append the "details" attribute
+      var detailsElement = xmlDoc.createElement('details');
+      detailsElement.innerHTML = dragDiv.dataset.details.trim();
+      jobElement.appendChild(detailsElement);
+
+      // Append the <job> element to the <data> element
       dataElement.appendChild(jobElement);
-      console.groupEnd();
     }
   });
 }
@@ -288,17 +314,17 @@ function appendJobsToData(xmlDoc) {
 function compareJobs(existingJob, dragDiv) {
   console.group("Comparing Attributes");
   for (var attribute in dragDiv.dataset) {
+    if (attribute !== 'details') {
+      var attributeValue = dragDiv.dataset[attribute];
+      var existingValue = existingJob.querySelector(attribute)?.textContent;
 
-    var existingValue = existingJob.querySelector(attribute) ? existingJob.querySelector(attribute).textContent.trim() : null;
-
-    if (dragDiv.dataset[attribute] !== existingValue) {
-      console.log("Different attribute");
-      console.log(dragDiv.dataset[attribute], existingValue)
-      console.groupEnd();
-      return false; // Attributes are different
+      if (attributeValue !== existingValue) {
+        console.log("Different attribute");
+        console.log(attributeValue, existingValue);
+        return false; // Attributes are different
+      }
     }
   }
-
   console.log("Attributes are the same");
   console.log(existingValue, attribute.value);
   console.groupEnd();
@@ -392,7 +418,7 @@ function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, d
         if (gridRow.trim() == f.textContent) {
 
           var rowIndex = f.parentElement.id.substring(f.parentElement.id.indexOf('r') + 1);
-          var newGridParentID = 'c'+ colIndex+'r'+rowIndex;
+          var newGridParentID = 'c' + colIndex + 'r' + rowIndex;
           createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, gridCol, gridRow, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, newGridParentID);
         }
       });
@@ -401,7 +427,7 @@ function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, d
 }
 
 function createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, gridCol, gridRow, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, appendTarget) {
-  
+
   var appendTarget = document.getElementById(appendTarget);
 
   // Create a draggable div
