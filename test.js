@@ -12,6 +12,8 @@ window.onload = function () {
 
   highlightToday();
 
+};
+
   // Function to format a date as "MM/DD/YYYY"
   function formatDate(date) {
     const options = { month: '2-digit', day: '2-digit', year: 'numeric' };
@@ -39,16 +41,12 @@ window.onload = function () {
     });
   }
 
-  // Checks if it's today's date
   function isToday(textContent) {
     const todayDate = new Date();
     const formattedToday = formatDate(todayDate);
-    console.log(formattedToday);
-    // Assuming textContent is in the format MM/DD/YYYY
     return textContent === formattedToday;
   }
 
-  // Highlight today's date
   function highlightToday() {
     const paragraphs = document.querySelectorAll('.day-label');
 
@@ -56,11 +54,8 @@ window.onload = function () {
       if (isToday(paragraph.textContent.trim())) {
         paragraph.classList.add('highlight');
       }
-      console.log(paragraph.textContent.trim());
     });
   }
-};
-
 
 // Drag and Drop Functionality
 let draggedBlock;
@@ -312,22 +307,17 @@ function appendJobsToData(xmlDoc) {
 }
 
 function compareJobs(existingJob, dragDiv) {
-  console.group("Comparing Attributes");
   for (var attribute in dragDiv.dataset) {
     if (attribute !== 'details') {
       var attributeValue = dragDiv.dataset[attribute];
       var existingValue = existingJob.querySelector(attribute)?.textContent;
 
       if (attributeValue !== existingValue) {
-        console.log("Different attribute");
-        console.log(attributeValue, existingValue);
         return false; // Attributes are different
       }
     }
   }
-  console.log("Attributes are the same");
-  console.log(existingValue, attribute.value);
-  console.groupEnd();
+
   return true; // All attributes are the same
 }
 
@@ -356,7 +346,8 @@ function loadExistingXML(callback) {
   fileInput.click();
 }
 
-function loadFromXML() {
+// Function to load XML and save its contents to local storage
+function loadXMLAndSaveToLocalStorage() {
   var fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.accept = '.xml';
@@ -369,12 +360,19 @@ function loadFromXML() {
 
       reader.onload = function (e) {
         var xmlContent = e.target.result;
+
+        // Save XML content to local storage
+        localStorage.setItem('loadedXML', xmlContent);
+
+        // You can also parse the XML content and perform additional actions if needed
         parseXML(xmlContent);
       };
 
       reader.readAsText(file);
     }
   });
+
+  // Trigger a click on the file input to open the file chooser dialog
   fileInput.click();
 }
 
@@ -492,7 +490,23 @@ saveBtn.addEventListener('click', () => {
 // LOAD BUTTON 
 const loadBtn = document.getElementById('load-btn');
 loadBtn.addEventListener('click', () => {
-  loadFromXML();
+  loadXMLAndSaveToLocalStorage();
+})
+
+// CHANGE DATE BUTTON
+const dateBtn = document.getElementById('date-btn');
+dateBtn.addEventListener('click', () => {
+  const userDateInput = prompt('Enter a date (MM/DD/YYYY):');
+  const userDate = new Date(userDateInput);
+
+  // Check if the user provided a valid date
+  if (!isNaN(userDate.getTime())) {
+    populateDayLabels(userDate);
+  } else {
+    alert('Invalid date input. Please enter a valid date.');
+  }
+
+  highlightToday();
 })
 
 //On loading in, divs are no longer draggable, hence why this function is necessary
@@ -513,6 +527,61 @@ function deleteDraggedElement(event) {
   const draggedElement = document.getElementById(draggedId);
 
   if (draggedElement) {
+    // Access data attributes using the dataset property
+    const draggedJobNum = draggedElement.dataset.jobNum;
+    const draggedGenDesc = draggedElement.dataset.generalDesc;
+    const draggedHeader = draggedElement.dataset.gridColheader;
+
+    // Remove the corresponding job from local storage
+    console.log(draggedJobNum, draggedGenDesc, draggedHeader);
+    removeJobFromLocalStorage(draggedJobNum, draggedGenDesc, draggedHeader);
+
+    // Remove the element from the DOM
     draggedElement.remove();
+  }
+}
+
+// Function to remove a job from local storage based on multiple attributes
+function removeJobFromLocalStorage(jobNum, generalDesc, gridColHeader) {
+  // Retrieve the existing XML content from local storage
+  var storedXmlContent = localStorage.getItem('loadedXML');
+
+  if (storedXmlContent) {
+    // Parse the XML string to an XML object
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(storedXmlContent, 'application/xml');
+
+    // Find the job with the specified attributes
+    var jobs = xmlDoc.querySelectorAll('job');
+
+    console.log(jobs[0].innerHTML); // this is giving me the string that I need
+    var jobToRemove;
+
+    jobs.forEach(function (job) {
+      var jobNumInXml = job.querySelector('jobNum').textContent
+      // var generalDescInXml = new DOMParser().parseFromString(job.innerHTML, 'application/xml').querySelector('generalDesc').textContent;
+      // var gridColHeaderInXml = new DOMParser().parseFromString(job.innerHTML, 'application/xml').querySelector('gridColheader').textContent;
+
+      console.log(jobNumInXml);
+
+      if (
+        jobNumInXml === jobNum 
+        // &&
+        // generalDescInXml === generalDesc &&
+        // gridColHeaderInXml === gridColHeader
+      ) {
+        jobToRemove = job;
+      }
+    });
+
+    if (jobToRemove) {
+      jobToRemove.remove();
+
+      // Serialize the updated XML back to string
+      var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
+
+      // Save the updated XML content back to local storage
+      localStorage.setItem('loadedXML', updatedXmlString);
+    }
   }
 }

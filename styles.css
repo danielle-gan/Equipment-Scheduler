@@ -132,8 +132,8 @@ header h1 {
   border: none;
   border-radius: 30px;
   transition: .3s;
+  margin-left: 20px;
   margin-top: 1%;
-
 }
 
 .button-save {
@@ -168,7 +168,7 @@ header h1 {
   border: none;
   border-radius: 30px;
   transition: .3s;
-  margin-left: 23%;
+  margin-left: 22%;
   margin-top: 1%;
 }
 
@@ -185,6 +185,11 @@ header h1 {
 }
 
 .button-load:hover {
+  background-color: black;
+  color: white;
+}
+
+.button-date:hover {
   background-color: black;
   color: white;
 }
@@ -223,10 +228,10 @@ header h1 {
 
 .highlight {
   background-color: var(--gray);
-  color: white;
+  color: var(--navy);
   font-weight: bold;
   padding: 10px;
-  box-shadow: -5px 5px var(--navy);
+  /* box-shadow: -5px 5px var(--navy); */
 }
 
 #trash-can {
