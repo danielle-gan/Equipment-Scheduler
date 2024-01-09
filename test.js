@@ -277,65 +277,6 @@ function saveToXML() {
   }
 }
 
-
-// // Function to save XML content
-// function saveToXML() {
-//   var fileName = prompt('Enter a filename:', 'ScheduleData');
-
-//   if (fileName !== null) {
-//     var loadExisting = confirm('Do you want to load into a preexisting file?');
-
-//     if (loadExisting) {
-//       // Load existing XML content
-//       loadExistingXML(function (existingXmlString) {
-//         // Parse the existing XML content
-//         var parser = new DOMParser();
-//         var xmlDoc = parser.parseFromString(existingXmlString, 'application/xml');
-
-//         // Find or create the <data> element
-//         var dataElement = xmlDoc.querySelector('data');
-//         if (!dataElement) {
-//           dataElement = xmlDoc.createElement('data');
-//           xmlDoc.appendChild(dataElement);
-//         }
-
-//         // Append new <job> elements to the <data> element
-//         appendJobsToData(xmlDoc);
-
-//         // Serialize the updated XML back to string
-//         var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
-
-//         // Create a Blob and a download link
-//         var blob = new Blob([updatedXmlString], { type: 'application/xml' });
-//         var downloadLink = document.createElement('a');
-
-//         downloadLink.download = fileName + '.xml';
-//         downloadLink.href = window.URL.createObjectURL(blob);
-
-//         // Trigger a click on the download link
-//         downloadLink.click();
-//       });
-//     } else {
-//       // Save as a fresh XML file
-//       var xmlDoc = document.implementation.createDocument(null, 'data', null);
-//       appendJobsToData(xmlDoc);
-
-//       // Serialize the XML to string
-//       var freshXmlString = new XMLSerializer().serializeToString(xmlDoc);
-
-//       // Create a Blob and a download link
-//       var blob = new Blob([freshXmlString], { type: 'application/xml' });
-//       var downloadLink = document.createElement('a');
-
-//       downloadLink.download = fileName + '.xml';
-//       downloadLink.href = window.URL.createObjectURL(blob);
-
-//       // Trigger a click on the download link
-//       downloadLink.click();
-//     }
-//   }
-// }
-
 function appendJobsToData(xmlDoc) {
   var dragDivs = document.querySelectorAll('.dragMe');
   var dataElement = xmlDoc.querySelector('data');
@@ -539,9 +480,8 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, g
   appendTarget.appendChild(dragDiv);
 
   dragDiv.addEventListener('dragstart', dragStart);
-
   //attach extra details to the div that display on click
-  dragDiv.dataset.details = details + dragDiv.id;
+  dragDiv.dataset.details = details;
   dragDiv.addEventListener('click', () => showModal(dragDiv.dataset.details));
   makeDivsDraggable();
 }
