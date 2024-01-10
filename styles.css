@@ -107,8 +107,8 @@ header h1 {
 .flex-form-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
   align-items: center;
+  margin-bottom: 4px;
 }
 
 .start {
@@ -258,7 +258,7 @@ header h1 {
 
 .grid-form {
   display: grid;
-  grid-template-columns:200px 200px 400px repeat(1, 1fr);
+  grid-template-columns:200px 200px 400px 100px ;
   row-gap: 8px;
   column-gap: 0px;
 }
@@ -276,7 +276,7 @@ form label {
 
 h3 {
   padding: 0;
-  margin: 0;
+  margin:0;
   margin-right: 10px;
   font-size: 1rem;
   font-weight: normal;
