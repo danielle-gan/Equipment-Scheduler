@@ -14,48 +14,48 @@ window.onload = function () {
 
 };
 
-  // Function to format a date as "MM/DD/YYYY"
-  function formatDate(date) {
-    const options = { month: '2-digit', day: '2-digit', year: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
-  }
+// Function to format a date as "MM/DD/YYYY"
+function formatDate(date) {
+  const options = { month: '2-digit', day: '2-digit', year: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
+}
 
-  // Function to get the next two weeks of dates from a given start date
-  function getNextTwoWeeks(startDate) {
-    const nextTwoWeeks = [];
-    for (let i = 0; i < 14; i++) {
-      const newDate = new Date(startDate);
-      newDate.setDate(startDate.getDate() + i);
-      nextTwoWeeks.push(newDate);
+// Function to get the next two weeks of dates from a given start date
+function getNextTwoWeeks(startDate) {
+  const nextTwoWeeks = [];
+  for (let i = 0; i < 14; i++) {
+    const newDate = new Date(startDate);
+    newDate.setDate(startDate.getDate() + i);
+    nextTwoWeeks.push(newDate);
+  }
+  return nextTwoWeeks;
+}
+
+// Function to populate "day-label" divs with the next two weeks of dates
+function populateDayLabels(selectedDate) {
+  const dayLabels = document.querySelectorAll('.day-label');
+  const nextTwoWeeks = getNextTwoWeeks(selectedDate);
+
+  dayLabels.forEach((label, index) => {
+    label.textContent = formatDate(nextTwoWeeks[index]);
+  });
+}
+
+function isToday(textContent) {
+  const todayDate = new Date();
+  const formattedToday = formatDate(todayDate);
+  return textContent === formattedToday;
+}
+
+function highlightToday() {
+  const paragraphs = document.querySelectorAll('.day-label');
+
+  paragraphs.forEach(paragraph => {
+    if (isToday(paragraph.textContent.trim())) {
+      paragraph.classList.add('highlight');
     }
-    return nextTwoWeeks;
-  }
-
-  // Function to populate "day-label" divs with the next two weeks of dates
-  function populateDayLabels(selectedDate) {
-    const dayLabels = document.querySelectorAll('.day-label');
-    const nextTwoWeeks = getNextTwoWeeks(selectedDate);
-
-    dayLabels.forEach((label, index) => {
-      label.textContent = formatDate(nextTwoWeeks[index]);
-    });
-  }
-
-  function isToday(textContent) {
-    const todayDate = new Date();
-    const formattedToday = formatDate(todayDate);
-    return textContent === formattedToday;
-  }
-
-  function highlightToday() {
-    const paragraphs = document.querySelectorAll('.day-label');
-
-    paragraphs.forEach(paragraph => {
-      if (isToday(paragraph.textContent.trim())) {
-        paragraph.classList.add('highlight');
-      }
-    });
-  }
+  });
+}
 
 // Drag and Drop Functionality
 let draggedBlock;
@@ -86,17 +86,22 @@ function drop(event) {
       if (draggedBlock instanceof Node) {
         event.target.appendChild(draggedBlock);
         draggedBlock.classList.add('dragged');
+        // grab the id of the grid cell
         var gridCell = draggedBlock.parentElement.id;
 
+        // grab the column number and row number
         var colIndex = gridCell.substring(1, gridCell.indexOf('r'));
         var rowIndex = gridCell.substring(gridCell.indexOf('r') + 1);
 
+        // string aggregate to get header IDs
         var gridRowHeaderID = 'c1' + 'r' + rowIndex;
         var gridColHeaderID = 'c' + colIndex + 'r1';
 
+        // take the inside of the headers
         var gridRowHeader = document.getElementById(gridRowHeaderID).textContent;
         var gridColHeader = document.getElementById(gridColHeaderID).textContent;
 
+        //assign them to the data atttributes
         draggedBlock.setAttribute('data-grid-colheader', gridColHeader);
         draggedBlock.setAttribute('data-grid-rowheader', gridRowHeader);
 
@@ -111,10 +116,7 @@ function drop(event) {
           // Append new job element to the XML
           appendJobToXML(xmlDoc, draggedBlock);
 
-          // Serialize the updated XML back to string
           var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
-
-          // Update localStorage with the new XML content
           localStorage.setItem('loadedXML', updatedXmlString);
         }
       } else {
@@ -148,7 +150,7 @@ function appendJobToXML(xmlDoc, draggedBlock) {
   dataElement.appendChild(jobElement);
 }
 
-
+// to make sure each div is unique
 function findMaxId() {
   const dragDivs = document.querySelectorAll('.dragMe');
   let maxId = 0;
@@ -163,7 +165,7 @@ function findMaxId() {
   return maxId;
 }
 
-// Form Inputs
+// Form Inputs  (text)
 const jobNum = document.getElementById('JobNum');
 const customer = document.getElementById('Customer');
 const runTime = document.getElementById('RunTime');
@@ -175,6 +177,40 @@ const numColors = document.getElementById('NumColors');
 const dollarValue = document.getElementById('DollarValue');
 const printCyl = document.getElementById('PrintCylinder');
 const toolCyl = document.getElementById('ToolCylinder');
+// Form Inputs (radio controls)
+const art = document.getElementsByName("art");
+const artValue = getSelectedRadioValue('art');
+
+const proofsent = document.getElementsByName("proofsent");
+const proofsentValue = getSelectedRadioValue('proofsent');
+
+const proofapp = document.getElementsByName("proofapp");
+const proofappValue = getSelectedRadioValue('proofapp');
+
+const mats = document.getElementsByName("mats");
+const matsValue = getSelectedRadioValue('mats');
+
+const dies = document.getElementsByName("dies");
+const diesValue = getSelectedRadioValue('dies');
+
+const plates = document.getElementsByName("plates");
+const platesValue = getSelectedRadioValue('plates');
+
+const purchase = document.getElementsByName("purchase");
+const purchaseValue = getSelectedRadioValue('purchase');
+
+function getSelectedRadioValue(groupName) {
+  const radioGroup = document.getElementsByName(groupName);
+
+  for (const radioButton of radioGroup) {
+    if (radioButton.checked) {
+      return radioButton.value;
+    }
+  }
+
+  // Return null if no radio button is selected
+  return null;
+}
 
 const button = document.getElementById('addBtn');
 const dragMe = document.getElementById('dragMe');
@@ -182,7 +218,8 @@ const flex = document.getElementById('itemStage');
 
 let details = '';
 
-function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, appendTarget) {
+
+function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, art, proofSent, proofApp, mats, dies, plates, purchase, appendTarget) {
   var dragDiv = document.createElement('div');
   dragDiv.classList.add('dragMe');
   dragDiv.classList.add('dragged');
@@ -200,6 +237,13 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   dragDiv.setAttribute('data-dollar-value', dollarValue.value);
   dragDiv.setAttribute('data-print-cyl', printCyl.value);
   dragDiv.setAttribute('data-tool-cyl', toolCyl.value);
+  dragDiv.setAttribute('data-art', art);
+  dragDiv.setAttribute('data-proof-sent', proofSent);
+  dragDiv.setAttribute('data-proof-app', proofApp);
+  dragDiv.setAttribute('data-mats', mats);
+  dragDiv.setAttribute('data-dies', dies);
+  dragDiv.setAttribute('data-plates', plates);
+  dragDiv.setAttribute('data-purchase', purchase);
 
 
   const label = `${jobNum.value} | ${customer.value} | ${runTime.value} | ${shipDate.value}`
@@ -250,7 +294,8 @@ function showModal(details) {
 
 button.addEventListener('click', function (event) {
   event.preventDefault();
-  createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, flex);
+  createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, flex);
+
 })
 
 
@@ -277,56 +322,6 @@ function saveToXML() {
   }
 }
 
-function appendJobsToData(xmlDoc) {
-  var dragDivs = document.querySelectorAll('.dragMe');
-  var dataElement = xmlDoc.querySelector('data');
-
-  dragDivs.forEach(function (dragDiv) {
-    // Check if a similar job already exists
-    var existingJobs = xmlDoc.querySelectorAll('job');
-    var jobExists = Array.from(existingJobs).some(function (existingJob) {
-      return compareJobs(existingJob, dragDiv);
-    });
-
-    // If the job doesn't already exist, append it
-    if (!jobExists) {
-      var jobElement = xmlDoc.createElement('job');
-
-      // Append attributes to the <job> element
-      for (var attribute in dragDiv.dataset) {
-        if (attribute !== 'details') {
-          var attributeElement = xmlDoc.createElement(attribute);
-          attributeElement.textContent = dragDiv.dataset[attribute].trim();
-          jobElement.appendChild(attributeElement);
-        }
-      }
-
-      // Append the "details" attribute
-      var detailsElement = xmlDoc.createElement('details');
-      detailsElement.innerHTML = dragDiv.dataset.details.trim();
-      jobElement.appendChild(detailsElement);
-
-      // Append the <job> element to the <data> element
-      dataElement.appendChild(jobElement);
-    }
-  });
-}
-
-function compareJobs(existingJob, dragDiv) {
-  for (var attribute in dragDiv.dataset) {
-    if (attribute !== 'details') {
-      var attributeValue = dragDiv.dataset[attribute];
-      var existingValue = existingJob.querySelector(attribute)?.textContent;
-
-      if (attributeValue !== existingValue) {
-        return false; // Attributes are different
-      }
-    }
-  }
-
-  return true; // All attributes are the same
-}
-
 function loadExistingXML(callback) {
   var fileInput = document.createElement('input');
   fileInput.type = 'file';
@@ -344,7 +339,6 @@ function loadExistingXML(callback) {
           callback(xmlContent);
         }
       };
-
       reader.readAsText(file);
     }
   });
@@ -404,13 +398,20 @@ function parseXML(xmlContent) {
     var dollarValue = job.querySelector('dollarValue').textContent;
     var printCyl = job.querySelector('printCyl').textContent;
     var toolCyl = job.querySelector('toolCyl').textContent;
+    // var artValue = job.querySelector('art').textContent;
+    // var proofsentValue = job.querySelector('proofsent').textContent;
+    // var proofappValue = job.querySelector('proofapp').textContent;
+    // var matsValue = job.querySelector('mats').textContent;
+    // var diesValue = job.querySelector('dies').textContent;
+    // var platesValue = job.querySelector('plates').textContent;
+    // var purchaseValue = job.querySelector('purchase').textContent;
 
-    placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl);
+    placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue);
   });
   makeDivsDraggable();
 }
 
-function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl) {
+function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue) {
 
   var columnHeaders = Array.from(document.getElementsByClassName('day-label'));
   var rowHeaders = Array.from(document.getElementsByClassName('editable'));
@@ -423,16 +424,17 @@ function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, d
 
           var rowIndex = f.parentElement.id.substring(f.parentElement.id.indexOf('r') + 1);
           var newGridParentID = 'c' + colIndex + 'r' + rowIndex;
-          createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, gridCol, gridRow, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, newGridParentID);
+          createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridRow,  description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, newGridParentID);
         }
       });
     }
   });
 }
 
-function createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, gridCol, gridRow, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, appendTarget) {
+function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, appendTarget) {
 
   var appendTarget = document.getElementById(appendTarget);
+  console.log(appendTarget);
 
   // Create a draggable div
   var dragDiv = document.createElement('div');
@@ -453,6 +455,13 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, description, g
   dragDiv.setAttribute('data-dollar-value', dollarValue);
   dragDiv.setAttribute('data-print-cyl', printCyl);
   dragDiv.setAttribute('data-tool-cyl', toolCyl);
+  dragDiv.setAttribute('data-art', artValue);
+  dragDiv.setAttribute('data-proof-sent', proofsentValue);
+  dragDiv.setAttribute('data-proof-app', proofappValue);
+  dragDiv.setAttribute('data-mats', matsValue);
+  dragDiv.setAttribute('data-dies', diesValue);
+  dragDiv.setAttribute('data-plates', platesValue);
+  dragDiv.setAttribute('data-purchase', purchaseValue);
 
   const label = `${jobNum} | ${customer} | ${runTime} | ${shipDate}`
   const details = ` <p>Job Number: ${jobNum}</p>
@@ -491,6 +500,74 @@ const saveBtn = document.getElementById('save-btn');
 saveBtn.addEventListener('click', () => {
   saveToXML();
 })
+
+// Function to append new <job> elements to the <data> element
+function appendJobsToData(xmlDoc) {
+  var dragDivs = document.querySelectorAll('.dragMe');
+  var dataElement = xmlDoc.querySelector('data');
+
+  dragDivs.forEach(function (dragDiv) {
+    var jobElement = xmlDoc.createElement('job');
+
+    for (var attribute in dragDiv.dataset) {
+      var attributeElement = xmlDoc.createElement(attribute);
+      attributeElement.textContent = dragDiv.dataset[attribute].trim();
+      jobElement.appendChild(attributeElement);
+    }
+
+    dataElement.appendChild(jobElement);
+  });
+}
+
+function saveToXML() {
+  var fileName = prompt('Enter a filename:', 'ScheduleData');
+
+  if (fileName !== null) {
+
+    // Check if there's existing XML content in local storage
+    var existingXmlString = localStorage.getItem('loadedXML');
+
+    if (existingXmlString) {
+      console.log("existing xml");
+      // Parse the existing XML content
+      var parser = new DOMParser();
+      var xmlDoc = parser.parseFromString(existingXmlString, 'application/xml');
+
+      // Find or create the <data> element
+      var dataElement = xmlDoc.querySelector('data');
+      if (!dataElement) {
+        dataElement = xmlDoc.createElement('data');
+        xmlDoc.appendChild(dataElement);
+      }
+
+      // Append new <job> elements to the <data> element
+      appendJobsToData(xmlDoc);
+
+      // Serialize the updated XML back to string
+      var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
+
+      // Save the updated XML content back to local storage
+      localStorage.setItem('loadedXML', updatedXmlString);
+    } else {
+      // Save as a fresh XML file
+      var xmlDoc = document.implementation.createDocument(null, 'data', null);
+      appendJobsToData(xmlDoc);
+
+      // Serialize the XML to string
+      var freshXmlString = new XMLSerializer().serializeToString(xmlDoc);
+
+      // Create a Blob and a download link
+      var blob = new Blob([freshXmlString], { type: 'application/xml' });
+      var downloadLink = document.createElement('a');
+
+      downloadLink.download = fileName + '.xml';
+      downloadLink.href = window.URL.createObjectURL(blob);
+
+      // Trigger a click on the download link
+      downloadLink.click();
+    }
+  }
+}
 
 // LOAD BUTTON 
 const loadBtn = document.getElementById('load-btn');
@@ -538,7 +615,6 @@ function deleteDraggedElement(event) {
     const draggedHeader = draggedElement.dataset.gridColheader;
 
     // Remove the corresponding job from local storage
-    console.log(draggedJobNum, draggedGenDesc, draggedHeader);
     removeJobFromLocalStorage(draggedJobNum, draggedGenDesc, draggedHeader);
 
     // Remove the element from the DOM
@@ -567,10 +643,8 @@ function removeJobFromLocalStorage(jobNum, generalDesc, gridColHeader) {
       // var generalDescInXml = new DOMParser().parseFromString(job.innerHTML, 'application/xml').querySelector('generalDesc').textContent;
       // var gridColHeaderInXml = new DOMParser().parseFromString(job.innerHTML, 'application/xml').querySelector('gridColheader').textContent;
 
-      console.log(jobNumInXml);
-
       if (
-        jobNumInXml === jobNum 
+        jobNumInXml === jobNum
         // &&
         // generalDescInXml === generalDesc &&
         // gridColHeaderInXml === gridColHeader
