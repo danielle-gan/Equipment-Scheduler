@@ -11,8 +11,13 @@ window.onload = function () {
   }
 
   highlightToday();
+  deleteLoadedXML();
 
 };
+
+function deleteLoadedXML() {
+  localStorage.removeItem('loadedXML');
+}
 
 // Function to format a date as "MM/DD/YYYY"
 function formatDate(date) {
@@ -258,6 +263,14 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
                   <p>Dollar Value Of Job: ${dollarValue.value}</p>
                   <p>Print Cylinder Size: ${printCyl.value}</p>
                   <p>Tool Cylinder Size: ${toolCyl.value}</p>
+                  <p>Art?:${art} </p>
+                  <p>Proof Sent?:${proofSent} </p>
+                  <p>Proof Approved?:${proofApp} </p>
+                  <p>Materials Ordered?:${mats} </p>
+                  <p>Dies Ordered?:${dies} </p>
+                  <p>Plates Ordered?:${plates} </p>
+                  <p>Purchase Order?:${purchase} </p>
+
                 `
   // Display relevant information in the div
   dragDiv.innerHTML += label
@@ -398,13 +411,13 @@ function parseXML(xmlContent) {
     var dollarValue = job.querySelector('dollarValue').textContent;
     var printCyl = job.querySelector('printCyl').textContent;
     var toolCyl = job.querySelector('toolCyl').textContent;
-    // var artValue = job.querySelector('art').textContent;
-    // var proofsentValue = job.querySelector('proofsent').textContent;
-    // var proofappValue = job.querySelector('proofapp').textContent;
-    // var matsValue = job.querySelector('mats').textContent;
-    // var diesValue = job.querySelector('dies').textContent;
-    // var platesValue = job.querySelector('plates').textContent;
-    // var purchaseValue = job.querySelector('purchase').textContent;
+    var artValue = job.querySelector('art').textContent;
+    var proofsentValue = job.querySelector('proofsent').textContent;
+    var proofappValue = job.querySelector('proofapp').textContent;
+    var matsValue = job.querySelector('mats').textContent;
+    var diesValue = job.querySelector('dies').textContent;
+    var platesValue = job.querySelector('plates').textContent;
+    var purchaseValue = job.querySelector('purchase').textContent;
 
     placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue);
   });
@@ -475,6 +488,13 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
                   <p>Dollar Value Of Job: ${dollarValue}</p>
                   <p>Print Cylinder Size: ${printCyl}</p>
                   <p>Tool Cylinder Size: ${toolCyl}</p>
+                  <p>Art?:${art} </p>
+                  <p>Proof Sent?:${proofSent} </p>
+                  <p>Proof Approved?:${proofApp} </p>
+                  <p>Materials Ordered?:${mats} </p>
+                  <p>Dies Ordered?:${dies} </p>
+                  <p>Plates Ordered?:${plates} </p>
+                  <p>Purchase Order?:${purchase} </p>
                 `
   // Display main info
   dragDiv.innerHTML += label;
