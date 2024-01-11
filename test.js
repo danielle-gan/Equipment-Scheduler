@@ -401,6 +401,41 @@ function showModal(dragdiv, details) {
   }
 }
 
+button.addEventListener('click', function (event) {
+  event.preventDefault();
+  const artValue = getSelectedRadioValue('art');
+  const proofsentValue = getSelectedRadioValue('proofsent');
+  const proofappValue = getSelectedRadioValue('proofapp');
+  const matsValue = getSelectedRadioValue('mats');
+  const diesValue = getSelectedRadioValue('dies');
+  const platesValue = getSelectedRadioValue('plates');
+  const purchaseValue = getSelectedRadioValue('purchase');
+  createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, flex);
+  resetForm();
+})
+
+function resetForm() {
+  document.getElementById('JobNum').value = "";
+  document.getElementById('Customer').value = "";
+  document.getElementById('RunTime').value = "";
+  document.getElementById('ShipDate').value = "";
+  document.getElementById('GeneralDesc').value = "";
+  document.getElementById('NumCopies').value = "";
+  document.getElementById('LinearFootage').value = "";
+  document.getElementById('NumColors').value = "";
+  document.getElementById('DollarValue').value = "";
+  document.getElementById('PrintCylinder').value = "";
+  document.getElementById('ToolCylinder').value = "";
+  document.getElementById('art-no').checked = true;
+  document.getElementById('proof-sent-no').checked = true;
+  document.getElementById('proof-app-no').checked = true;
+  document.getElementById('mat-no').checked = true;
+  document.getElementById('dies-no').checked = true;
+  document.getElementById('plates-no').checked = true;
+  document.getElementById('purchase-no').checked = true;
+}
+
+
 // Function to save XML content
 function saveToXML() {
   var fileName = prompt('Enter a filename:', 'ScheduleData');
