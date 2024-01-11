@@ -302,6 +302,7 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   makeDivsDraggable();
 }
 
+// this one is for divs created using the form
 function showModal(dragdiv, details) {
   if (!document.getElementById('modal')) {
 
@@ -315,7 +316,108 @@ function showModal(dragdiv, details) {
       modal.remove(); // Remove modal on click
     });
 
-    console.log(dragdiv.getAttribute('data-job-num'));
+    console.log(dragdiv);
+
+    var jobForm = dragdiv.getAttribute('data-job-num');
+    var custForm = dragdiv.getAttribute('data-customer');
+    var runForm = dragdiv.getAttribute('data-run-time');
+    var shipForm  = dragdiv.getAttribute('data-ship-date');
+    var descForm = dragdiv.getAttribute('data-general-desc');
+    var copiesForm = dragdiv.getAttribute('data-num-copies');
+    var footageForm = dragdiv.getAttribute('data-linear-footage');
+    var colorsForm = dragdiv.getAttribute('data-num-colors');
+    var dollarsForm = dragdiv.getAttribute('data-dollar-value');
+    var printcylForm = dragdiv.getAttribute('data-print-cyl');
+    var toolcylForm = dragdiv.getAttribute('data-tool-cyl');
+    var artForm = dragdiv.getAttribute('data-art');
+    var proofsentForm = dragdiv.getAttribute('data-proof-sent');
+    var proofappForm = dragdiv.getAttribute('data-proof-app');
+    var matsForm = dragdiv.getAttribute('data-mats');
+    var diesForm = dragdiv.getAttribute('data-dies');
+    var platesForm = dragdiv.getAttribute('data-plates');
+    var purchaseForm = dragdiv.getAttribute('data-purchase');
+
+    if (artForm === 'YES') {
+      document.getElementById('art-yes').checked = true;
+    } else {
+      document.getElementById('art-no').checked = true;
+    }
+
+    if (proofsentForm === 'YES') {
+      document.getElementById('proof-sent-yes').checked = true;
+    } else {
+      document.getElementById('proof-sent-no').checked = true;
+    }
+
+    if (proofappForm === 'YES') {
+      document.getElementById('proof-app-yes').checked = true;
+    } else {
+      document.getElementById('proof-app-no').checked = true;
+    }
+
+    if (matsForm === 'NO') {
+      document.getElementById('mat-no').checked = true;
+    } else if (matsForm === 'YES') {
+      document.getElementById('mat-yes').checked = true;
+    }
+    else {
+      document.getElementById('mat-rec').checked = true;
+    }
+
+    if (diesForm === 'NO') {
+      document.getElementById('dies-no').checked = true;
+    } else if (diesForm === 'YES') {
+      document.getElementById('dies-yes').checked = true;
+    }
+    else {
+      document.getElementById('dies-rec').checked = true;
+    }
+
+    if (platesForm === 'NO') {
+      document.getElementById('plates-no').checked = true;
+    } else if (platesForm === 'YES') {
+      document.getElementById('plates-yes').checked = true;
+    }
+    else {
+      document.getElementById('plates-rec').checked = true;
+    }
+
+    if (purchaseForm === 'YES') {
+      document.getElementById('purchase-yes').checked = true;
+    } else {
+      document.getElementById('purchase-no').checked = true;
+    }
+
+    document.getElementById('JobNum').value = jobForm;
+    document.getElementById('Customer').value = custForm;
+    document.getElementById('RunTime').value = runForm;
+    document.getElementById('ShipDate').value = shipForm;
+    document.getElementById('GeneralDesc').value = descForm;
+    document.getElementById('NumCopies').value = copiesForm;
+    document.getElementById('LinearFootage').value = footageForm;
+    document.getElementById('NumColors').value = colorsForm;
+    document.getElementById('DollarValue').value = dollarsForm;
+    document.getElementById('PrintCylinder').value = printcylForm;
+    document.getElementById('ToolCylinder').value = toolcylForm;
+
+  }
+}
+
+// this one is for loaded in divs
+function showModal2(dragdiv, details) {
+  if (!document.getElementById('modal')) {
+
+    const modal = document.createElement('div');
+    modal.classList.add('modal');
+    modal.innerHTML += details;
+
+    document.body.appendChild(modal);
+
+    modal.addEventListener('click', () => {
+      modal.remove(); // Remove modal on click
+    });
+
+    console.log(dragdiv);
 
     var jobForm = dragdiv.getAttribute('data-job-num');
     var custForm = dragdiv.getAttribute('data-customer');
@@ -537,8 +639,8 @@ function parseXML(xmlContent) {
     var printCyl = job.querySelector('printCyl').textContent;
     var toolCyl = job.querySelector('toolCyl').textContent;
     var artValue = job.querySelector('art').textContent;
-    var proofsentValue = job.querySelector('proofsent').textContent;
-    var proofappValue = job.querySelector('proofapp').textContent;
+    var proofsentValue = job.querySelector('proofSent').textContent;
+    var proofappValue = job.querySelector('proofApp').textContent;
     var matsValue = job.querySelector('mats').textContent;
     var diesValue = job.querySelector('dies').textContent;
     var platesValue = job.querySelector('plates').textContent;
@@ -617,13 +719,13 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
       <p>Tool Cylinder Size: ${toolCyl}</p>
     </div>
     <div>
-      <p>Art?:${art} </p>
-      <p>Proof Sent?:${proofSent} </p>
-      <p>Proof Approved?:${proofApp} </p>
-      <p>Materials Ordered?:${mats} </p>
-      <p>Dies Ordered?:${dies} </p>
-      <p>Plates Ordered?:${plates} </p>
-      <p>Purchase Order?:${purchase} </p>
+      <p>Art?:${artValue} </p>
+      <p>Proof Sent?:${proofsentValue} </p>
+      <p>Proof Approved?:${proofappValue} </p>
+      <p>Materials Ordered?:${matsValue} </p>
+      <p>Dies Ordered?:${diesValue} </p>
+      <p>Plates Ordered?:${platesValue} </p>
+      <p>Purchase Order?:${purchaseValue} </p>
     </div>
   </div>
                 `
@@ -642,7 +744,7 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
   dragDiv.addEventListener('dragstart', dragStart);
   //attach extra details to the div that display on click
   dragDiv.dataset.details = details;
-  dragDiv.addEventListener('click', () => showModal(dragDiv.dataset.details));
+  dragDiv.addEventListener('click', () => showModal2(dragDiv, dragDiv.dataset.details));
   makeDivsDraggable();
 }
 
