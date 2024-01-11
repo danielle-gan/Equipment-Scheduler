@@ -184,25 +184,14 @@ const printCyl = document.getElementById('PrintCylinder');
 const toolCyl = document.getElementById('ToolCylinder');
 // Form Inputs (radio controls)
 const art = document.getElementsByName("art");
-const artValue = getSelectedRadioValue('art');
-
 const proofsent = document.getElementsByName("proofsent");
-const proofsentValue = getSelectedRadioValue('proofsent');
-
 const proofapp = document.getElementsByName("proofapp");
-const proofappValue = getSelectedRadioValue('proofapp');
-
 const mats = document.getElementsByName("mats");
-const matsValue = getSelectedRadioValue('mats');
-
 const dies = document.getElementsByName("dies");
-const diesValue = getSelectedRadioValue('dies');
-
 const plates = document.getElementsByName("plates");
-const platesValue = getSelectedRadioValue('plates');
-
 const purchase = document.getElementsByName("purchase");
-const purchaseValue = getSelectedRadioValue('purchase');
+
+
 
 function getSelectedRadioValue(groupName) {
   const radioGroup = document.getElementsByName(groupName);
@@ -217,6 +206,23 @@ function getSelectedRadioValue(groupName) {
   return null;
 }
 
+// Get all radio groups with the class 'toggle-radio'
+const radioGroups = document.querySelectorAll('.toggle-radio');
+
+// Add event listener to each radio group
+radioGroups.forEach((radioGroup) => {
+  // Get the radio inputs within the current radio group
+  const radioInputs = radioGroup.querySelectorAll('input[type="radio"]');
+
+  // Add event listener to each radio input within the group
+  radioInputs.forEach((radioInput) => {
+    radioInput.addEventListener('click', function () {
+      console.log(`Selected value for ${radioGroup.dataset.color}:`, this.value);
+    });
+  });
+});
+
+
 const button = document.getElementById('addBtn');
 const dragMe = document.getElementById('dragMe');
 const flex = document.getElementById('itemStage');
@@ -225,6 +231,7 @@ let details = '';
 
 
 function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, art, proofSent, proofApp, mats, dies, plates, purchase, appendTarget) {
+
   var dragDiv = document.createElement('div');
   dragDiv.classList.add('dragMe');
   dragDiv.classList.add('dragged');
@@ -249,6 +256,8 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   dragDiv.setAttribute('data-dies', dies);
   dragDiv.setAttribute('data-plates', plates);
   dragDiv.setAttribute('data-purchase', purchase);
+
+  console.log(art, proofSent);
 
 
   const label = `${jobNum.value} | ${customer.value} | ${runTime.value} | ${shipDate.value}`
@@ -307,6 +316,13 @@ function showModal(details) {
 
 button.addEventListener('click', function (event) {
   event.preventDefault();
+  const artValue = getSelectedRadioValue('art');
+  const proofsentValue = getSelectedRadioValue('proofsent');
+  const proofappValue = getSelectedRadioValue('proofapp');
+  const matsValue = getSelectedRadioValue('mats');
+  const diesValue = getSelectedRadioValue('dies');
+  const platesValue = getSelectedRadioValue('plates');
+  const purchaseValue = getSelectedRadioValue('purchase');
   createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, flex);
 
 })
@@ -447,7 +463,6 @@ function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, d
 function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, appendTarget) {
 
   var appendTarget = document.getElementById(appendTarget);
-  console.log(appendTarget);
 
   // Create a draggable div
   var dragDiv = document.createElement('div');
@@ -458,7 +473,6 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
   dragDiv.setAttribute('data-customer', customer);
   dragDiv.setAttribute('data-run-time', runTime);
   dragDiv.setAttribute('data-ship-date', shipDate);
-  // dragDiv.setAttribute('data-grid-cell', appendTarget.id); 
   dragDiv.setAttribute('data-grid-colheader', gridCol);
   dragDiv.setAttribute('data-grid-rowheader', gridRow);
   dragDiv.setAttribute('data-general-desc', description);
