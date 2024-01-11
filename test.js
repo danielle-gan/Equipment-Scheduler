@@ -217,11 +217,9 @@ radioGroups.forEach((radioGroup) => {
   // Add event listener to each radio input within the group
   radioInputs.forEach((radioInput) => {
     radioInput.addEventListener('click', function () {
-      console.log(`Selected value for ${radioGroup.dataset.color}:`, this.value);
     });
   });
 });
-
 
 const button = document.getElementById('addBtn');
 const dragMe = document.getElementById('dragMe');
@@ -256,8 +254,6 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   dragDiv.setAttribute('data-dies', dies);
   dragDiv.setAttribute('data-plates', plates);
   dragDiv.setAttribute('data-purchase', purchase);
-
-  console.log(art, proofSent);
 
 
   const label = `${jobNum.value} | ${customer.value} | ${runTime.value} | ${shipDate.value}`
@@ -301,12 +297,12 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   dragDiv.dataset.details = details; 
   // + dragDiv.id;
 
-  dragDiv.addEventListener('click', () => showModal(dragDiv.dataset.details));
+  dragDiv.addEventListener('click', () => showModal(dragDiv, dragDiv.dataset.details));
 
   makeDivsDraggable();
 }
 
-function showModal(details) {
+function showModal(dragdiv, details) {
   if (!document.getElementById('modal')) {
 
     const modal = document.createElement('div');
@@ -318,6 +314,91 @@ function showModal(details) {
     modal.addEventListener('click', () => {
       modal.remove(); // Remove modal on click
     });
+
+    console.log(dragdiv.getAttribute('data-job-num'));
+
+    var jobForm = dragdiv.getAttribute('data-job-num');
+    var custForm = dragdiv.getAttribute('data-customer');
+    var runForm = dragdiv.getAttribute('data-run-time');
+    var shipForm  = dragdiv.getAttribute('data-ship-date');
+    var descForm = dragdiv.getAttribute('data-general-desc');
+    var copiesForm = dragdiv.getAttribute('data-num-copies');
+    var footageForm = dragdiv.getAttribute('data-linear-footage');
+    var colorsForm = dragdiv.getAttribute('data-num-colors');
+    var dollarsForm = dragdiv.getAttribute('data-dollar-value');
+    var printcylForm = dragdiv.getAttribute('data-print-cyl');
+    var toolcylForm = dragdiv.getAttribute('data-tool-cyl');
+    var artForm = dragdiv.getAttribute('data-art');
+    var proofsentForm = dragdiv.getAttribute('data-proof-sent');
+    var proofappForm = dragdiv.getAttribute('data-proof-app');
+    var matsForm = dragdiv.getAttribute('data-mats');
+    var diesForm = dragdiv.getAttribute('data-dies');
+    var platesForm = dragdiv.getAttribute('data-plates');
+    var purchaseForm = dragdiv.getAttribute('data-purchase');
+
+    if (artForm === 'YES') {
+      document.getElementById('art-yes').checked = true;
+    } else {
+      document.getElementById('art-no').checked = true;
+    }
+
+    if (proofsentForm === 'YES') {
+      document.getElementById('proof-sent-yes').checked = true;
+    } else {
+      document.getElementById('proof-sent-no').checked = true;
+    }
+
+    if (proofappForm === 'YES') {
+      document.getElementById('proof-app-yes').checked = true;
+    } else {
+      document.getElementById('proof-app-no').checked = true;
+    }
+
+    if (matsForm === 'NO') {
+      document.getElementById('mat-no').checked = true;
+    } else if (matsForm === 'YES') {
+      document.getElementById('mat-yes').checked = true;
+    }
+    else {
+      document.getElementById('mat-rec').checked = true;
+    }
+
+    if (diesForm === 'NO') {
+      document.getElementById('dies-no').checked = true;
+    } else if (diesForm === 'YES') {
+      document.getElementById('dies-yes').checked = true;
+    }
+    else {
+      document.getElementById('dies-rec').checked = true;
+    }
+
+    if (platesForm === 'NO') {
+      document.getElementById('plates-no').checked = true;
+    } else if (platesForm === 'YES') {
+      document.getElementById('plates-yes').checked = true;
+    }
+    else {
+      document.getElementById('plates-rec').checked = true;
+    }
+
+    if (purchaseForm === 'YES') {
+      document.getElementById('purchase-yes').checked = true;
+    } else {
+      document.getElementById('purchase-no').checked = true;
+    }
+
+    document.getElementById('JobNum').value = jobForm;
+    document.getElementById('Customer').value = custForm;
+    document.getElementById('RunTime').value = runForm;
+    document.getElementById('ShipDate').value = shipForm;
+    document.getElementById('GeneralDesc').value = descForm;
+    document.getElementById('NumCopies').value = copiesForm;
+    document.getElementById('LinearFootage').value = footageForm;
+    document.getElementById('NumColors').value = colorsForm;
+    document.getElementById('DollarValue').value = dollarsForm;
+    document.getElementById('PrintCylinder').value = printcylForm;
+    document.getElementById('ToolCylinder').value = toolcylForm;
+
   }
 }
 
@@ -331,8 +412,29 @@ button.addEventListener('click', function (event) {
   const platesValue = getSelectedRadioValue('plates');
   const purchaseValue = getSelectedRadioValue('purchase');
   createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, flex);
-
+  resetForm();
 })
+
+function resetForm() {
+  document.getElementById('JobNum').value = "";
+  document.getElementById('Customer').value = "";
+  document.getElementById('RunTime').value = "";
+  document.getElementById('ShipDate').value = "";
+  document.getElementById('GeneralDesc').value = "";
+  document.getElementById('NumCopies').value = "";
+  document.getElementById('LinearFootage').value = "";
+  document.getElementById('NumColors').value = "";
+  document.getElementById('DollarValue').value = "";
+  document.getElementById('PrintCylinder').value = "";
+  document.getElementById('ToolCylinder').value = "";
+  document.getElementById('art-no').checked = true;
+  document.getElementById('proof-sent-no').checked = true;
+  document.getElementById('proof-app-no').checked = true;
+  document.getElementById('mat-no').checked = true;
+  document.getElementById('dies-no').checked = true;
+  document.getElementById('plates-no').checked = true;
+  document.getElementById('purchase-no').checked = true;
+}
 
 
 // Function to save XML content
@@ -577,7 +679,6 @@ function saveToXML() {
     var existingXmlString = localStorage.getItem('loadedXML');
 
     if (existingXmlString) {
-      console.log("existing xml");
       // Parse the existing XML content
       var parser = new DOMParser();
       var xmlDoc = parser.parseFromString(existingXmlString, 'application/xml');
@@ -684,7 +785,6 @@ function removeJobFromLocalStorage(jobNum, generalDesc, gridColHeader) {
     // Find the job with the specified attributes
     var jobs = xmlDoc.querySelectorAll('job');
 
-    console.log(jobs[0].innerHTML); // this is giving me the string that I need
     var jobToRemove;
 
     jobs.forEach(function (job) {
