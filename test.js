@@ -316,8 +316,6 @@ function showModal(dragdiv, details) {
       modal.remove(); // Remove modal on click
     });
 
-    console.log(dragdiv);
-
     var jobForm = dragdiv.getAttribute('data-job-num');
     var custForm = dragdiv.getAttribute('data-customer');
     var runForm = dragdiv.getAttribute('data-run-time');
@@ -402,142 +400,6 @@ function showModal(dragdiv, details) {
 
   }
 }
-
-// this one is for loaded in divs
-function showModal2(dragdiv, details) {
-  if (!document.getElementById('modal')) {
-
-    const modal = document.createElement('div');
-    modal.classList.add('modal');
-    modal.innerHTML += details;
-
-    document.body.appendChild(modal);
-
-    modal.addEventListener('click', () => {
-      modal.remove(); // Remove modal on click
-    });
-
-    console.log(dragdiv);
-
-    var jobForm = dragdiv.getAttribute('data-job-num');
-    var custForm = dragdiv.getAttribute('data-customer');
-    var runForm = dragdiv.getAttribute('data-run-time');
-    var shipForm  = dragdiv.getAttribute('data-ship-date');
-    var descForm = dragdiv.getAttribute('data-general-desc');
-    var copiesForm = dragdiv.getAttribute('data-num-copies');
-    var footageForm = dragdiv.getAttribute('data-linear-footage');
-    var colorsForm = dragdiv.getAttribute('data-num-colors');
-    var dollarsForm = dragdiv.getAttribute('data-dollar-value');
-    var printcylForm = dragdiv.getAttribute('data-print-cyl');
-    var toolcylForm = dragdiv.getAttribute('data-tool-cyl');
-    var artForm = dragdiv.getAttribute('data-art');
-    var proofsentForm = dragdiv.getAttribute('data-proof-sent');
-    var proofappForm = dragdiv.getAttribute('data-proof-app');
-    var matsForm = dragdiv.getAttribute('data-mats');
-    var diesForm = dragdiv.getAttribute('data-dies');
-    var platesForm = dragdiv.getAttribute('data-plates');
-    var purchaseForm = dragdiv.getAttribute('data-purchase');
-
-    if (artForm === 'YES') {
-      document.getElementById('art-yes').checked = true;
-    } else {
-      document.getElementById('art-no').checked = true;
-    }
-
-    if (proofsentForm === 'YES') {
-      document.getElementById('proof-sent-yes').checked = true;
-    } else {
-      document.getElementById('proof-sent-no').checked = true;
-    }
-
-    if (proofappForm === 'YES') {
-      document.getElementById('proof-app-yes').checked = true;
-    } else {
-      document.getElementById('proof-app-no').checked = true;
-    }
-
-    if (matsForm === 'NO') {
-      document.getElementById('mat-no').checked = true;
-    } else if (matsForm === 'YES') {
-      document.getElementById('mat-yes').checked = true;
-    }
-    else {
-      document.getElementById('mat-rec').checked = true;
-    }
-
-    if (diesForm === 'NO') {
-      document.getElementById('dies-no').checked = true;
-    } else if (diesForm === 'YES') {
-      document.getElementById('dies-yes').checked = true;
-    }
-    else {
-      document.getElementById('dies-rec').checked = true;
-    }
-
-    if (platesForm === 'NO') {
-      document.getElementById('plates-no').checked = true;
-    } else if (platesForm === 'YES') {
-      document.getElementById('plates-yes').checked = true;
-    }
-    else {
-      document.getElementById('plates-rec').checked = true;
-    }
-
-    if (purchaseForm === 'YES') {
-      document.getElementById('purchase-yes').checked = true;
-    } else {
-      document.getElementById('purchase-no').checked = true;
-    }
-
-    document.getElementById('JobNum').value = jobForm;
-    document.getElementById('Customer').value = custForm;
-    document.getElementById('RunTime').value = runForm;
-    document.getElementById('ShipDate').value = shipForm;
-    document.getElementById('GeneralDesc').value = descForm;
-    document.getElementById('NumCopies').value = copiesForm;
-    document.getElementById('LinearFootage').value = footageForm;
-    document.getElementById('NumColors').value = colorsForm;
-    document.getElementById('DollarValue').value = dollarsForm;
-    document.getElementById('PrintCylinder').value = printcylForm;
-    document.getElementById('ToolCylinder').value = toolcylForm;
-
-  }
-}
-
-button.addEventListener('click', function (event) {
-  event.preventDefault();
-  const artValue = getSelectedRadioValue('art');
-  const proofsentValue = getSelectedRadioValue('proofsent');
-  const proofappValue = getSelectedRadioValue('proofapp');
-  const matsValue = getSelectedRadioValue('mats');
-  const diesValue = getSelectedRadioValue('dies');
-  const platesValue = getSelectedRadioValue('plates');
-  const purchaseValue = getSelectedRadioValue('purchase');
-  createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, flex);
-  resetForm();
-})
-
-function resetForm() {
-  document.getElementById('JobNum').value = "";
-  document.getElementById('Customer').value = "";
-  document.getElementById('RunTime').value = "";
-  document.getElementById('ShipDate').value = "";
-  document.getElementById('GeneralDesc').value = "";
-  document.getElementById('NumCopies').value = "";
-  document.getElementById('LinearFootage').value = "";
-  document.getElementById('NumColors').value = "";
-  document.getElementById('DollarValue').value = "";
-  document.getElementById('PrintCylinder').value = "";
-  document.getElementById('ToolCylinder').value = "";
-  document.getElementById('art-no').checked = true;
-  document.getElementById('proof-sent-no').checked = true;
-  document.getElementById('proof-app-no').checked = true;
-  document.getElementById('mat-no').checked = true;
-  document.getElementById('dies-no').checked = true;
-  document.getElementById('plates-no').checked = true;
-  document.getElementById('purchase-no').checked = true;
-}
-
 
 // Function to save XML content
 function saveToXML() {
@@ -744,7 +606,7 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
   dragDiv.addEventListener('dragstart', dragStart);
   //attach extra details to the div that display on click
   dragDiv.dataset.details = details;
-  dragDiv.addEventListener('click', () => showModal2(dragDiv, dragDiv.dataset.details));
+  dragDiv.addEventListener('click', () => showModal(dragDiv, dragDiv.dataset.details));
   makeDivsDraggable();
 }
 
