@@ -261,26 +261,32 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
 
 
   const label = `${jobNum.value} | ${customer.value} | ${runTime.value} | ${shipDate.value}`
-  const details = ` <p>Job Number: ${jobNum.value}</p>
-                  <p>Customer: ${customer.value}</p>
-                  <p>Run Time: ${runTime.value}</p>
-                  <p>Ship Date: ${shipDate.value}</p>
-                  <p>Description: ${description.value}</p>
-                  <p>Number Of Copies: ${numCopies.value}</p>
-                  <p>Linear Footage: ${linearFootage.value}</p>
-                  <p>Number Of Colors: ${numColors.value}</p>
-                  <p>Dollar Value Of Job: ${dollarValue.value}</p>
-                  <p>Print Cylinder Size: ${printCyl.value}</p>
-                  <p>Tool Cylinder Size: ${toolCyl.value}</p>
-                  <p>Art?:${art} </p>
-                  <p>Proof Sent?:${proofSent} </p>
-                  <p>Proof Approved?:${proofApp} </p>
-                  <p>Materials Ordered?:${mats} </p>
-                  <p>Dies Ordered?:${dies} </p>
-                  <p>Plates Ordered?:${plates} </p>
-                  <p>Purchase Order?:${purchase} </p>
-
-                `
+  const details = `   
+  <div class="flex-container">
+  <div>
+    <p>Job Number: ${jobNum.value}</p>
+    <p>Customer: ${customer.value}</p>
+    <p>Run Time: ${runTime.value}</p>
+    <p>Ship Date: ${shipDate.value}</p>
+    <p>Description: ${description.value}</p>
+    <p>Number Of Copies: ${numCopies.value}</p>
+    <p>Linear Footage: ${linearFootage.value}</p>
+    <p>Number Of Colors: ${numColors.value}</p>
+    <p>Dollar Value Of Job: ${dollarValue.value}</p>
+    <p>Print Cylinder Size: ${printCyl.value}</p>
+    <p>Tool Cylinder Size: ${toolCyl.value}</p>
+  </div>
+  <div>
+    <p>Art?:${art} </p>
+    <p>Proof Sent?:${proofSent} </p>
+    <p>Proof Approved?:${proofApp} </p>
+    <p>Materials Ordered?:${mats} </p>
+    <p>Dies Ordered?:${dies} </p>
+    <p>Plates Ordered?:${plates} </p>
+    <p>Purchase Order?:${purchase} </p>
+  </div>
+</div>
+`
   // Display relevant information in the div
   dragDiv.innerHTML += label
 
@@ -292,7 +298,8 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   appendTarget.appendChild(dragDiv);
   dragDiv.addEventListener('dragstart', dragStart);
 
-  dragDiv.dataset.details = details + dragDiv.id;
+  dragDiv.dataset.details = details; 
+  // + dragDiv.id;
 
   dragDiv.addEventListener('click', () => showModal(dragDiv.dataset.details));
 
@@ -491,24 +498,32 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
   dragDiv.setAttribute('data-purchase', purchaseValue);
 
   const label = `${jobNum} | ${customer} | ${runTime} | ${shipDate}`
-  const details = ` <p>Job Number: ${jobNum}</p>
-                  <p>Customer: ${customer}</p>
-                  <p>Run Time: ${runTime}</p>
-                  <p>Ship Date: ${shipDate}</p>
-                  <p>Description: ${description}</p>
-                  <p>Number Of Copies: ${numCopies}</p>
-                  <p>Linear Footage: ${linearFootage}</p>
-                  <p>Number Of Colors: ${numColors}</p>
-                  <p>Dollar Value Of Job: ${dollarValue}</p>
-                  <p>Print Cylinder Size: ${printCyl}</p>
-                  <p>Tool Cylinder Size: ${toolCyl}</p>
-                  <p>Art?:${art} </p>
-                  <p>Proof Sent?:${proofSent} </p>
-                  <p>Proof Approved?:${proofApp} </p>
-                  <p>Materials Ordered?:${mats} </p>
-                  <p>Dies Ordered?:${dies} </p>
-                  <p>Plates Ordered?:${plates} </p>
-                  <p>Purchase Order?:${purchase} </p>
+  const details = `
+  
+  <div class="flex-container">
+    <div>
+      <p>Job Number: ${jobNum}</p>
+      <p>Customer: ${customer}</p>
+      <p>Run Time: ${runTime}</p>
+      <p>Ship Date: ${shipDate}</p>
+      <p>Description: ${description}</p>
+      <p>Number Of Copies: ${numCopies}</p>
+      <p>Linear Footage: ${linearFootage}</p>
+      <p>Number Of Colors: ${numColors}</p>
+      <p>Dollar Value Of Job: ${dollarValue}</p>
+      <p>Print Cylinder Size: ${printCyl}</p>
+      <p>Tool Cylinder Size: ${toolCyl}</p>
+    </div>
+    <div>
+      <p>Art?:${art} </p>
+      <p>Proof Sent?:${proofSent} </p>
+      <p>Proof Approved?:${proofApp} </p>
+      <p>Materials Ordered?:${mats} </p>
+      <p>Dies Ordered?:${dies} </p>
+      <p>Plates Ordered?:${plates} </p>
+      <p>Purchase Order?:${purchase} </p>
+    </div>
+  </div>
                 `
   // Display main info
   dragDiv.innerHTML += label;
