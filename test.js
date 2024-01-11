@@ -442,6 +442,7 @@ function saveToXML() {
 
   if (fileName !== null) {
     var xmlContent = localStorage.getItem('loadedXML');
+    console.log("XML Content:", xmlContent); // Add this line
 
     if (xmlContent) {
       // Create a Blob and a download link
@@ -451,6 +452,7 @@ function saveToXML() {
       downloadLink.download = fileName + '.xml';
       downloadLink.href = window.URL.createObjectURL(blob);
 
+      console.log("SAVED");
       // Trigger a click on the download link
       downloadLink.click();
     } else {
@@ -649,6 +651,7 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
 const saveBtn = document.getElementById('save-btn');
 saveBtn.addEventListener('click', () => {
   saveToXML();
+  console.log("saved");
 })
 
 // Function to append new <job> elements to the <data> element
