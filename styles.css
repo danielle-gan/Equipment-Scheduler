@@ -263,9 +263,9 @@ header h1 {
 
 .grid-form {
   display: grid;
-  grid-template-columns:200px 200px 400px 100px ;
+  grid-template-columns:200px repeat(4, 1fr) ;
   row-gap: 8px;
-  column-gap: 0px;
+  column-gap: 20px;
 }
 
 .form-column {
@@ -281,7 +281,7 @@ form label {
 
 h3 {
   padding: 0;
-  margin:0;
+  margin:.41em;
   margin-right: 10px;
   font-size: 1rem;
   font-weight: normal;
@@ -317,4 +317,5 @@ h3 {
 
 .goodToRun {
   background-color: var(--green);
+  border-color: var(--green);
 }
