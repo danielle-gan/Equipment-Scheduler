@@ -233,7 +233,7 @@ header h1 {
 }
 
 .dragged {
-  border: 2px solid var(--red);
+  border: 2px solid var(--navy);
   background-color: white;
 }
 
@@ -316,6 +316,10 @@ h3 {
 }
 
 .goodToRun {
-  background-color: var(--green);
   border-color: var(--green);
+}
+
+/* for lack of a better name */
+.badToRun {
+  border-color: var(--red);
 }

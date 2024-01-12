@@ -103,6 +103,7 @@ function drop(event) {
         draggedBlock.setAttribute('data-grid-rowheader', gridRowHeader);
 
         pastDateChecker(draggedBlock);
+        statusChecker(draggedBlock);
 
         // Retrieve existing XML content from localStorage
         var loadedXML = localStorage.getItem('loadedXML');
@@ -610,6 +611,10 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
   dragDiv.dataset.details = details;
   dragDiv.addEventListener('click', () => showModal(dragDiv, dragDiv.dataset.details));
   makeDivsDraggable();
+
+  // color conditioning for the divs
+  pastDateChecker(dragDiv);
+  statusChecker(dragDiv);
 }
 
 // SAVE BUTTON 
@@ -810,18 +815,36 @@ function removeJobFromLocalStorage(jobNum, generalDesc, gridColHeader) {
 
 // called on drop to see if data-shipDate attribute is before the grid column header 
 function pastDateChecker(div) {
+console.log("Checking Dates");
 var shipDatestr = div.getAttribute('data-ship-date');
 var schedDatestr = div.getAttribute('data-grid-colheader');
 
 var shipDate = new Date(shipDatestr);
 var schedDate = new Date(schedDatestr);
 
-console.log("Ship Date:" + shipDate,"Sched Date:" + schedDate);
 if (shipDate < schedDate) {
   console.log("SHIP DATE BEFORE SCHED DATE!");
   div.classList.add('pastDate');
 }
 else {
   div.classList.remove('pastDate');
+  console.log(div.id + "this div is scheduled properly");
 }
+}
+
+function statusChecker(div) {
+  console.log("Checking Status");
+  var statusArray = ['data-art', 'data-proof-sent', 'data-proof-app', 'data-mats', 'data-dies', 'data-plates', 'data-purchase'];
+
+  for (var status = 0; status < statusArray.length; status++) {
+    var statusName = statusArray[status];
+    if (div.getAttribute(statusName) == "YES" || div.getAttribute(statusName) == "RECEIVED") {
+      div.classList.add('goodToRun');
+      console.log(div.id + "this div is good to run");
+    }
+    else{
+      div.classList.add('badToRun');
+      div.classList.remove('goodToRun');
+    }
+  } 
 }
