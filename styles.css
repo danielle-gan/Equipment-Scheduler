@@ -46,7 +46,7 @@ header h1 {
   border: 2px solid #ccc;
   text-wrap: pretty;
   justify-content: center;
-  word-break: break-word;
+  white-space: normal;
 }
 
 .fixed {
@@ -71,7 +71,7 @@ header h1 {
   font-size: .8rem;
   word-wrap:break-word;
   text-wrap: wrap;
-  
+
 }
 
 .m-0 {

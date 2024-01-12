@@ -784,26 +784,22 @@ function removeJobFromLocalStorage(jobNum, generalDesc, gridColHeader) {
     var jobToRemove;
 
     jobs.forEach(function (job) {
-      var jobNumInXml = job.querySelector('jobNum').textContent
-      // var generalDescInXml = new DOMParser().parseFromString(job.innerHTML, 'application/xml').querySelector('generalDesc').textContent;
-      // var gridColHeaderInXml = new DOMParser().parseFromString(job.innerHTML, 'application/xml').querySelector('gridColheader').textContent;
+      var jobNumInXml = job.querySelector('jobNum').textContent;
+      var generalDescInXml = job.querySelector('generalDesc').textContent;
+      var gridColHeaderInXml = job.querySelector('gridColheader').textContent;
 
       if (
-        jobNumInXml === jobNum
-        // &&
-        // generalDescInXml === generalDesc &&
-        // gridColHeaderInXml === gridColHeader
+        jobNumInXml === jobNum && generalDescInXml === generalDesc && gridColHeaderInXml === gridColHeader
       ) {
         jobToRemove = job;
+        console.log(jobToRemove);
       }
     });
 
     if (jobToRemove) {
       jobToRemove.remove();
-
       // Serialize the updated XML back to string
       var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
-
       // Save the updated XML content back to local storage
       localStorage.setItem('loadedXML', updatedXmlString);
     }
