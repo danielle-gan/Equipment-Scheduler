@@ -466,7 +466,7 @@ function loadXMLAndSaveToLocalStorage() {
 
         // Save XML content to local storage
         localStorage.setItem('loadedXML', xmlContent);
-
+        clearDragMeDivs('.dragInto');
         parseXML(xmlContent);
       };
 
@@ -689,9 +689,7 @@ function saveToXML() {
 // LOAD BUTTON 
 const loadBtn = document.getElementById('load-btn');
 loadBtn.addEventListener('click', () => {
-  clearDragMeDivs('.dragInto', () => {
-    loadXMLAndSaveToLocalStorage();
-});
+  loadXMLAndSaveToLocalStorage();
 })
 
 // CHANGE DATE BUTTON
@@ -719,6 +717,7 @@ function clearDragMeDivs(selector) {
   dragMeDivs.forEach((dragMeDiv) => {
     dragMeDiv.innerHTML = ''; // Remove all child elements
   });
+  return
 }
 
 //On loading in, divs are no longer draggable, hence why this function is necessary

@@ -69,6 +69,9 @@ header h1 {
 
 .sm-font {
   font-size: .8rem;
+  word-wrap:break-word;
+  text-wrap: wrap;
+  
 }
 
 .m-0 {
