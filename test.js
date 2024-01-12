@@ -437,29 +437,29 @@ function resetForm() {
 
 
 // Function to save XML content
-function saveToXML() {
-  var fileName = prompt('Enter a filename:', 'ScheduleData');
+// function saveToXML() {
+//   var fileName = prompt('Enter a filename:', 'ScheduleData');
 
-  if (fileName !== null) {
-    var xmlContent = localStorage.getItem('loadedXML');
-    console.log("XML Content:", xmlContent); // Add this line
+//   if (fileName !== null) {
+//     var xmlContent = localStorage.getItem('loadedXML');
+//     console.log("XML Content:", xmlContent); // Add this line
 
-    if (xmlContent) {
-      // Create a Blob and a download link
-      var blob = new Blob([xmlContent], { type: 'application/xml' });
-      var downloadLink = document.createElement('a');
+//     if (xmlContent) {
+//       // Create a Blob and a download link
+//       var blob = new Blob([xmlContent], { type: 'application/xml' });
+//       var downloadLink = document.createElement('a');
 
-      downloadLink.download = fileName + '.xml';
-      downloadLink.href = window.URL.createObjectURL(blob);
+//       downloadLink.download = fileName + '.xml';
+//       downloadLink.href = window.URL.createObjectURL(blob);
 
-      console.log("SAVED");
-      // Trigger a click on the download link
-      downloadLink.click();
-    } else {
-      alert('No XML content to save.');
-    }
-  }
-}
+//       console.log("SAVED");
+//       // Trigger a click on the download link
+//       downloadLink.click();
+//     } else {
+//       alert('No XML content to save.');
+//     }
+//   }
+// }
 
 function loadExistingXML(callback) {
   var fileInput = document.createElement('input');
@@ -674,12 +674,12 @@ function appendJobsToData(xmlDoc) {
 
 function saveToXML() {
   var fileName = prompt('Enter a filename:', 'ScheduleData');
-
+  
   if (fileName !== null) {
 
     // Check if there's existing XML content in local storage
     var existingXmlString = localStorage.getItem('loadedXML');
-
+    console.log("XML Content:", existingXmlString); // Add this line
     if (existingXmlString) {
       // Parse the existing XML content
       var parser = new DOMParser();
@@ -691,15 +691,24 @@ function saveToXML() {
         dataElement = xmlDoc.createElement('data');
         xmlDoc.appendChild(dataElement);
       }
-
       // Append new <job> elements to the <data> element
-      appendJobsToData(xmlDoc);
+      // appendJobsToData(xmlDoc);
 
       // Serialize the updated XML back to string
       var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
 
-      // Save the updated XML content back to local storage
-      localStorage.setItem('loadedXML', updatedXmlString);
+      console.log(updatedXmlString);
+
+      //Create a Blob and a download link
+      var blob = new Blob([updatedXmlString], { type: 'application/xml' });
+      var downloadLink = document.createElement('a');
+
+      downloadLink.download = fileName + '.xml';
+      downloadLink.href = window.URL.createObjectURL(blob);
+
+      console.log("SAVED");
+      // Trigger a click on the download link
+      downloadLink.click();
     } else {
       // Save as a fresh XML file
       var xmlDoc = document.implementation.createDocument(null, 'data', null);
