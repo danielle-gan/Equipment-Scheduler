@@ -102,6 +102,8 @@ function drop(event) {
         draggedBlock.setAttribute('data-grid-colheader', gridColHeader);
         draggedBlock.setAttribute('data-grid-rowheader', gridRowHeader);
 
+        pastDateChecker(draggedBlock);
+
         // Retrieve existing XML content from localStorage
         var loadedXML = localStorage.getItem('loadedXML');
 
@@ -804,4 +806,22 @@ function removeJobFromLocalStorage(jobNum, generalDesc, gridColHeader) {
       localStorage.setItem('loadedXML', updatedXmlString);
     }
   }
+}
+
+// called on drop to see if data-shipDate attribute is before the grid column header 
+function pastDateChecker(div) {
+var shipDatestr = div.getAttribute('data-ship-date');
+var schedDatestr = div.getAttribute('data-grid-colheader');
+
+var shipDate = new Date(shipDatestr);
+var schedDate = new Date(schedDatestr);
+
+console.log("Ship Date:" + shipDate,"Sched Date:" + schedDate);
+if (shipDate < schedDate) {
+  console.log("SHIP DATE BEFORE SCHED DATE!");
+  div.classList.add('pastDate');
+}
+else {
+  div.classList.remove('pastDate');
+}
 }

@@ -310,3 +310,11 @@ h3 {
 .editable {
   padding: 20px;
 }
+
+.pastDate {
+  color: var(--red);
+}
+
+.goodToRun {
+  background-color: var(--green);
+}

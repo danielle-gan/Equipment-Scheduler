@@ -78,13 +78,13 @@ CORE STYLES ABOVE - NO TOUCHY
 
 /* Style: Testing */
 .toggle-radio[data-color='test'] > input + label							{color:black;}
-.toggle-radio[data-color='test'] > input:first-of-type:checked + label		{color:white; background:#993100;}
-.toggle-radio[data-color='test'] > input:last-of-type:checked + label		{color:white; background:#007f24;}
+.toggle-radio[data-color='test'] > input:first-of-type:checked + label		{color:white; background:#D22F25;}
+.toggle-radio[data-color='test'] > input:last-of-type:checked + label		{color:white; background:#338b38;}
 
 .toggle-radio[data-color='test2'] > input + label							{color:#080808;}
 .toggle-radio[data-color='test2'] > input:checked + label					{color:black; background:#f1c30f;}
-.toggle-radio[data-color='test2'] > input:first-of-type:checked + label		{color:white; background:#993100;}
-.toggle-radio[data-color='test2'] > input:last-of-type:checked + label		{color:white; background:#007f24;}
+.toggle-radio[data-color='test2'] > input:first-of-type:checked + label		{color:white; background:#D22F25;}
+.toggle-radio[data-color='test2'] > input:last-of-type:checked + label		{color:white; background:#338b38;}
 
 /* ------------------------------ */
 
