@@ -689,7 +689,9 @@ function saveToXML() {
 // LOAD BUTTON 
 const loadBtn = document.getElementById('load-btn');
 loadBtn.addEventListener('click', () => {
-  loadXMLAndSaveToLocalStorage();
+  clearDragMeDivs('.dragInto', () => {
+    loadXMLAndSaveToLocalStorage();
+});
 })
 
 // CHANGE DATE BUTTON

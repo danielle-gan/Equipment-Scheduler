@@ -46,6 +46,7 @@ header h1 {
   border: 2px solid #ccc;
   text-wrap: pretty;
   justify-content: center;
+  word-break: break-word;
 }
 
 .fixed {
@@ -220,6 +221,7 @@ header h1 {
   height: 36px;
   border: 3px dotted var(--navy);
   width: 305px;
+  text-wrap: pretty;
   /* margin-top: 1%; */
 }
 
