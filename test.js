@@ -215,6 +215,7 @@ radioGroups.forEach((radioGroup) => {
 });
 
 const button = document.getElementById('addBtn');
+const clrButton = document.getElementById('clearBtn');
 const dragMe = document.getElementById('dragMe');
 const flex = document.getElementById('itemStage');
 
@@ -405,6 +406,11 @@ button.addEventListener('click', function (event) {
   const purchaseValue = getSelectedRadioValue('purchase');
   createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, flex);
   resetForm();
+})
+
+clrButton.addEventListener('click', function (event) {
+  event.preventDefault();
+  resetForm();  
 })
 
 function resetForm() {
@@ -703,6 +709,12 @@ loadBtn.addEventListener('click', () => {
 const dateBtn = document.getElementById('date-btn');
 dateBtn.addEventListener('click', () => {
   const userDateInput = prompt('Enter a date (MM/DD/YYYY):');
+
+  if (userDateInput === null || (isNaN(userDate.getTime()))) {
+    alert('Invalid date input. Please enter a valid date.');
+    return; // Exit the function without making any changes
+  }
+
   const userDate = new Date(userDateInput);
   var storedXmlContent = localStorage.getItem('loadedXML');
 
