@@ -52,15 +52,7 @@ function isToday(textContent) {
   return textContent === formattedToday;
 }
 
-function highlightToday() {
-  const paragraphs = document.querySelectorAll('.day-label');
 
-  paragraphs.forEach(paragraph => {
-    if (isToday(paragraph.textContent.trim())) {
-      paragraph.classList.add('highlight');
-    }
-  });
-}
 
 // Drag and Drop Functionality
 let draggedBlock;
@@ -190,8 +182,6 @@ const mats = document.getElementsByName("mats");
 const dies = document.getElementsByName("dies");
 const plates = document.getElementsByName("plates");
 const purchase = document.getElementsByName("purchase");
-
-
 
 function getSelectedRadioValue(groupName) {
   const radioGroup = document.getElementsByName(groupName);
@@ -435,32 +425,6 @@ function resetForm() {
   document.getElementById('purchase-no').checked = true;
 }
 
-
-// Function to save XML content
-// function saveToXML() {
-//   var fileName = prompt('Enter a filename:', 'ScheduleData');
-
-//   if (fileName !== null) {
-//     var xmlContent = localStorage.getItem('loadedXML');
-//     console.log("XML Content:", xmlContent); // Add this line
-
-//     if (xmlContent) {
-//       // Create a Blob and a download link
-//       var blob = new Blob([xmlContent], { type: 'application/xml' });
-//       var downloadLink = document.createElement('a');
-
-//       downloadLink.download = fileName + '.xml';
-//       downloadLink.href = window.URL.createObjectURL(blob);
-
-//       console.log("SAVED");
-//       // Trigger a click on the download link
-//       downloadLink.click();
-//     } else {
-//       alert('No XML content to save.');
-//     }
-//   }
-// }
-
 function loadExistingXML(callback) {
   var fileInput = document.createElement('input');
   fileInput.type = 'file';
@@ -503,7 +467,6 @@ function loadXMLAndSaveToLocalStorage() {
         // Save XML content to local storage
         localStorage.setItem('loadedXML', xmlContent);
 
-        // You can also parse the XML content and perform additional actions if needed
         parseXML(xmlContent);
       };
 
@@ -651,7 +614,6 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
 const saveBtn = document.getElementById('save-btn');
 saveBtn.addEventListener('click', () => {
   saveToXML();
-  console.log("saved");
 })
 
 // Function to append new <job> elements to the <data> element
@@ -679,7 +641,6 @@ function saveToXML() {
 
     // Check if there's existing XML content in local storage
     var existingXmlString = localStorage.getItem('loadedXML');
-    console.log("XML Content:", existingXmlString); // Add this line
     if (existingXmlString) {
       // Parse the existing XML content
       var parser = new DOMParser();
@@ -691,13 +652,9 @@ function saveToXML() {
         dataElement = xmlDoc.createElement('data');
         xmlDoc.appendChild(dataElement);
       }
-      // Append new <job> elements to the <data> element
-      // appendJobsToData(xmlDoc);
 
       // Serialize the updated XML back to string
       var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
-
-      console.log(updatedXmlString);
 
       //Create a Blob and a download link
       var blob = new Blob([updatedXmlString], { type: 'application/xml' });
@@ -706,7 +663,6 @@ function saveToXML() {
       downloadLink.download = fileName + '.xml';
       downloadLink.href = window.URL.createObjectURL(blob);
 
-      console.log("SAVED");
       // Trigger a click on the download link
       downloadLink.click();
     } else {
@@ -741,16 +697,27 @@ const dateBtn = document.getElementById('date-btn');
 dateBtn.addEventListener('click', () => {
   const userDateInput = prompt('Enter a date (MM/DD/YYYY):');
   const userDate = new Date(userDateInput);
+  var storedXmlContent = localStorage.getItem('loadedXML');
 
-  // Check if the user provided a valid date
+  clearDragMeDivs('.dragInto');
+  removeHighlights();
+
   if (!isNaN(userDate.getTime())) {
     populateDayLabels(userDate);
+    highlightToday();
+    parseXML(storedXmlContent);
   } else {
     alert('Invalid date input. Please enter a valid date.');
   }
+});
 
-  highlightToday();
-})
+
+function clearDragMeDivs(selector) {
+  const dragMeDivs = document.querySelectorAll(selector);
+  dragMeDivs.forEach((dragMeDiv) => {
+    dragMeDiv.innerHTML = ''; // Remove all child elements
+  });
+}
 
 //On loading in, divs are no longer draggable, hence why this function is necessary
 function makeDivsDraggable() {
@@ -761,6 +728,23 @@ function makeDivsDraggable() {
       event.dataTransfer.setData('text/plain', draggable.id);
     });
   })
+}
+
+function highlightToday() {
+  const paragraphs = document.querySelectorAll('.day-label');
+
+  paragraphs.forEach(paragraph => {
+    if (isToday(paragraph.textContent.trim())) {
+      paragraph.classList.add('highlight');
+    }
+  });
+}
+
+function removeHighlights() {
+  const divs = document.querySelectorAll('.highlight');
+  divs.forEach(div => {
+    div.classList.remove('highlight');
+  });
 }
 
 // On dropping into the trash can
