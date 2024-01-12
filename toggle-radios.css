@@ -84,7 +84,7 @@ CORE STYLES ABOVE - NO TOUCHY
 .toggle-radio[data-color='test2'] > input + label							{color:#080808;}
 .toggle-radio[data-color='test2'] > input:checked + label					{color:black; background:#f1c30f;}
 .toggle-radio[data-color='test2'] > input:first-of-type:checked + label		{color:white; background:#D22F25;}
-.toggle-radio[data-color='test2'] > input:last-of-type:checked + label		{color:white; background:#338b38;}
+.toggle-radio[data-color='test2'] > input:last-of-type:checked + label		{color:white; background:#338b38}
 
 /* ------------------------------ */
 
@@ -104,7 +104,7 @@ CORE STYLES ABOVE - NO TOUCHY
 
 /* Large (lg) and up */
 @media (min-width:992px) {
-	.toggle-radio > input + label				{display:inline-block; float:left; border-width:1px 0 1px 1px;}
+	.toggle-radio > input + label				{float:left; border-width:1px 0 1px 1px;}
 	.toggle-radio > input:last-of-type + label 	{border-right-width:1px;}
 	.toggle-radio > input + label:before		{display:none;}
 
