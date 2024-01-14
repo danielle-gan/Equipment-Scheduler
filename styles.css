@@ -12,7 +12,7 @@ html {
 
 
 header {
-  position: absolute;
+  --position: absolute;
   top: 0px;
   left: 0px;
   width: 200%;
@@ -104,7 +104,7 @@ header h1 {
 
 .flex-container {
   display: flex;
-  justify-content: center;
+  justify-content:end;
   align-items: center;
 }
 

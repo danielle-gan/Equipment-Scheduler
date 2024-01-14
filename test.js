@@ -710,12 +710,17 @@ const dateBtn = document.getElementById('date-btn');
 dateBtn.addEventListener('click', () => {
   const userDateInput = prompt('Enter a date (MM/DD/YYYY):');
 
-  if (userDateInput === null || (isNaN(userDate.getTime()))) {
+  const userDate = new Date(userDateInput);
+
+  if (userDateInput === "" || (isNaN(userDate.getTime()))) {
     alert('Invalid date input. Please enter a valid date.');
     return; // Exit the function without making any changes
   }
 
-  const userDate = new Date(userDateInput);
+  if(userDateInput === null) {
+    return;
+  }
+
   var storedXmlContent = localStorage.getItem('loadedXML');
 
   clearDragMeDivs('.dragInto');
@@ -827,7 +832,6 @@ function removeJobFromLocalStorage(jobNum, generalDesc, gridColHeader) {
 
 // called on drop to see if data-shipDate attribute is before the grid column header 
 function pastDateChecker(div) {
-console.log("Checking Dates");
 var shipDatestr = div.getAttribute('data-ship-date');
 var schedDatestr = div.getAttribute('data-grid-colheader');
 
