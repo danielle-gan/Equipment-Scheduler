@@ -258,12 +258,12 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
 
   const label = `${jobNum.value} | ${customer.value} | ${runTime.value} | ${shipDate.value}`
   const details = `   
-  <div class="flex-container">
+  <div class="flex-modal">
   <div>
     <p>Job Number: ${jobNum.value}</p>
     <p>Customer: ${customer.value}</p>
     <p>Run Time: ${runTime.value}</p>
-    <p>Ship Date: ${shipDate.value}</p>
+    <p id="ship-date">Ship Date: ${shipDate.value}</p>
     <p>Description: ${description.value}</p>
     <p>Number Of Copies: ${numCopies.value}</p>
     <p>Linear Footage: ${linearFootage.value}</p>
@@ -272,14 +272,14 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
     <p>Print Cylinder Size: ${printCyl.value}</p>
     <p>Tool Cylinder Size: ${toolCyl.value}</p>
   </div>
-  <div>
-    <p>Art?:${art} </p>
-    <p>Proof Sent?:${proofSent} </p>
-    <p>Proof Approved?:${proofApp} </p>
-    <p>Materials Ordered?:${mats} </p>
-    <p>Dies Ordered?:${dies} </p>
-    <p>Plates Ordered?:${plates} </p>
-    <p>Purchase Order?:${purchase} </p>
+  <div id="radio-loggers">
+    <p>Art?: ${art} </p>
+    <p>Proof Sent?: ${proofSent} </p>
+    <p>Proof Approved?: ${proofApp} </p>
+    <p>Materials Ordered?: ${mats} </p>
+    <p>Dies Ordered?: ${dies} </p>
+    <p>Plates Ordered?: ${plates} </p>
+    <p>Purchase Order?: ${purchase} </p>
   </div>
 </div>
 `
@@ -295,7 +295,6 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   dragDiv.addEventListener('dragstart', dragStart);
 
   dragDiv.dataset.details = details; 
-  // + dragDiv.id;
 
   dragDiv.addEventListener('click', () => showModal(dragDiv, dragDiv.dataset.details));
 
@@ -337,24 +336,29 @@ function showModal(dragdiv, details) {
 
     if (artForm === 'YES') {
       document.getElementById('art-yes').checked = true;
+
     } else {
       document.getElementById('art-no').checked = true;
+      modal.classList.add('red-border');
     }
 
     if (proofsentForm === 'YES') {
       document.getElementById('proof-sent-yes').checked = true;
     } else {
       document.getElementById('proof-sent-no').checked = true;
+      modal.classList.add('red-border');
     }
 
     if (proofappForm === 'YES') {
       document.getElementById('proof-app-yes').checked = true;
     } else {
       document.getElementById('proof-app-no').checked = true;
+      modal.classList.add('red-border');
     }
 
     if (matsForm === 'NO') {
       document.getElementById('mat-no').checked = true;
+      modal.classList.add('red-border');
     } else if (matsForm === 'YES') {
       document.getElementById('mat-yes').checked = true;
     }
@@ -364,6 +368,7 @@ function showModal(dragdiv, details) {
 
     if (diesForm === 'NO') {
       document.getElementById('dies-no').checked = true;
+      modal.classList.add('red-border');
     } else if (diesForm === 'YES') {
       document.getElementById('dies-yes').checked = true;
     }
@@ -373,6 +378,7 @@ function showModal(dragdiv, details) {
 
     if (platesForm === 'NO') {
       document.getElementById('plates-no').checked = true;
+      modal.classList.add('red-border');
     } else if (platesForm === 'YES') {
       document.getElementById('plates-yes').checked = true;
     }
@@ -384,6 +390,7 @@ function showModal(dragdiv, details) {
       document.getElementById('purchase-yes').checked = true;
     } else {
       document.getElementById('purchase-no').checked = true;
+      modal.classList.add('red-border');
     }
 
     document.getElementById('JobNum').value = jobForm;
@@ -397,6 +404,17 @@ function showModal(dragdiv, details) {
     document.getElementById('DollarValue').value = dollarsForm;
     document.getElementById('PrintCylinder').value = printcylForm;
     document.getElementById('ToolCylinder').value = toolcylForm;
+
+    var shipDateattr = new Date(dragdiv.getAttribute('data-ship-date'));
+    var schedDateattr = new Date(dragdiv.getAttribute('data-grid-colheader'));
+    var shipDateID = document.getElementById('ship-date');
+
+    if (shipDateattr < schedDateattr) {
+      shipDateID.classList.add('pastDate'); 
+    }
+    else {
+      shipDateID.classList.remove('pastDate');
+    }
 
   }
 }
@@ -605,7 +623,7 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
       <p>Job Number: ${jobNum}</p>
       <p>Customer: ${customer}</p>
       <p>Run Time: ${runTime}</p>
-      <p>Ship Date: ${shipDate}</p>
+      <p id="ship-date">Ship Date: ${shipDate}</p>
       <p>Description: ${description}</p>
       <p>Number Of Copies: ${numCopies}</p>
       <p>Linear Footage: ${linearFootage}</p>
@@ -614,7 +632,7 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
       <p>Print Cylinder Size: ${printCyl}</p>
       <p>Tool Cylinder Size: ${toolCyl}</p>
     </div>
-    <div>
+    <div id="radio-loggers">
       <p>Art?:${artValue} </p>
       <p>Proof Sent?:${proofsentValue} </p>
       <p>Proof Approved?:${proofappValue} </p>
@@ -624,7 +642,7 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
       <p>Purchase Order?:${purchaseValue} </p>
     </div>
   </div>
-                `
+  `
   // Display main info
   dragDiv.innerHTML += label;
 
@@ -795,6 +813,14 @@ dateBtn.addEventListener('click', () => {
   const datePicker = document.createElement('input');
   datePicker.type = 'date';
 
+  // close button
+  const closeButton = document.createElement('button');
+  closeButton.textContent = 'Cancel';
+  closeButton.addEventListener('click', () => {
+  // Remove the modal
+  document.body.removeChild(modalContainer);
+});
+
   // Add an event listener for when the user selects a date
   datePicker.addEventListener('change', () => {
     const userDateInput = datePicker.value;
@@ -825,8 +851,9 @@ dateBtn.addEventListener('click', () => {
     document.body.removeChild(modalContainer);
   });
 
-  // Append the date picker to the modal container
+  // Append the date picker and the close button to the modal container
   modalContainer.appendChild(datePicker);
+  modalContainer.appendChild(closeButton);
 
   // Append the modal container to the body to make it visible
   document.body.appendChild(modalContainer);
