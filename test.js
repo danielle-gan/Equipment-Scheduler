@@ -963,11 +963,22 @@ else {
 
 // checks the radio controls to see the status of the job
 function statusChecker(div) {
-  var statusArray = ['data-art', 'data-proof-sent', 'data-proof-app', 'data-mats', 'data-dies', 'data-plates', 'data-purchase'];
+  var statusArray = ['data-art', 'data-proof-sent', 'data-proof-app', 'data-purchase'];
+  var tripleStatusArray = ['data-mats', 'data-dies', 'data-plates',]
 
   for (var status = 0; status < statusArray.length; status++) {
     var statusName = statusArray[status];
-    if (div.getAttribute(statusName) == "YES" || div.getAttribute(statusName) == "RECEIVED") {
+    if (div.getAttribute(statusName) == "YES") {
+      div.classList.add('yellowToRun');
+    }
+    else{
+      div.classList.add('badToRun');
+      div.classList.remove('goodToRun');
+    }
+  } 
+  for (var status = 0; status < tripleStatusArray.length; status++) {
+    var statusName = statusArray[status];
+    if (div.getAttribute(statusName) == "RECEIVED") {
       div.classList.add('goodToRun');
     }
     else{
@@ -975,6 +986,9 @@ function statusChecker(div) {
       div.classList.remove('goodToRun');
     }
   } 
+
+
+  
 }
 
 //toggles edit mode for row headers

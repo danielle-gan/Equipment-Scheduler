@@ -343,6 +343,10 @@ h3 {
   border-color: var(--green);
 }
 
+.yellowToRun {
+  border-color: rgb(224, 188, 28);  
+}
+
 /* for lack of a better name */
 .badToRun {
   border-color: var(--red);
