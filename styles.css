@@ -249,9 +249,6 @@ header h1 {
 .highlight {
   background-color: var(--gray);
   color: var(--navy);
-  font-weight: bold;
-  padding: 10px;
-  /* box-shadow: -5px 5px var(--navy); */
 }
 
 #trash-can {

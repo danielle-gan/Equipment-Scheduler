@@ -7,16 +7,13 @@ window.onload = function () {
   if (userDate == null || userDate.trim == "" )  {
     alert(`Invalid date input. Using today's date.`);
     userDate = new Date();
-    console.log(userDate);
     populateDayLabels(userDate);
   }
   else if (!isNaN(userDate.getTime())) {
     populateDayLabels(userDate);
-    console.log(userDate);  
   } 
   else {
     userDate = new Date();
-    console.log(userDate);
     populateDayLabels(userDate);
   }
 
@@ -844,7 +841,6 @@ dateBtn.addEventListener('click', () => {
         removeHighlights();
         populateDayLabels(userDate);
         highlightToday();
-        console.log('No XML content found in local storage.');
       }
     }
     // Remove the modal
@@ -936,7 +932,6 @@ function removeJobFromLocalStorage(jobNum, generalDesc, gridColHeader) {
         jobNumInXml === jobNum && generalDescInXml === generalDesc && gridColHeaderInXml === gridColHeader
       ) {
         jobToRemove = job;
-        console.log(jobToRemove);
       }
     });
 
@@ -959,25 +954,21 @@ var shipDate = new Date(shipDatestr);
 var schedDate = new Date(schedDatestr);
 
 if (shipDate < schedDate) {
-  console.log("SHIP DATE BEFORE SCHED DATE!");
   div.classList.add('pastDate');
 }
 else {
   div.classList.remove('pastDate');
-  console.log(div.id + "this div is scheduled properly");
 }
 }
 
 // checks the radio controls to see the status of the job
 function statusChecker(div) {
-  console.log("Checking Status");
   var statusArray = ['data-art', 'data-proof-sent', 'data-proof-app', 'data-mats', 'data-dies', 'data-plates', 'data-purchase'];
 
   for (var status = 0; status < statusArray.length; status++) {
     var statusName = statusArray[status];
     if (div.getAttribute(statusName) == "YES" || div.getAttribute(statusName) == "RECEIVED") {
       div.classList.add('goodToRun');
-      console.log(div.id + "this div is good to run");
     }
     else{
       div.classList.add('badToRun');
@@ -990,3 +981,9 @@ function statusChecker(div) {
 function toggleEditMode(element) {
   element.contentEditable = !element.isContentEditable;
 }
+
+
+
+// Add event listener to the print button
+var printButton = document.getElementById('print-btn');
+printButton.addEventListener('click', () => window.print());
