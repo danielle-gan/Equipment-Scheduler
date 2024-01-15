@@ -1,13 +1,23 @@
 window.onload = function () {
   // Ask the user for a date input
   const userDateInput = prompt('Enter a date (MM/DD/YYYY):');
-  const userDate = new Date(userDateInput);
+  var userDate = new Date(userDateInput);
 
   // Check if the user provided a valid date
-  if (!isNaN(userDate.getTime())) {
+  if (userDate == null || userDate.trim == "" )  {
+    alert(`Invalid date input. Using today's date.`);
+    userDate = new Date();
+    console.log(userDate);
     populateDayLabels(userDate);
-  } else {
-    alert('Invalid date input. Please enter a valid date.');
+  }
+  else if (!isNaN(userDate.getTime())) {
+    populateDayLabels(userDate);
+    console.log(userDate);  
+  } 
+  else {
+    userDate = new Date();
+    console.log(userDate);
+    populateDayLabels(userDate);
   }
 
   highlightToday();
