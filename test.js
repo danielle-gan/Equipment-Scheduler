@@ -52,8 +52,6 @@ function isToday(textContent) {
   return textContent === formattedToday;
 }
 
-
-
 // Drag and Drop Functionality
 let draggedBlock;
 
@@ -194,8 +192,6 @@ function getSelectedRadioValue(groupName) {
       return radioButton.value;
     }
   }
-
-  // Return null if no radio button is selected
   return null;
 }
 
@@ -221,7 +217,7 @@ const flex = document.getElementById('itemStage');
 
 let details = '';
 
-
+// for creating jobs in the DOM with the form
 function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, art, proofSent, proofApp, mats, dies, plates, purchase, appendTarget) {
 
   var dragDiv = document.createElement('div');
@@ -296,7 +292,7 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   makeDivsDraggable();
 }
 
-// this one is for divs created using the form
+// Show modal with extra details on click
 function showModal(dragdiv, details) {
   if (!document.getElementById('modal')) {
 
@@ -395,6 +391,7 @@ function showModal(dragdiv, details) {
   }
 }
 
+// On clicking the add button, grab the values from the form and create a div holder
 button.addEventListener('click', function (event) {
   event.preventDefault();
   const artValue = getSelectedRadioValue('art');
@@ -408,11 +405,13 @@ button.addEventListener('click', function (event) {
   resetForm();
 })
 
+// Clear the form with the "-" button
 clrButton.addEventListener('click', function (event) {
   event.preventDefault();
   resetForm();  
 })
 
+// reset form entries 
 function resetForm() {
   document.getElementById('JobNum').value = "";
   document.getElementById('Customer').value = "";
@@ -483,7 +482,6 @@ function loadXMLAndSaveToLocalStorage() {
     }
   });
 
-  // Trigger a click on the file input to open the file chooser dialog
   fileInput.click();
 }
 
@@ -492,6 +490,25 @@ function parseXML(xmlContent) {
   var xmlDoc = parser.parseFromString(xmlContent, 'application/xml');
 
   var jobs = xmlDoc.querySelectorAll('job');
+  var machine1 = xmlDoc.querySelector('machine1').textContent;
+  var machine2 = xmlDoc.querySelector('machine2').textContent;
+  var machine3 = xmlDoc.querySelector('machine3').textContent;
+  var machine4 = xmlDoc.querySelector('machine4').textContent;
+  var machine5 = xmlDoc.querySelector('machine5').textContent;
+
+  var machine1DOM = document.getElementById('machine1');
+  var machine2DOM = document.getElementById('machine2');
+  var machine3DOM = document.getElementById('machine3');
+  var machine4DOM = document.getElementById('machine4');
+  var machine5DOM = document.getElementById('machine5');
+
+  console.log(machine1DOM, machine2DOM, machine3DOM, machine4DOM, machine5DOM)
+
+  machine1DOM.innerHTML = machine1;
+  machine2DOM.innerHTML = machine2;
+  machine3DOM.innerHTML = machine3;
+  machine4DOM.innerHTML = machine4;
+  machine5DOM.innerHTML = machine5;
 
   jobs.forEach(function (job) {
 
@@ -629,7 +646,7 @@ saveBtn.addEventListener('click', () => {
   saveToXML();
 })
 
-// Function to append new <job> elements to the <data> element
+// Function to append new <job> elements to the <data> element (XML)
 function appendJobsToData(xmlDoc) {
   var dragDivs = document.querySelectorAll('.dragMe');
   var dataElement = xmlDoc.querySelector('data');
@@ -647,6 +664,29 @@ function appendJobsToData(xmlDoc) {
   });
 }
 
+// function to append <machine> elements to the <data> element (XML) 
+function appendMachinesToData(xmlDoc) {
+  var editableParagraphs = document.querySelectorAll('.editable');
+  var dataElement = xmlDoc.createElement('data');
+
+  editableParagraphs.forEach(function(paragraph, index) {
+    var machineElement = xmlDoc.createElement('machine' + (index + 1));
+    machineElement.textContent = paragraph.textContent;
+    dataElement.appendChild(machineElement);
+  });
+
+  // Assuming xmlDoc is your existing XML document
+  var existingDataElement = xmlDoc.querySelector('data');
+  if (existingDataElement) {
+    // Replace existing data with new data
+    existingDataElement.parentNode.replaceChild(dataElement, existingDataElement);
+  } else {
+    // If no existing data, just append
+    xmlDoc.documentElement.appendChild(dataElement);
+  }
+}
+
+// Save over an existing load file, or save a fresh file
 function saveToXML() {
   var fileName = prompt('Enter a filename:', 'ScheduleData');
   
@@ -682,7 +722,7 @@ function saveToXML() {
       // Save as a fresh XML file
       var xmlDoc = document.implementation.createDocument(null, 'data', null);
       appendJobsToData(xmlDoc);
-
+      appendMachinesToData(xmlDoc);
       // Serialize the XML to string
       var freshXmlString = new XMLSerializer().serializeToString(xmlDoc);
 
@@ -744,7 +784,7 @@ function clearDragMeDivs(selector) {
   return
 }
 
-//On loading in, divs are no longer draggable, hence why this function is necessary
+//On loading divs in, divs are no longer draggable, hence why this function is necessary
 function makeDivsDraggable() {
   var draggables = document.querySelectorAll('.dragMe');
   draggables.forEach(function (draggable) {
@@ -784,10 +824,8 @@ function deleteDraggedElement(event) {
     const draggedGenDesc = draggedElement.dataset.generalDesc;
     const draggedHeader = draggedElement.dataset.gridColheader;
 
-    // Remove the corresponding job from local storage
+    // remove job from local storage and remove job from the DOM
     removeJobFromLocalStorage(draggedJobNum, draggedGenDesc, draggedHeader);
-
-    // Remove the element from the DOM
     draggedElement.remove();
   }
 }
@@ -798,13 +836,12 @@ function removeJobFromLocalStorage(jobNum, generalDesc, gridColHeader) {
   var storedXmlContent = localStorage.getItem('loadedXML');
 
   if (storedXmlContent) {
-    // Parse the XML string to an XML object
     var parser = new DOMParser();
     var xmlDoc = parser.parseFromString(storedXmlContent, 'application/xml');
 
-    // Find the job with the specified attributes
+    // grab all jobs
     var jobs = xmlDoc.querySelectorAll('job');
-
+    // initialize variable for the job that's getting removed
     var jobToRemove;
 
     jobs.forEach(function (job) {
@@ -848,6 +885,7 @@ else {
 }
 }
 
+// checks the radio controls to see the status of the job
 function statusChecker(div) {
   console.log("Checking Status");
   var statusArray = ['data-art', 'data-proof-sent', 'data-proof-app', 'data-mats', 'data-dies', 'data-plates', 'data-purchase'];
@@ -863,4 +901,9 @@ function statusChecker(div) {
       div.classList.remove('goodToRun');
     }
   } 
+}
+
+//toggles edit mode for row headers
+function toggleEditMode(element) {
+  element.contentEditable = !element.isContentEditable;
 }

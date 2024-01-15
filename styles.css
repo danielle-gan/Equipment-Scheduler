@@ -29,14 +29,13 @@ header h1 {
 .grid {
   display: grid;
   grid-template-columns: 200px repeat(14, 20rem);
-  grid-template-rows: 120px repeat(6, 100px);
-  height: 700px;
+  grid-template-rows: 70px repeat(6, 100px);
+  height: 650px;
   grid-column-gap: 7px;
   grid-row-gap: 7px;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
-  margin-top: 3%;
   text-align: center;
   padding-left: 5px;
 }
@@ -104,7 +103,7 @@ header h1 {
 
 .flex-container {
   display: flex;
-  justify-content:end;
+  justify-content: center;
   align-items: center;
 }
 

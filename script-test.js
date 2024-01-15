@@ -280,10 +280,6 @@ function makeDivsDraggable() {
   })
 }
 
-function toggleEditMode(element) {
-  element.contentEditable = !element.isContentEditable;
-}
-
 // Checks if it's today's date
 function isToday(textContent) {
   const todayDate = new Date();
