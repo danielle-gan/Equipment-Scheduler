@@ -675,15 +675,8 @@ function appendMachinesToData(xmlDoc) {
     dataElement.appendChild(machineElement);
   });
 
-  // Assuming xmlDoc is your existing XML document
-  var existingDataElement = xmlDoc.querySelector('data');
-  if (existingDataElement) {
-    // Replace existing data with new data
-    existingDataElement.parentNode.replaceChild(dataElement, existingDataElement);
-  } else {
-    // If no existing data, just append
-    xmlDoc.documentElement.appendChild(dataElement);
-  }
+  xmlDoc.documentElement.appendChild(dataElement);
+
 }
 
 // Save over an existing load file, or save a fresh file
