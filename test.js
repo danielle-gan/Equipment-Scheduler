@@ -512,8 +512,6 @@ function parseXML(xmlContent) {
   var machine4DOM = document.getElementById('machine4');
   var machine5DOM = document.getElementById('machine5');
 
-  console.log(machine1DOM, machine2DOM, machine3DOM, machine4DOM, machine5DOM)
-
   machine1DOM.innerHTML = machine1;
   machine2DOM.innerHTML = machine2;
   machine3DOM.innerHTML = machine3;
@@ -749,35 +747,90 @@ loadBtn.addEventListener('click', () => {
 })
 
 // CHANGE DATE BUTTON
+// const dateBtn = document.getElementById('date-btn');
+// dateBtn.addEventListener('click', () => {
+//   const userDateInput = prompt('Enter a date (MM/DD/YYYY):');
+
+//   const userDate = new Date(userDateInput);
+
+//   if (userDateInput === "" || (isNaN(userDate.getTime()))) {
+//     alert('Invalid date input. Please enter a valid date.');
+//     return; // Exit the function without making any changes
+//   }
+
+//   if(userDateInput === null) {
+//     return;
+//   }
+
+//   var storedXmlContent = localStorage.getItem('loadedXML');
+
+//   clearDragMeDivs('.dragInto');
+//   removeHighlights();
+
+//   if (!isNaN(userDate.getTime())) {
+//     populateDayLabels(userDate);
+//     highlightToday();
+//     parseXML(storedXmlContent);
+//   } else {
+//     alert('Invalid date input. Please enter a valid date.');
+//   }
+// });
+
+// CHANGE DATE BUTTON
 const dateBtn = document.getElementById('date-btn');
 dateBtn.addEventListener('click', () => {
-  const userDateInput = prompt('Enter a date (MM/DD/YYYY):');
+  // Create a modal container
+  const modalContainer = document.createElement('div');
+  modalContainer.style.position = 'fixed';
+  modalContainer.style.top = '0';
+  modalContainer.style.left = '0';
+  modalContainer.style.width = '100%';
+  modalContainer.style.height = '100%';
+  modalContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+  modalContainer.style.display = 'flex';
+  modalContainer.style.justifyContent = 'center';
+  modalContainer.style.alignItems = 'center';
 
-  const userDate = new Date(userDateInput);
+  // Create a date picker
+  const datePicker = document.createElement('input');
+  datePicker.type = 'date';
 
-  if (userDateInput === "" || (isNaN(userDate.getTime()))) {
-    alert('Invalid date input. Please enter a valid date.');
-    return; // Exit the function without making any changes
-  }
+  // Add an event listener for when the user selects a date
+  datePicker.addEventListener('change', () => {
+    const userDateInput = datePicker.value;
+    const userDate = new Date(userDateInput);
 
-  if(userDateInput === null) {
-    return;
-  }
+    if (userDateInput === "" || isNaN(userDate.getTime())) {
+      alert('Invalid date input. Please enter a valid date.');
+    } else {
+      // Add one day to the userDate
+      userDate.setDate(userDate.getDate() + 1);
 
-  var storedXmlContent = localStorage.getItem('loadedXML');
+      // Check if loadedXML content exists in local storage
+      const storedXmlContent = localStorage.getItem('loadedXML');
+      if (storedXmlContent) {
+        clearDragMeDivs('.dragInto');
+        removeHighlights();
+        populateDayLabels(userDate);
+        highlightToday();
+        parseXML(storedXmlContent);
+      } else {
+        removeHighlights();
+        populateDayLabels(userDate);
+        highlightToday();
+        console.log('No XML content found in local storage.');
+      }
+    }
+    // Remove the modal
+    document.body.removeChild(modalContainer);
+  });
 
-  clearDragMeDivs('.dragInto');
-  removeHighlights();
+  // Append the date picker to the modal container
+  modalContainer.appendChild(datePicker);
 
-  if (!isNaN(userDate.getTime())) {
-    populateDayLabels(userDate);
-    highlightToday();
-    parseXML(storedXmlContent);
-  } else {
-    alert('Invalid date input. Please enter a valid date.');
-  }
+  // Append the modal container to the body to make it visible
+  document.body.appendChild(modalContainer);
 });
-
 
 function clearDragMeDivs(selector) {
   const dragMeDivs = document.querySelectorAll(selector);
