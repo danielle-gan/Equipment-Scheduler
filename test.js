@@ -1,26 +1,20 @@
 window.onload = function () {
-  // Ask the user for a date input
   const userDateInput = prompt('Enter a date (MM/DD/YYYY):');
   var userDate = new Date(userDateInput);
 
-  // Check if the user provided a valid date
-  if (userDate == null || userDate.trim == "" )  {
-    alert(`Invalid date input. Using today's date.`);
-    userDate = new Date();
+  // Check if the user provided a valid date, otherwise use today's date
+  if (!isNaN(userDate.getTime())) {
     populateDayLabels(userDate);
   }
-  else if (!isNaN(userDate.getTime())) {
-    populateDayLabels(userDate);
-  } 
   else {
     userDate = new Date();
     populateDayLabels(userDate);
   }
-
-  highlightToday();
-  deleteLoadedXML();
   
-  // Initialize 'loadedXML' with an empty XML structure or any default value
+  highlightToday();
+  localStorage.removeItem('loadedXML');
+
+  // Initialize 'loadedXML' in local storage
   var initialXmlString = `<data>
   <machine1>Machine 1</machine1>
   <machine2>Machine 2</machine2>
@@ -31,43 +25,6 @@ window.onload = function () {
 
   localStorage.setItem('loadedXML', initialXmlString);
 };
-
-function deleteLoadedXML() {
-  localStorage.removeItem('loadedXML');
-}
-
-// Format Date MM/DD/YYYY
-function formatDate(date) {
-  const options = { month: '2-digit', day: '2-digit', year: '4-digit' };
-  return date.toLocaleDateString('en-US', options);
-}
-
-// Function to get the next two weeks of dates from a given start date
-function getNextTwoWeeks(startDate) {
-  const nextTwoWeeks = [];
-  for (let i = 0; i < 14; i++) {
-    const newDate = new Date(startDate);
-    newDate.setDate(startDate.getDate() + i);
-    nextTwoWeeks.push(newDate);
-  }
-  return nextTwoWeeks;
-}
-
-// Function to populate "day-label" divs with the next two weeks of dates
-function populateDayLabels(selectedDate) {
-  const dayLabels = document.querySelectorAll('.day-label');
-  const nextTwoWeeks = getNextTwoWeeks(selectedDate);
-
-  dayLabels.forEach((label, index) => {
-    label.textContent = formatDate(nextTwoWeeks[index]);
-  });
-}
-
-function isToday(textContent) {
-  const todayDate = new Date();
-  const formattedToday = formatDate(todayDate);
-  return textContent === formattedToday;
-}
 
 // Drag and Drop Functionality
 let draggedBlock;
@@ -165,7 +122,7 @@ function appendJobToXML(xmlDoc, draggedBlock) {
   dataElement.appendChild(jobElement);
 }
 
-// to make sure each div is unique
+// to make sure each div id is unique
 function findMaxId() {
   const dragDivs = document.querySelectorAll('.dragMe');
   let maxId = 0;
@@ -201,6 +158,46 @@ const dies = document.getElementsByName("dies");
 const plates = document.getElementsByName("plates");
 const purchase = document.getElementsByName("purchase");
 
+const dragMe = document.getElementById('dragMe');
+const flex = document.getElementById('itemStage');
+
+// BUTTONS
+//ADD BUTTON
+const addbutton = document.getElementById('addBtn');
+addbutton.addEventListener('click', function (event) {
+  event.preventDefault();
+  const artValue = getSelectedRadioValue('art');
+  const proofsentValue = getSelectedRadioValue('proofsent');
+  const proofappValue = getSelectedRadioValue('proofapp');
+  const matsValue = getSelectedRadioValue('mats');
+  const diesValue = getSelectedRadioValue('dies');
+  const platesValue = getSelectedRadioValue('plates');
+  const purchaseValue = getSelectedRadioValue('purchase');
+  createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, flex);
+  resetForm();
+})
+
+//CLEAR BUTTON
+const clrButton = document.getElementById('clearBtn');
+clrButton.addEventListener('click', function (event) {
+  event.preventDefault();
+  resetForm();
+})
+
+// PRINT BUTTON
+var printButton = document.getElementById('print-btn');
+printButton.addEventListener('click', () => window.print());
+// SAVE BUTTON 
+const saveBtn = document.getElementById('save-btn');
+saveBtn.addEventListener('click', () => {
+  saveToXML();
+})
+// LOAD BUTTON 
+const loadBtn = document.getElementById('load-btn');
+loadBtn.addEventListener('click', () => {
+  loadXMLintoLocalStorage();
+})
+
 function getSelectedRadioValue(groupName) {
   const radioGroup = document.getElementsByName(groupName);
 
@@ -220,17 +217,12 @@ radioGroups.forEach((radioGroup) => {
   // Get the radio inputs within the current radio group
   const radioInputs = radioGroup.querySelectorAll('input[type="radio"]');
 
-  // Add event listener to each radio input within the group
   radioInputs.forEach((radioInput) => {
     radioInput.addEventListener('click', function () {
     });
   });
 });
 
-const button = document.getElementById('addBtn');
-const clrButton = document.getElementById('clearBtn');
-const dragMe = document.getElementById('dragMe');
-const flex = document.getElementById('itemStage');
 
 let details = '';
 
@@ -301,11 +293,93 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   appendTarget.appendChild(dragDiv);
   dragDiv.addEventListener('dragstart', dragStart);
 
-  dragDiv.dataset.details = details; 
+  dragDiv.dataset.details = details;
 
   dragDiv.addEventListener('click', () => showModal(dragDiv, dragDiv.dataset.details));
 
   makeDivsDraggable();
+}
+
+// for divs added on load
+function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, appendTarget) {
+
+  var appendTarget = document.getElementById(appendTarget);
+
+  // Create a draggable div
+  var dragDiv = document.createElement('div');
+  dragDiv.classList.add('dragMe');
+  dragDiv.classList.add('dragged');
+
+  dragDiv.setAttribute('data-job-num', jobNum);
+  dragDiv.setAttribute('data-customer', customer);
+  dragDiv.setAttribute('data-run-time', runTime);
+  dragDiv.setAttribute('data-ship-date', shipDate);
+  dragDiv.setAttribute('data-grid-colheader', gridCol);
+  dragDiv.setAttribute('data-grid-rowheader', gridRow);
+  dragDiv.setAttribute('data-general-desc', description);
+  dragDiv.setAttribute('data-num-copies', numCopies);
+  dragDiv.setAttribute('data-linear-footage', linearFootage);
+  dragDiv.setAttribute('data-num-colors', numColors);
+  dragDiv.setAttribute('data-dollar-value', dollarValue);
+  dragDiv.setAttribute('data-print-cyl', printCyl);
+  dragDiv.setAttribute('data-tool-cyl', toolCyl);
+  dragDiv.setAttribute('data-art', artValue);
+  dragDiv.setAttribute('data-proof-sent', proofsentValue);
+  dragDiv.setAttribute('data-proof-app', proofappValue);
+  dragDiv.setAttribute('data-mats', matsValue);
+  dragDiv.setAttribute('data-dies', diesValue);
+  dragDiv.setAttribute('data-plates', platesValue);
+  dragDiv.setAttribute('data-purchase', purchaseValue);
+
+  const label = `${jobNum} | ${customer} | ${runTime} | ${shipDate}`
+  const details = `
+  <button id="closeModalBtn" class="close-modal-button"> X </button>
+  <div class="flex-modal" id="modal">
+    <div>
+      <p>Job Number: ${jobNum}</p>
+      <p>Customer: ${customer}</p>
+      <p>Run Time: ${runTime}</p>
+      <p id="ship-date">Ship Date: ${shipDate}</p>
+      <p>Description: ${description}</p>
+      <p>Number Of Copies: ${numCopies}</p>
+      <p>Linear Footage: ${linearFootage}</p>
+      <p>Number Of Colors: ${numColors}</p>
+      <p>Dollar Value Of Job: ${dollarValue}</p>
+      <p>Print Cylinder Size: ${printCyl}</p>
+      <p>Tool Cylinder Size: ${toolCyl}</p>
+    </div>
+    <div id="radio-loggers">
+      <p>Art?:${artValue} </p>
+      <p>Proof Sent?:${proofsentValue} </p>
+      <p>Proof Approved?:${proofappValue} </p>
+      <p>Materials Ordered?:${matsValue} </p>
+      <p>Dies Ordered?:${diesValue} </p>
+      <p>Plates Ordered?:${platesValue} </p>
+      <p>Purchase Order?:${purchaseValue} </p>
+    </div>
+  </div>
+  `
+  // Display main info
+  dragDiv.innerHTML += label;
+
+  const maxId = findMaxId();
+  dragDiv.id = `drag${maxId + 1}`;
+
+  // make the div draggable
+  dragDiv.draggable = true;
+
+  //append to item stage (next to + button)
+  appendTarget.appendChild(dragDiv);
+
+  dragDiv.addEventListener('dragstart', dragStart);
+  //attach extra details to the div that display on click
+  dragDiv.dataset.details = details;
+  dragDiv.addEventListener('click', () => showModal(dragDiv, dragDiv.dataset.details));
+  makeDivsDraggable();
+
+  // color conditioning for the divs
+  pastDateChecker(dragDiv);
+  statusChecker(dragDiv);
 }
 
 // Show modal with extra details on click
@@ -324,10 +398,11 @@ function showModal(dragdiv, details) {
       modal.remove();
     });
 
+    // Repopulate form with clicked on div
     var jobForm = dragdiv.getAttribute('data-job-num');
     var custForm = dragdiv.getAttribute('data-customer');
     var runForm = dragdiv.getAttribute('data-run-time');
-    var shipForm  = dragdiv.getAttribute('data-ship-date');
+    var shipForm = dragdiv.getAttribute('data-ship-date');
     var descForm = dragdiv.getAttribute('data-general-desc');
     var copiesForm = dragdiv.getAttribute('data-num-copies');
     var footageForm = dragdiv.getAttribute('data-linear-footage');
@@ -417,48 +492,25 @@ function showModal(dragdiv, details) {
   }
 }
 
-// On clicking the add button, grab the values from the form and create a div holder
-button.addEventListener('click', function (event) {
-  event.preventDefault();
-  const artValue = getSelectedRadioValue('art');
-  const proofsentValue = getSelectedRadioValue('proofsent');
-  const proofappValue = getSelectedRadioValue('proofapp');
-  const matsValue = getSelectedRadioValue('mats');
-  const diesValue = getSelectedRadioValue('dies');
-  const platesValue = getSelectedRadioValue('plates');
-  const purchaseValue = getSelectedRadioValue('purchase');
-  createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, flex);
-  resetForm();
-})
-
-// Clear the form with the "-" button
-clrButton.addEventListener('click', function (event) {
-  event.preventDefault();
-  resetForm();  
-})
-
 // reset form entries 
 function resetForm() {
-  document.getElementById('JobNum').value = "";
-  document.getElementById('Customer').value = "";
-  document.getElementById('RunTime').value = "";
-  document.getElementById('ShipDate').value = "";
-  document.getElementById('GeneralDesc').value = "";
-  document.getElementById('NumCopies').value = "";
-  document.getElementById('LinearFootage').value = "";
-  document.getElementById('NumColors').value = "";
-  document.getElementById('DollarValue').value = "";
-  document.getElementById('PrintCylinder').value = "";
-  document.getElementById('ToolCylinder').value = "";
-  document.getElementById('art-no').checked = true;
-  document.getElementById('proof-sent-no').checked = true;
-  document.getElementById('proof-app-no').checked = true;
-  document.getElementById('mat-no').checked = true;
-  document.getElementById('dies-no').checked = true;
-  document.getElementById('plates-no').checked = true;
-  document.getElementById('purchase-no').checked = true;
+  // Select all input elements inside the form
+  var formInputs = document.querySelectorAll('#gridForm input');
+
+  formInputs.forEach(function (input) {
+    if (input.type === 'radio') {
+      // Check the radio values that are NO
+      if (input.value === 'NO') {
+        input.checked = true;
+      }
+    } else {
+      // Set input value to ""
+      input.value = "";
+    }
+  });
 }
 
+// called on clicking "load schedule" and then selecting an xml file
 function loadExistingXML(callback) {
   var fileInput = document.createElement('input');
   fileInput.type = 'file';
@@ -544,7 +596,7 @@ function parseXML(xmlContent) {
   makeDivsDraggable();
 }
 
-//  for loading in using the load schedule button
+//  for loading in using the load schedule button -- this one grabs the machine names from the XML doc and populates the row headers 
 function parseXML2(xmlContent) {
   var parser = new DOMParser();
   var xmlDoc = parser.parseFromString(xmlContent, 'application/xml');
@@ -609,99 +661,12 @@ function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, d
 
           var rowIndex = f.parentElement.id.substring(f.parentElement.id.indexOf('r') + 1);
           var newGridParentID = 'c' + colIndex + 'r' + rowIndex;
-          createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridRow,  description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, newGridParentID);
+          createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, newGridParentID);
         }
       });
     }
   });
 }
-
-function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, appendTarget) {
-
-  var appendTarget = document.getElementById(appendTarget);
-
-  // Create a draggable div
-  var dragDiv = document.createElement('div');
-  dragDiv.classList.add('dragMe');
-  dragDiv.classList.add('dragged');
-
-  dragDiv.setAttribute('data-job-num', jobNum);
-  dragDiv.setAttribute('data-customer', customer);
-  dragDiv.setAttribute('data-run-time', runTime);
-  dragDiv.setAttribute('data-ship-date', shipDate);
-  dragDiv.setAttribute('data-grid-colheader', gridCol);
-  dragDiv.setAttribute('data-grid-rowheader', gridRow);
-  dragDiv.setAttribute('data-general-desc', description);
-  dragDiv.setAttribute('data-num-copies', numCopies);
-  dragDiv.setAttribute('data-linear-footage', linearFootage);
-  dragDiv.setAttribute('data-num-colors', numColors);
-  dragDiv.setAttribute('data-dollar-value', dollarValue);
-  dragDiv.setAttribute('data-print-cyl', printCyl);
-  dragDiv.setAttribute('data-tool-cyl', toolCyl);
-  dragDiv.setAttribute('data-art', artValue);
-  dragDiv.setAttribute('data-proof-sent', proofsentValue);
-  dragDiv.setAttribute('data-proof-app', proofappValue);
-  dragDiv.setAttribute('data-mats', matsValue);
-  dragDiv.setAttribute('data-dies', diesValue);
-  dragDiv.setAttribute('data-plates', platesValue);
-  dragDiv.setAttribute('data-purchase', purchaseValue);
-
-  const label = `${jobNum} | ${customer} | ${runTime} | ${shipDate}`
-  const details = `
-  <button id="closeModalBtn" class="close-modal-button"> X </button>
-  <div class="flex-modal" id="modal">
-    <div>
-      <p>Job Number: ${jobNum}</p>
-      <p>Customer: ${customer}</p>
-      <p>Run Time: ${runTime}</p>
-      <p id="ship-date">Ship Date: ${shipDate}</p>
-      <p>Description: ${description}</p>
-      <p>Number Of Copies: ${numCopies}</p>
-      <p>Linear Footage: ${linearFootage}</p>
-      <p>Number Of Colors: ${numColors}</p>
-      <p>Dollar Value Of Job: ${dollarValue}</p>
-      <p>Print Cylinder Size: ${printCyl}</p>
-      <p>Tool Cylinder Size: ${toolCyl}</p>
-    </div>
-    <div id="radio-loggers">
-      <p>Art?:${artValue} </p>
-      <p>Proof Sent?:${proofsentValue} </p>
-      <p>Proof Approved?:${proofappValue} </p>
-      <p>Materials Ordered?:${matsValue} </p>
-      <p>Dies Ordered?:${diesValue} </p>
-      <p>Plates Ordered?:${platesValue} </p>
-      <p>Purchase Order?:${purchaseValue} </p>
-    </div>
-  </div>
-  `
-  // Display main info
-  dragDiv.innerHTML += label;
-
-  const maxId = findMaxId();
-  dragDiv.id = `drag${maxId + 1}`;
-
-  // make the div draggable
-  dragDiv.draggable = true;
-
-  //append to item stage (next to + button)
-  appendTarget.appendChild(dragDiv);
-
-  dragDiv.addEventListener('dragstart', dragStart);
-  //attach extra details to the div that display on click
-  dragDiv.dataset.details = details;
-  dragDiv.addEventListener('click', () => showModal(dragDiv, dragDiv.dataset.details));
-  makeDivsDraggable();
-
-  // color conditioning for the divs
-  pastDateChecker(dragDiv);
-  statusChecker(dragDiv);
-}
-
-// SAVE BUTTON 
-const saveBtn = document.getElementById('save-btn');
-saveBtn.addEventListener('click', () => {
-  saveToXML();
-})
 
 // Function to append new <job> elements to the <data> element (XML)
 function appendJobsToData(xmlDoc) {
@@ -721,79 +686,45 @@ function appendJobsToData(xmlDoc) {
   });
 }
 
+// 
 function updateMachinesInData(xmlDoc) {
   var editableParagraphs = document.querySelectorAll('.editable');
   var dataElement = xmlDoc.querySelector('data');
 
-  editableParagraphs.forEach(function(paragraph, index) {
+  editableParagraphs.forEach(function (paragraph, index) {
     var machineElement = dataElement.querySelector('machine' + (index + 1));
-    console.log(index, machineElement);
 
     if (machineElement) {
-      // If <machineX> tag exists in the XML document
-      console.log("exists");
       machineElement.textContent = paragraph.textContent;
-    } 
+    }
   });
 }
 
 // Save over an existing load file, or save a fresh file
 function saveToXML() {
   var fileName = prompt('Enter a filename:', 'ScheduleData');
-  
-  if (fileName !== null) {
 
-    // Check if there's existing XML content in local storage
-    var existingXmlString = localStorage.getItem('loadedXML');
-    if (existingXmlString) {
-      // Parse the existing XML content
-      var parser = new DOMParser();
-      var xmlDoc = parser.parseFromString(existingXmlString, 'application/xml');
+  var existingXmlString = localStorage.getItem('loadedXML');
+  var parser = new DOMParser();
+  var xmlDoc = parser.parseFromString(existingXmlString, 'application/xml');
 
-      // Find or create the <data> element
-      var dataElement = xmlDoc.querySelector('data');
-      if (!dataElement) {
-        dataElement = xmlDoc.createElement('data');
-        xmlDoc.appendChild(dataElement);
-      }
-      updateMachinesInData(xmlDoc);
+  // Find or create the <data> element
+  var dataElement = xmlDoc.querySelector('data');
+  dataElement = xmlDoc.createElement('data');
+  xmlDoc.appendChild(dataElement);
 
-      // Serialize the updated XML back to string
-      var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
+  // MAKE SURE THIS WORKS???
+  updateMachinesInData(xmlDoc);
 
-      //Create a Blob and a download link
-      var blob = new Blob([updatedXmlString], { type: 'application/xml' });
-      var downloadLink = document.createElement('a');
+  var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
+  var blob = new Blob([updatedXmlString], { type: 'application/xml' });
+  var downloadLink = document.createElement('a');
 
-      downloadLink.download = fileName + '.xml';
-      downloadLink.href = window.URL.createObjectURL(blob);
+  downloadLink.download = fileName + '.xml';
+  downloadLink.href = window.URL.createObjectURL(blob);
 
-      // Trigger a click on the download link
-      downloadLink.click();
-    } else {
-      // Save as a fresh XML file
-      var xmlDoc = document.implementation.createDocument(null, 'data', null);
-      appendJobsToData(xmlDoc);
-      updateMachinesInData(xmlDoc);
-
-      var freshXmlString = new XMLSerializer().serializeToString(xmlDoc);
-
-      var blob = new Blob([freshXmlString], { type: 'application/xml' });
-      var downloadLink = document.createElement('a');
-
-      downloadLink.download = fileName + '.xml';
-      downloadLink.href = window.URL.createObjectURL(blob);
-
-      downloadLink.click();
-    }
-  }
+  downloadLink.click();
 }
-
-// LOAD BUTTON 
-const loadBtn = document.getElementById('load-btn');
-loadBtn.addEventListener('click', () => {
-  loadXMLintoLocalStorage();
-})
 
 // CHANGE DATE BUTTON
 const dateBtn = document.getElementById('date-btn');
@@ -814,13 +745,13 @@ dateBtn.addEventListener('click', () => {
   const datePicker = document.createElement('input');
   datePicker.type = 'date';
 
-  // close button
+  // Close button
   const closeButton = document.createElement('button');
   closeButton.textContent = 'Cancel';
   closeButton.addEventListener('click', () => {
-  // Remove the modal
-  document.body.removeChild(modalContainer);
-});
+    // Remove the modal
+    document.body.removeChild(modalContainer);
+  });
 
   // Add an event listener for when the user selects a date
   datePicker.addEventListener('change', () => {
@@ -877,23 +808,6 @@ function makeDivsDraggable() {
   })
 }
 
-function highlightToday() {
-  const paragraphs = document.querySelectorAll('.day-label');
-
-  paragraphs.forEach(paragraph => {
-    if (isToday(paragraph.textContent.trim())) {
-      paragraph.classList.add('highlight');
-    }
-  });
-}
-
-function removeHighlights() {
-  const divs = document.querySelectorAll('.highlight');
-  divs.forEach(div => {
-    div.classList.remove('highlight');
-  });
-}
-
 // On dropping into the trash can
 function deleteDraggedElement(event) {
   event.preventDefault();
@@ -918,7 +832,6 @@ function removeJobFromLocalStorage(jobNum, customer, generalDesc, gridColHeader)
   // Retrieve the existing XML content from local storage
   var storedXmlContent = localStorage.getItem('loadedXML');
 
-  if (storedXmlContent) {
     var parser = new DOMParser();
     var xmlDoc = parser.parseFromString(storedXmlContent, 'application/xml');
 
@@ -945,23 +858,58 @@ function removeJobFromLocalStorage(jobNum, customer, generalDesc, gridColHeader)
       var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
       localStorage.setItem('loadedXML', updatedXmlString);
     }
-  }
 }
 
+// FUNCTIONS FOR POPULATING DATE LABELS 
+// Format Date MM/DD/YYYY
+function formatDate(date) {
+  const options = { month: '2-digit', day: '2-digit', year: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
+}
+
+// Function to get the next two weeks of dates from a given start date
+function getNextTwoWeeks(startDate) {
+  const nextTwoWeeks = [];
+  for (let i = 0; i < 14; i++) {
+    const newDate = new Date(startDate);
+    newDate.setDate(startDate.getDate() + i);
+    nextTwoWeeks.push(newDate);
+  }
+  return nextTwoWeeks;
+}
+
+// Function to populate "day-label" divs with the next two weeks of dates
+function populateDayLabels(selectedDate) {
+  const dayLabels = document.querySelectorAll('.day-label');
+  const nextTwoWeeks = getNextTwoWeeks(selectedDate);
+
+  dayLabels.forEach((label, index) => {
+    label.textContent = formatDate(nextTwoWeeks[index]);
+  });
+}
+
+function isToday(textContent) {
+  const todayDate = new Date();
+  const formattedToday = formatDate(todayDate);
+  return textContent === formattedToday;
+}
+
+
+// FUNCTIONS FOR FORMATTING
 // called on drop to see if data-shipDate attribute is before the grid column header 
 function pastDateChecker(div) {
-var shipDatestr = div.getAttribute('data-ship-date');
-var schedDatestr = div.getAttribute('data-grid-colheader');
+  var shipDatestr = div.getAttribute('data-ship-date');
+  var schedDatestr = div.getAttribute('data-grid-colheader');
 
-var shipDate = new Date(shipDatestr);
-var schedDate = new Date(schedDatestr);
+  var shipDate = new Date(shipDatestr);
+  var schedDate = new Date(schedDatestr);
 
-if (shipDate < schedDate) {
-  div.classList.add('pastDate');
-}
-else {
-  div.classList.remove('pastDate');
-}
+  if (shipDate < schedDate) {
+    div.classList.add('pastDate');
+  }
+  else {
+    div.classList.remove('pastDate');
+  }
 }
 
 // checks the radio controls to see the status of the job
@@ -974,23 +922,35 @@ function statusChecker(div) {
     if (div.getAttribute(statusName) == "YES") {
       div.classList.add('yellowToRun');
     }
-    else{
+    else {
       div.classList.add('badToRun');
     }
-  } 
+  }
   for (var status = 0; status < tripleStatusArray.length; status++) {
     var statusName = tripleStatusArray[status];
     if (div.getAttribute(statusName) == "NO") {
       div.classList.add('badToRun');
     }
-    else if(div.getAttribute(statusName) == "RECEIVED"){
+    else if (div.getAttribute(statusName) == "RECEIVED") {
       div.classList.add('goodToRun');
       div.classList.remove('yellowToRun')
     }
-  } 
-
+  }
 }
 
-// Add event listener to the print button
-var printButton = document.getElementById('print-btn');
-printButton.addEventListener('click', () => window.print());
+function highlightToday() {
+  const paragraphs = document.querySelectorAll('.day-label');
+
+  paragraphs.forEach(paragraph => {
+    if (isToday(paragraph.textContent.trim())) {
+      paragraph.classList.add('highlight');
+    }
+  });
+}
+
+function removeHighlights() {
+  const divs = document.querySelectorAll('.highlight');
+  divs.forEach(div => {
+    div.classList.remove('highlight');
+  });
+}
