@@ -19,7 +19,19 @@ window.onload = function () {
 
   highlightToday();
   deleteLoadedXML();
-
+  if (!localStorage.getItem('loadedXML')) {
+    // Initialize 'loadedXML' with an empty XML structure or any default value
+    var initialXmlString = `<data>
+<machine1>Machine 1</machine1>
+<machine2>Machine 2</machine2>
+<machine3>Machine 3</machine3>
+<machine4>Machine 4</machine4>
+<machine5>Machine 5</machine5>
+</data>`;
+    
+    // Save the initial value to local storage
+    localStorage.setItem('loadedXML', initialXmlString);
+  }
 };
 
 function deleteLoadedXML() {
@@ -474,7 +486,7 @@ function loadExistingXML(callback) {
 }
 
 // Function to load XML and save its contents to local storage
-function loadXMLAndSaveToLocalStorage() {
+function loadXMLintoLocalStorage() {
   var fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.accept = '.xml';
@@ -489,7 +501,7 @@ function loadXMLAndSaveToLocalStorage() {
         var xmlContent = e.target.result;
         localStorage.setItem('loadedXML', xmlContent);
         clearDragMeDivs('.dragInto');
-        parseXML(xmlContent);
+        parseXML2(xmlContent);
       };
 
       reader.readAsText(file);
@@ -499,7 +511,43 @@ function loadXMLAndSaveToLocalStorage() {
   fileInput.click();
 }
 
+// any other time the local storage needs to be parsed onto the screen
 function parseXML(xmlContent) {
+  var parser = new DOMParser();
+  var xmlDoc = parser.parseFromString(xmlContent, 'application/xml');
+
+  var jobs = xmlDoc.querySelectorAll('job');
+
+  jobs.forEach(function (job) {
+
+    var jobNum = job.querySelector('jobNum').textContent;
+    var customer = job.querySelector('customer').textContent;
+    var runTime = job.querySelector('runTime').textContent;
+    var shipDate = job.querySelector('shipDate').textContent;
+    var gridCol = job.querySelector('gridColheader').textContent;
+    var gridRow = job.querySelector('gridRowheader').textContent;
+    var description = job.querySelector('generalDesc').textContent;
+    var numCopies = job.querySelector('numCopies').textContent;
+    var linearFootage = job.querySelector('linearFootage').textContent;
+    var numColors = job.querySelector('numColors').textContent;
+    var dollarValue = job.querySelector('dollarValue').textContent;
+    var printCyl = job.querySelector('printCyl').textContent;
+    var toolCyl = job.querySelector('toolCyl').textContent;
+    var artValue = job.querySelector('art').textContent;
+    var proofsentValue = job.querySelector('proofSent').textContent;
+    var proofappValue = job.querySelector('proofApp').textContent;
+    var matsValue = job.querySelector('mats').textContent;
+    var diesValue = job.querySelector('dies').textContent;
+    var platesValue = job.querySelector('plates').textContent;
+    var purchaseValue = job.querySelector('purchase').textContent;
+
+    placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue);
+  });
+  makeDivsDraggable();
+}
+
+//  for loading in using the load schedule button
+function parseXML2(xmlContent) {
   var parser = new DOMParser();
   var xmlDoc = parser.parseFromString(xmlContent, 'application/xml');
 
@@ -675,19 +723,20 @@ function appendJobsToData(xmlDoc) {
   });
 }
 
-// function to append <machine> elements to the <data> element (XML) 
-function appendMachinesToData(xmlDoc) {
+function updateMachinesInData(xmlDoc) {
   var editableParagraphs = document.querySelectorAll('.editable');
-  var dataElement = xmlDoc.createElement('data');
+  var dataElement = xmlDoc.querySelector('data');
 
   editableParagraphs.forEach(function(paragraph, index) {
-    var machineElement = xmlDoc.createElement('machine' + (index + 1));
-    machineElement.textContent = paragraph.textContent;
-    dataElement.appendChild(machineElement);
+    var machineElement = dataElement.querySelector('machine' + (index + 1));
+    console.log(index, machineElement);
+
+    if (machineElement) {
+      // If <machineX> tag exists in the XML document
+      console.log("exists");
+      machineElement.textContent = paragraph.textContent;
+    } 
   });
-
-  xmlDoc.documentElement.appendChild(dataElement);
-
 }
 
 // Save over an existing load file, or save a fresh file
@@ -709,6 +758,7 @@ function saveToXML() {
         dataElement = xmlDoc.createElement('data');
         xmlDoc.appendChild(dataElement);
       }
+      updateMachinesInData(xmlDoc);
 
       // Serialize the updated XML back to string
       var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
@@ -726,18 +776,16 @@ function saveToXML() {
       // Save as a fresh XML file
       var xmlDoc = document.implementation.createDocument(null, 'data', null);
       appendJobsToData(xmlDoc);
-      appendMachinesToData(xmlDoc);
-      // Serialize the XML to string
+      updateMachinesInData(xmlDoc);
+
       var freshXmlString = new XMLSerializer().serializeToString(xmlDoc);
 
-      // Create a Blob and a download link
       var blob = new Blob([freshXmlString], { type: 'application/xml' });
       var downloadLink = document.createElement('a');
 
       downloadLink.download = fileName + '.xml';
       downloadLink.href = window.URL.createObjectURL(blob);
 
-      // Trigger a click on the download link
       downloadLink.click();
     }
   }
@@ -746,7 +794,7 @@ function saveToXML() {
 // LOAD BUTTON 
 const loadBtn = document.getElementById('load-btn');
 loadBtn.addEventListener('click', () => {
-  loadXMLAndSaveToLocalStorage();
+  loadXMLintoLocalStorage();
 })
 
 // CHANGE DATE BUTTON
@@ -788,17 +836,16 @@ dateBtn.addEventListener('click', () => {
       userDate.setDate(userDate.getDate() + 1);
 
       // Check if loadedXML content exists in local storage
-      const storedXmlContent = localStorage.getItem('loadedXML');
+      var storedXmlContent = localStorage.getItem('loadedXML');
+      var parser = new DOMParser();
+      var xmlDoc = parser.parseFromString(storedXmlContent, 'application/xml');
       if (storedXmlContent) {
         clearDragMeDivs('.dragInto');
         removeHighlights();
         populateDayLabels(userDate);
         highlightToday();
+        updateMachinesInData(xmlDoc);
         parseXML(storedXmlContent);
-      } else {
-        removeHighlights();
-        populateDayLabels(userDate);
-        highlightToday();
       }
     }
     // Remove the modal
@@ -809,7 +856,7 @@ dateBtn.addEventListener('click', () => {
   modalContainer.appendChild(datePicker);
   modalContainer.appendChild(closeButton);
 
-  // Append the modal container to the body to make it visible
+  // Append the modal container to the body
   document.body.appendChild(modalContainer);
 });
 
@@ -895,9 +942,7 @@ function removeJobFromLocalStorage(jobNum, generalDesc, gridColHeader) {
 
     if (jobToRemove) {
       jobToRemove.remove();
-      // Serialize the updated XML back to string
       var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
-      // Save the updated XML content back to local storage
       localStorage.setItem('loadedXML', updatedXmlString);
     }
   }
@@ -950,8 +995,6 @@ function statusChecker(div) {
 function toggleEditMode(element) {
   element.contentEditable = !element.isContentEditable;
 }
-
-
 
 // Add event listener to the print button
 var printButton = document.getElementById('print-btn');
