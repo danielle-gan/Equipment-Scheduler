@@ -26,7 +26,6 @@ window.onload = function () {
   localStorage.setItem('loadedXML', initialXmlString);
 };
 
-
 function appendJobToXML(xmlDoc, draggedBlock) {
   // Create a new job element
   var jobElement = xmlDoc.createElement('job');
@@ -458,7 +457,7 @@ function loadExistingXML(callback) {
   fileInput.click();
 }
 
-// Function to load XML and save its contents to local storage
+//load XML from file and save its contents to local storage
 function loadXMLintoLocalStorage() {
   var fileInput = document.createElement('input');
   fileInput.type = 'file';
@@ -476,7 +475,6 @@ function loadXMLintoLocalStorage() {
         clearDragMeDivs('.dragInto');
         parseXML2(xmlContent);
       };
-
       reader.readAsText(file);
     }
   });
@@ -609,7 +607,7 @@ function appendJobsToData(xmlDoc) {
   });
 }
 
-// 
+// Set machine names in the xml doc to be the text of the row headers
 function updateMachinesInData(xmlDoc) {
   var editableParagraphs = document.querySelectorAll('.editable');
   var dataElement = xmlDoc.querySelector('data');
@@ -631,12 +629,6 @@ function saveToXML() {
   var parser = new DOMParser();
   var xmlDoc = parser.parseFromString(existingXmlString, 'application/xml');
 
-  // Find or create the <data> element
-  var dataElement = xmlDoc.querySelector('data');
-  dataElement = xmlDoc.createElement('data');
-  xmlDoc.appendChild(dataElement);
-
-  // MAKE SURE THIS WORKS???
   updateMachinesInData(xmlDoc);
 
   var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
@@ -889,7 +881,6 @@ function isToday(textContent) {
   const formattedToday = formatDate(todayDate);
   return textContent === formattedToday;
 }
-
 
 // FUNCTIONS FOR FORMATTING
 // called on drop to see if data-shipDate attribute is before the grid column header 
