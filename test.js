@@ -48,6 +48,18 @@ function appendJobToXML(xmlDoc, draggedBlock) {
   dataElement.appendChild(jobElement);
 }
 
+function removeExistingJob(xmlDoc, draggedBlock) {
+  var jobNum = draggedBlock.getAttribute('data-job-num');
+  var existingJob = xmlDoc.querySelector('[jobNum="' + jobNum + '"]');
+  console.log("checking to see if job: " + jobNum + " exists");
+  console.log(xmlDoc);
+  console.log(existingJob);
+  if (existingJob) {
+    existingJob.parentNode.removeChild(existingJob);
+    console.log("removing job from localStorage");
+  }
+}
+
 // to make sure each div id is unique
 function findMaxId() {
   const dragDivs = document.querySelectorAll('.dragMe');
@@ -220,12 +232,14 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   dragDiv.addEventListener('click', () => showModal(dragDiv, dragDiv.dataset.details));
 
   makeDivsDraggable();
+
+  // color conditioning for the divs
+  pastDateChecker(dragDiv);
+  statusChecker(dragDiv);
 }
 
 // for divs added on load
 function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, appendTarget) {
-
-  var appendTarget = document.getElementById(appendTarget);
 
   // Create a draggable div
   var dragDiv = document.createElement('div');
@@ -255,7 +269,6 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
 
   const label = `${jobNum} | ${customer} | ${runTime} | ${shipDate}`
   const details = `
-  <button id="closeModalBtn" class="close-modal-button"> X </button>
   <div class="flex-modal" id="modal">
     <div>
       <p>Job Number: ${jobNum}</p>
@@ -522,7 +535,6 @@ function parseXML2(xmlContent) {
   var parser = new DOMParser();
   var xmlDoc = parser.parseFromString(xmlContent, 'application/xml');
 
-  var jobs = xmlDoc.querySelectorAll('job');
   var machine1 = xmlDoc.querySelector('machine1').textContent;
   var machine2 = xmlDoc.querySelector('machine2').textContent;
   var machine3 = xmlDoc.querySelector('machine3').textContent;
@@ -541,8 +553,8 @@ function parseXML2(xmlContent) {
   machine4DOM.innerHTML = machine4;
   machine5DOM.innerHTML = machine5;
 
+  var jobs = xmlDoc.querySelectorAll('job');
   jobs.forEach(function (job) {
-
     var jobNum = job.querySelector('jobNum').textContent;
     var customer = job.querySelector('customer').textContent;
     var runTime = job.querySelector('runTime').textContent;
@@ -564,6 +576,8 @@ function parseXML2(xmlContent) {
     var platesValue = job.querySelector('plates').textContent;
     var purchaseValue = job.querySelector('purchase').textContent;
 
+    console.log(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue);
+
     placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue);
   });
   makeDivsDraggable();
@@ -582,28 +596,11 @@ function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, d
 
           var rowIndex = f.parentElement.id.substring(f.parentElement.id.indexOf('r') + 1);
           var newGridParentID = 'c' + colIndex + 'r' + rowIndex;
-          createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, newGridParentID);
+          var appendTarget = document.getElementById(newGridParentID);
+          createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue, appendTarget);
         }
       });
     }
-  });
-}
-
-// Function to append new <job> elements to the <data> element (XML)
-function appendJobsToData(xmlDoc) {
-  var dragDivs = document.querySelectorAll('.dragMe');
-  var dataElement = xmlDoc.querySelector('data');
-
-  dragDivs.forEach(function (dragDiv) {
-    var jobElement = xmlDoc.createElement('job');
-
-    for (var attribute in dragDiv.dataset) {
-      var attributeElement = xmlDoc.createElement(attribute);
-      attributeElement.textContent = dragDiv.dataset[attribute].trim();
-      jobElement.appendChild(attributeElement);
-    }
-
-    dataElement.appendChild(jobElement);
   });
 }
 
@@ -717,6 +714,20 @@ function clearDragMeDivs(selector) {
 function dragStart(event) {
   draggedBlock = event.target;
   event.dataTransfer.setData('text/plain', event.target.id);
+
+  const draggedId = event.dataTransfer.getData('text/plain');
+  const draggedElement = document.getElementById(draggedId);
+
+  if (draggedElement) {
+    // Access data attributes using the dataset property
+    const draggedJobNum = draggedElement.dataset.jobNum;
+    const draggedCustomer = draggedElement.dataset.customer;
+    const draggedGenDesc = draggedElement.dataset.generalDesc;
+    const draggedHeader = draggedElement.dataset.gridColheader;
+
+    // remove job from local storage and remove job from the DOM
+    removeJobFromLocalStorage(draggedJobNum, draggedCustomer, draggedGenDesc, draggedHeader);
+  }
 }
 
 function allowDrop(event) {
