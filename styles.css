@@ -314,7 +314,7 @@ h3 {
   color: var(--navy);
   flex-direction: column;
   font-size: 1.5rem;
-  border: double 10px var(--green);
+  border: double 10px;
 }
 
 .modal p span {

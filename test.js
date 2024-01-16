@@ -336,26 +336,22 @@ function showModal(dragdiv, details) {
 
     } else {
       document.getElementById('art-no').checked = true;
-      modal.classList.add('red-border');
     }
 
     if (proofsentForm === 'YES') {
       document.getElementById('proof-sent-yes').checked = true;
     } else {
       document.getElementById('proof-sent-no').checked = true;
-      modal.classList.add('red-border');
     }
 
     if (proofappForm === 'YES') {
       document.getElementById('proof-app-yes').checked = true;
     } else {
       document.getElementById('proof-app-no').checked = true;
-      modal.classList.add('red-border');
     }
 
     if (matsForm === 'NO') {
       document.getElementById('mat-no').checked = true;
-      modal.classList.add('red-border');
     } else if (matsForm === 'YES') {
       document.getElementById('mat-yes').checked = true;
     }
@@ -365,7 +361,6 @@ function showModal(dragdiv, details) {
 
     if (diesForm === 'NO') {
       document.getElementById('dies-no').checked = true;
-      modal.classList.add('red-border');
     } else if (diesForm === 'YES') {
       document.getElementById('dies-yes').checked = true;
     }
@@ -375,7 +370,6 @@ function showModal(dragdiv, details) {
 
     if (platesForm === 'NO') {
       document.getElementById('plates-no').checked = true;
-      modal.classList.add('red-border');
     } else if (platesForm === 'YES') {
       document.getElementById('plates-yes').checked = true;
     }
@@ -387,7 +381,6 @@ function showModal(dragdiv, details) {
       document.getElementById('purchase-yes').checked = true;
     } else {
       document.getElementById('purchase-no').checked = true;
-      modal.classList.add('red-border');
     }
 
     document.getElementById('JobNum').value = jobForm;
@@ -401,6 +394,11 @@ function showModal(dragdiv, details) {
     document.getElementById('DollarValue').value = dollarsForm;
     document.getElementById('PrintCylinder').value = printcylForm;
     document.getElementById('ToolCylinder').value = toolcylForm;
+
+    // Color Conditioning for the modal 
+
+    var borderColor = window.getComputedStyle(dragdiv).getPropertyValue('border-color');
+    modal.style.borderColor = borderColor;
 
     var shipDateattr = new Date(dragdiv.getAttribute('data-ship-date'));
     var schedDateattr = new Date(dragdiv.getAttribute('data-grid-colheader'));
@@ -973,22 +971,19 @@ function statusChecker(div) {
     }
     else{
       div.classList.add('badToRun');
-      div.classList.remove('goodToRun');
     }
   } 
   for (var status = 0; status < tripleStatusArray.length; status++) {
-    var statusName = statusArray[status];
-    if (div.getAttribute(statusName) == "RECEIVED") {
-      div.classList.add('goodToRun');
-    }
-    else{
+    var statusName = tripleStatusArray[status];
+    if (div.getAttribute(statusName) == "NO") {
       div.classList.add('badToRun');
-      div.classList.remove('goodToRun');
+    }
+    else if(div.getAttribute(statusName) == "RECEIVED"){
+      div.classList.add('goodToRun');
+      div.classList.remove('yellowToRun')
     }
   } 
 
-
-  
 }
 
 //toggles edit mode for row headers
