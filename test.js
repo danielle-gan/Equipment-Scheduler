@@ -100,7 +100,7 @@ function drop(event) {
         var gridColHeaderID = 'c' + colIndex + 'r1';
 
         // take the inside of the headers
-        var gridRowHeader = document.getElementById(gridRowHeaderID).textContent;
+        var gridRowHeader = document.getElementById(gridRowHeaderID).firstElementChild.id;
         var gridColHeader = document.getElementById(gridColHeaderID).textContent;
 
         //assign them to the data atttributes
@@ -559,7 +559,7 @@ function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, d
     if (gridCol == e.textContent) {
       var colIndex = e.id.substring(1, e.id.indexOf('r'));
       rowHeaders.forEach(function (f) {
-        if (gridRow.trim() == f.textContent) {
+        if (gridRow == f.id) {
 
           var rowIndex = f.parentElement.id.substring(f.parentElement.id.indexOf('r') + 1);
           var newGridParentID = 'c' + colIndex + 'r' + rowIndex;
@@ -748,36 +748,6 @@ const loadBtn = document.getElementById('load-btn');
 loadBtn.addEventListener('click', () => {
   loadXMLAndSaveToLocalStorage();
 })
-
-// CHANGE DATE BUTTON
-// const dateBtn = document.getElementById('date-btn');
-// dateBtn.addEventListener('click', () => {
-//   const userDateInput = prompt('Enter a date (MM/DD/YYYY):');
-
-//   const userDate = new Date(userDateInput);
-
-//   if (userDateInput === "" || (isNaN(userDate.getTime()))) {
-//     alert('Invalid date input. Please enter a valid date.');
-//     return; // Exit the function without making any changes
-//   }
-
-//   if(userDateInput === null) {
-//     return;
-//   }
-
-//   var storedXmlContent = localStorage.getItem('loadedXML');
-
-//   clearDragMeDivs('.dragInto');
-//   removeHighlights();
-
-//   if (!isNaN(userDate.getTime())) {
-//     populateDayLabels(userDate);
-//     highlightToday();
-//     parseXML(storedXmlContent);
-//   } else {
-//     alert('Invalid date input. Please enter a valid date.');
-//   }
-// });
 
 // CHANGE DATE BUTTON
 const dateBtn = document.getElementById('date-btn');
