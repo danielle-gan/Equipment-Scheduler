@@ -19,28 +19,26 @@ window.onload = function () {
 
   highlightToday();
   deleteLoadedXML();
-  if (!localStorage.getItem('loadedXML')) {
-    // Initialize 'loadedXML' with an empty XML structure or any default value
-    var initialXmlString = `<data>
-<machine1>Machine 1</machine1>
-<machine2>Machine 2</machine2>
-<machine3>Machine 3</machine3>
-<machine4>Machine 4</machine4>
-<machine5>Machine 5</machine5>
-</data>`;
-    
-    // Save the initial value to local storage
-    localStorage.setItem('loadedXML', initialXmlString);
-  }
+  
+  // Initialize 'loadedXML' with an empty XML structure or any default value
+  var initialXmlString = `<data>
+  <machine1>Machine 1</machine1>
+  <machine2>Machine 2</machine2>
+  <machine3>Machine 3</machine3>
+  <machine4>Machine 4</machine4>
+  <machine5>Machine 5</machine5>
+  </data>`;
+
+  localStorage.setItem('loadedXML', initialXmlString);
 };
 
 function deleteLoadedXML() {
   localStorage.removeItem('loadedXML');
 }
 
-// Function to format a date as "MM/DD/YYYY"
+// Format Date MM/DD/YYYY
 function formatDate(date) {
-  const options = { month: '2-digit', day: '2-digit', year: 'numeric' };
+  const options = { month: '2-digit', day: '2-digit', year: '4-digit' };
   return date.toLocaleDateString('en-US', options);
 }
 
@@ -905,17 +903,18 @@ function deleteDraggedElement(event) {
   if (draggedElement) {
     // Access data attributes using the dataset property
     const draggedJobNum = draggedElement.dataset.jobNum;
+    const draggedCustomer = draggedElement.dataset.customer;
     const draggedGenDesc = draggedElement.dataset.generalDesc;
     const draggedHeader = draggedElement.dataset.gridColheader;
 
     // remove job from local storage and remove job from the DOM
-    removeJobFromLocalStorage(draggedJobNum, draggedGenDesc, draggedHeader);
+    removeJobFromLocalStorage(draggedJobNum, draggedCustomer, draggedGenDesc, draggedHeader);
     draggedElement.remove();
   }
 }
 
 // Function to remove a job from local storage based on multiple attributes
-function removeJobFromLocalStorage(jobNum, generalDesc, gridColHeader) {
+function removeJobFromLocalStorage(jobNum, customer, generalDesc, gridColHeader) {
   // Retrieve the existing XML content from local storage
   var storedXmlContent = localStorage.getItem('loadedXML');
 
@@ -930,11 +929,12 @@ function removeJobFromLocalStorage(jobNum, generalDesc, gridColHeader) {
 
     jobs.forEach(function (job) {
       var jobNumInXml = job.querySelector('jobNum').textContent;
+      var custInXml = job.querySelector('customer').textContent;
       var generalDescInXml = job.querySelector('generalDesc').textContent;
       var gridColHeaderInXml = job.querySelector('gridColheader').textContent;
 
       if (
-        jobNumInXml === jobNum && generalDescInXml === generalDesc && gridColHeaderInXml === gridColHeader
+        jobNumInXml === jobNum && generalDescInXml === generalDesc && gridColHeaderInXml === gridColHeader && custInXml === customer
       ) {
         jobToRemove = job;
       }
@@ -989,11 +989,6 @@ function statusChecker(div) {
     }
   } 
 
-}
-
-//toggles edit mode for row headers
-function toggleEditMode(element) {
-  element.contentEditable = !element.isContentEditable;
 }
 
 // Add event listener to the print button
