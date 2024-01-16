@@ -322,19 +322,17 @@ h3 {
 }
 
 .flex-modal {
+  flex-direction: row;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-}
-
-.red-border {
-  border: double 10px var(--red);
 }
 
 .editable {
   padding: 20px;
 }
 
+/* Color Conditioning */
 .pastDate {
   color: var(--red);
 }
@@ -347,7 +345,6 @@ h3 {
   border-color: rgb(224, 188, 28);  
 }
 
-/* for lack of a better name */
 .badToRun {
   border-color: var(--red);
 }

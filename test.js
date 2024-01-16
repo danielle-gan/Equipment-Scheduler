@@ -255,7 +255,7 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
 
   const label = `${jobNum.value} | ${customer.value} | ${runTime.value} | ${shipDate.value}`
   const details = `   
-  <div class="flex-modal">
+  <div class="flex-modal" id="modal">
   <div>
     <p>Job Number: ${jobNum.value}</p>
     <p>Customer: ${customer.value}</p>
@@ -300,7 +300,9 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
 
 // Show modal with extra details on click
 function showModal(dragdiv, details) {
+
   if (!document.getElementById('modal')) {
+    console.log("open modal");
 
     const modal = document.createElement('div');
     modal.classList.add('modal');
@@ -309,7 +311,7 @@ function showModal(dragdiv, details) {
     document.body.appendChild(modal);
 
     modal.addEventListener('click', () => {
-      modal.remove(); // Remove modal on click
+      modal.remove();
     });
 
     var jobForm = dragdiv.getAttribute('data-job-num');
@@ -396,20 +398,11 @@ function showModal(dragdiv, details) {
     document.getElementById('ToolCylinder').value = toolcylForm;
 
     // Color Conditioning for the modal 
-
     var borderColor = window.getComputedStyle(dragdiv).getPropertyValue('border-color');
+    var color = window.getComputedStyle(dragdiv).getPropertyValue('color');
     modal.style.borderColor = borderColor;
-
-    var shipDateattr = new Date(dragdiv.getAttribute('data-ship-date'));
-    var schedDateattr = new Date(dragdiv.getAttribute('data-grid-colheader'));
     var shipDateID = document.getElementById('ship-date');
-
-    if (shipDateattr < schedDateattr) {
-      shipDateID.classList.add('pastDate'); 
-    }
-    else {
-      shipDateID.classList.remove('pastDate');
-    }
+    shipDateID.style.color = color;
 
   }
 }
@@ -494,8 +487,6 @@ function loadXMLAndSaveToLocalStorage() {
 
       reader.onload = function (e) {
         var xmlContent = e.target.result;
-
-        // Save XML content to local storage
         localStorage.setItem('loadedXML', xmlContent);
         clearDragMeDivs('.dragInto');
         parseXML(xmlContent);
@@ -537,7 +528,6 @@ function parseXML(xmlContent) {
     var customer = job.querySelector('customer').textContent;
     var runTime = job.querySelector('runTime').textContent;
     var shipDate = job.querySelector('shipDate').textContent;
-    // var gridCell = job.querySelector('gridCell').textContent;
     var gridCol = job.querySelector('gridColheader').textContent;
     var gridRow = job.querySelector('gridRowheader').textContent;
     var description = job.querySelector('generalDesc').textContent;
@@ -612,8 +602,8 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
 
   const label = `${jobNum} | ${customer} | ${runTime} | ${shipDate}`
   const details = `
-  
-  <div class="flex-container">
+  <button id="closeModalBtn" class="close-modal-button"> X </button>
+  <div class="flex-modal" id="modal">
     <div>
       <p>Job Number: ${jobNum}</p>
       <p>Customer: ${customer}</p>
