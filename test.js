@@ -48,18 +48,6 @@ function appendJobToXML(xmlDoc, draggedBlock) {
   dataElement.appendChild(jobElement);
 }
 
-function removeExistingJob(xmlDoc, draggedBlock) {
-  var jobNum = draggedBlock.getAttribute('data-job-num');
-  var existingJob = xmlDoc.querySelector('[jobNum="' + jobNum + '"]');
-  console.log("checking to see if job: " + jobNum + " exists");
-  console.log(xmlDoc);
-  console.log(existingJob);
-  if (existingJob) {
-    existingJob.parentNode.removeChild(existingJob);
-    console.log("removing job from localStorage");
-  }
-}
-
 // to make sure each div id is unique
 function findMaxId() {
   const dragDivs = document.querySelectorAll('.dragMe');
