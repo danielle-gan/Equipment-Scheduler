@@ -10,7 +10,7 @@ window.onload = function () {
     userDate = new Date();
     populateDayLabels(userDate);
   }
-  
+
   highlightToday();
   localStorage.removeItem('loadedXML');
 
@@ -26,79 +26,6 @@ window.onload = function () {
   localStorage.setItem('loadedXML', initialXmlString);
 };
 
-// Drag and Drop Functionality
-let draggedBlock;
-
-function dragStart(event) {
-  draggedBlock = event.target;
-  event.dataTransfer.setData('text/plain', event.target.id);
-}
-
-function allowDrop(event) {
-  event.preventDefault();
-}
-
-function removeDragOver(event) {
-  event.target.classList.remove('drag-over');
-}
-
-function drop(event) {
-  event.preventDefault();
-
-  if (event.target && event.target.classList) {
-    event.target.classList.remove('drag-over');
-
-    if (event.target.classList.contains('dragInto')) {
-      const draggedId = event.dataTransfer.getData('text/plain');
-      const draggedBlock = document.getElementById(draggedId);
-
-      if (draggedBlock instanceof Node) {
-        event.target.appendChild(draggedBlock);
-        draggedBlock.classList.add('dragged');
-        // grab the id of the grid cell
-        var gridCell = draggedBlock.parentElement.id;
-
-        // grab the column number and row number
-        var colIndex = gridCell.substring(1, gridCell.indexOf('r'));
-        var rowIndex = gridCell.substring(gridCell.indexOf('r') + 1);
-
-        // string aggregate to get header IDs
-        var gridRowHeaderID = 'c1' + 'r' + rowIndex;
-        var gridColHeaderID = 'c' + colIndex + 'r1';
-
-        // take the inside of the headers
-        var gridRowHeader = document.getElementById(gridRowHeaderID).firstElementChild.id;
-        var gridColHeader = document.getElementById(gridColHeaderID).textContent;
-
-        //assign them to the data atttributes
-        draggedBlock.setAttribute('data-grid-colheader', gridColHeader);
-        draggedBlock.setAttribute('data-grid-rowheader', gridRowHeader);
-
-        pastDateChecker(draggedBlock);
-        statusChecker(draggedBlock);
-
-        // Retrieve existing XML content from localStorage
-        var loadedXML = localStorage.getItem('loadedXML');
-
-        if (loadedXML) {
-          // Parse the XML content
-          var parser = new DOMParser();
-          var xmlDoc = parser.parseFromString(loadedXML, 'application/xml');
-
-          // Append new job element to the XML
-          appendJobToXML(xmlDoc, draggedBlock);
-
-          var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
-          localStorage.setItem('loadedXML', updatedXmlString);
-        }
-      } else {
-        console.error('Invalid node or not found:', draggedBlock);
-      }
-    }
-  } else {
-    console.error('Invalid event target:', event.target);
-  }
-}
 
 function appendJobToXML(xmlDoc, draggedBlock) {
   // Create a new job element
@@ -137,6 +64,7 @@ function findMaxId() {
   return maxId;
 }
 
+// INITIALIZING GLOBAL CONSTANTS AND VARIABLES
 // Form Inputs  (text)
 const jobNum = document.getElementById('JobNum');
 const customer = document.getElementById('Customer');
@@ -160,6 +88,8 @@ const purchase = document.getElementsByName("purchase");
 
 const dragMe = document.getElementById('dragMe');
 const flex = document.getElementById('itemStage');
+let draggedBlock;
+let details = '';
 
 // BUTTONS
 //ADD BUTTON
@@ -211,20 +141,14 @@ function getSelectedRadioValue(groupName) {
 
 // Get all radio groups with the class 'toggle-radio'
 const radioGroups = document.querySelectorAll('.toggle-radio');
-
-// Add event listener to each radio group
 radioGroups.forEach((radioGroup) => {
   // Get the radio inputs within the current radio group
   const radioInputs = radioGroup.querySelectorAll('input[type="radio"]');
-
   radioInputs.forEach((radioInput) => {
     radioInput.addEventListener('click', function () {
     });
   });
 });
-
-
-let details = '';
 
 // for creating jobs in the DOM with the form
 function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, art, proofSent, proofApp, mats, dies, plates, purchase, appendTarget) {
@@ -253,7 +177,6 @@ function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, nu
   dragDiv.setAttribute('data-dies', dies);
   dragDiv.setAttribute('data-plates', plates);
   dragDiv.setAttribute('data-purchase', purchase);
-
 
   const label = `${jobNum.value} | ${customer.value} | ${runTime.value} | ${shipDate.value}`
   const details = `   
@@ -795,6 +718,79 @@ function clearDragMeDivs(selector) {
     dragMeDiv.innerHTML = ''; // Remove all child elements
   });
   return
+}
+
+// DRAG AND DROP FUNCTIONALITY
+
+function dragStart(event) {
+  draggedBlock = event.target;
+  event.dataTransfer.setData('text/plain', event.target.id);
+}
+
+function allowDrop(event) {
+  event.preventDefault();
+}
+
+function removeDragOver(event) {
+  event.target.classList.remove('drag-over');
+}
+
+function drop(event) {
+  event.preventDefault();
+
+  if (event.target && event.target.classList) {
+    event.target.classList.remove('drag-over');
+
+    if (event.target.classList.contains('dragInto')) {
+      const draggedId = event.dataTransfer.getData('text/plain');
+      const draggedBlock = document.getElementById(draggedId);
+
+      if (draggedBlock instanceof Node) {
+        event.target.appendChild(draggedBlock);
+        draggedBlock.classList.add('dragged');
+        // grab the id of the grid cell
+        var gridCell = draggedBlock.parentElement.id;
+
+        // grab the column number and row number
+        var colIndex = gridCell.substring(1, gridCell.indexOf('r'));
+        var rowIndex = gridCell.substring(gridCell.indexOf('r') + 1);
+
+        // string aggregate to get header IDs
+        var gridRowHeaderID = 'c1' + 'r' + rowIndex;
+        var gridColHeaderID = 'c' + colIndex + 'r1';
+
+        // take the inside of the headers
+        var gridRowHeader = document.getElementById(gridRowHeaderID).firstElementChild.id;
+        var gridColHeader = document.getElementById(gridColHeaderID).textContent;
+
+        //assign them to the data atttributes
+        draggedBlock.setAttribute('data-grid-colheader', gridColHeader);
+        draggedBlock.setAttribute('data-grid-rowheader', gridRowHeader);
+
+        pastDateChecker(draggedBlock);
+        statusChecker(draggedBlock);
+
+        // Retrieve existing XML content from localStorage
+        var loadedXML = localStorage.getItem('loadedXML');
+
+        if (loadedXML) {
+          // Parse the XML content
+          var parser = new DOMParser();
+          var xmlDoc = parser.parseFromString(loadedXML, 'application/xml');
+
+          // Append new job element to the XML
+          appendJobToXML(xmlDoc, draggedBlock);
+
+          var updatedXmlString = new XMLSerializer().serializeToString(xmlDoc);
+          localStorage.setItem('loadedXML', updatedXmlString);
+        }
+      } else {
+        console.error('Invalid node or not found:', draggedBlock);
+      }
+    }
+  } else {
+    console.error('Invalid event target:', event.target);
+  }
 }
 
 //On loading divs in, divs are no longer draggable, hence why this function is necessary
