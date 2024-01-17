@@ -1,0 +1,72 @@
+/* Style to make the grid a flex container with flex-wrap */
+
+@media print {
+body {
+    font-size: 10px;
+}
+
+header {
+    display: none; 
+}
+
+.sm-font {
+    display: none;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 140px repeat(14, 9.4rem);
+    grid-template-rows: 40px repeat(9, 75px);
+    height: 700px;
+    grid-column-gap: 7px;
+    grid-row-gap: 7px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    white-space: nowrap;
+    text-align: center;
+    padding-left: 5px;
+  }
+
+  .editable {
+    font-size: 15pt;
+  }
+
+  .dragMe {
+    display: flex;
+    font-family: monospace;
+    font-size: .6rem;
+    justify-content: center;
+    align-items: center;
+    word-break: break-word;
+    margin-left: 1%;
+    height: 36px;
+    width: 140px;
+    text-wrap: pretty;
+    /* margin-top: 1%; */
+  }
+
+
+#itemStage {
+    display:none;
+}
+
+.pastDate {
+  color: var(--red);
+}
+
+.goodToRun {
+  border-color: var(--green);
+}
+
+.yellowToRun {
+  border-color: rgb(224, 188, 28);  
+}
+
+/* for lack of a better name */
+.badToRun {
+  border-color: var(--red);
+}
+
+
+}
+  
