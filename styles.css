@@ -191,8 +191,19 @@ header h1 {
   padding: 12px 24px;
   border: 1px solid white;
   border-radius: 30px;
+  transition: .3s;  
+  margin-left: 20px;
+}
+
+.button-addNote {
+  background-color: var(--navy);
+  color: var(--white);
+  font-size: 1.2rem;
+  padding: 12px 24px;
+  border: 1px solid white;
+  border-radius: 30px;
   transition: .3s;
-  margin-left: 40%;
+  margin-left: 30%;
 }
 
 .button-add:hover {
@@ -317,6 +328,21 @@ h3 {
   border: double 10px;
 }
 
+.note-modal {
+  position: fixed;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  height: 25%;
+  background-color: white;
+  z-index: 1000;
+  color: var(--navy);
+  font-size: 1.5rem;
+  border: double 10px;
+  display: flex;
+  flex-direction: column;
+}
+
 .modal p span {
   font-weight: bold;
 }
@@ -359,4 +385,13 @@ h3 {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#print-note {
+  display:none;
+}
+
+.printNoteArea {
+  height: 75%;
+  font-size: 2rem;
 }

@@ -68,6 +68,12 @@ header {
   border-color: var(--red);
 }
 
+#print-note {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 
 }
   

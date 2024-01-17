@@ -76,9 +76,60 @@ clrButton.addEventListener('click', function (event) {
   resetForm();
 })
 
+// PRINT NOTE BUTTON
+var addNoteButton = document.getElementById('notes-btn');
+addNoteButton.addEventListener('click', () => addNote());
+
 // PRINT BUTTON
 var printButton = document.getElementById('print-btn');
 printButton.addEventListener('click', () => window.print());
+
+// CHANGE DATE BUTTON
+const dateBtn = document.getElementById('date-btn');
+dateBtn.addEventListener('click', () => {
+  // Create a modal container
+  const modalContainer = document.createElement('div');
+  modalContainer.classList.add('date-picker');
+
+  // Create a date picker
+  const datePicker = document.createElement('input');
+  datePicker.type = 'date';
+
+  datePicker.addEventListener('change', () => {
+    const userDateInput = datePicker.value;
+    const userDate = new Date(userDateInput);
+
+    // Add one day to the userDate (weird date picker output)
+    userDate.setDate(userDate.getDate() + 1);
+
+    var storedXmlContent = localStorage.getItem('loadedXML');
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(storedXmlContent, 'application/xml');
+    clearDragMeDivs('.dragInto');
+    removeHighlights();
+    populateDayLabels(userDate);
+    highlightToday();
+    updateMachinesInData(xmlDoc);
+    parseXML(storedXmlContent);
+    // Remove the modal after date is picked
+    document.body.removeChild(modalContainer);
+  });
+
+  // Close button
+  const closeButton = document.createElement('button');
+  closeButton.textContent = 'Cancel';
+  closeButton.addEventListener('click', () => {
+    document.body.removeChild(modalContainer);
+  });
+
+  // Append the date picker and the close button to the modal container
+  modalContainer.appendChild(datePicker);
+  modalContainer.appendChild(closeButton);
+
+  // Append the modal container to the body
+  document.body.appendChild(modalContainer);
+});
+
 // SAVE BUTTON 
 const saveBtn = document.getElementById('save-btn');
 saveBtn.addEventListener('click', () => {
@@ -111,6 +162,56 @@ radioGroups.forEach((radioGroup) => {
     });
   });
 });
+
+function addNote() {
+  const printNoteDiv = document.getElementById('print-note');
+  const existingNote = printNoteDiv.textContent;
+
+  if (!document.getElementById('modal')) {
+    console.log("open modal");
+
+    const modal = document.createElement('div');
+    modal.classList.add('note-modal');
+
+    const printNoteArea = document.createElement('textarea');
+    printNoteArea.classList.add('printNoteArea');
+    printNoteArea.setAttribute('placeholder', "add print note here...");
+
+    if(!existingNote.trim() == "") {
+    printNoteArea.value = existingNote;
+    }
+
+    const buttonArea = document.createElement('div');
+    buttonArea.classList.add('flex-container');
+
+    // Close Modal Button
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = 'Close';
+    closeBtn.addEventListener('click', () => {
+      modal.remove();
+    });
+
+    // Save Note Button
+    const saveNoteBtn = document.createElement('button');
+    saveNoteBtn.textContent = 'Save';
+    saveNoteBtn.addEventListener('click', () => {
+      const noteText = printNoteArea.value.trim();
+      if (noteText !== '') {
+        const printNoteDiv = document.getElementById('print-note');
+        printNoteDiv.textContent = noteText;
+      }
+      modal.remove();
+    });
+
+    // Append elements to modal
+    modal.appendChild(printNoteArea);
+    modal.appendChild(buttonArea);
+    buttonArea.appendChild(closeBtn);
+    buttonArea.appendChild(saveNoteBtn);
+    // Append modal to the body
+    document.body.appendChild(modal);
+  }
+}
 
 // for creating jobs in the DOM with the form
 function createAndAppendDiv(jobNum, customer, runTime, shipDate, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, art, proofSent, proofApp, mats, dies, plates, purchase, appendTarget) {
@@ -272,7 +373,6 @@ function createAndAppendDiv2(jobNum, customer, runTime, shipDate, gridCol, gridR
 function showModal(dragdiv, details) {
 
   if (!document.getElementById('modal')) {
-    console.log("open modal");
 
     const modal = document.createElement('div');
     modal.classList.add('modal');
@@ -545,52 +645,6 @@ function saveToXML() {
   downloadLink.href = window.URL.createObjectURL(blob);
   downloadLink.click();
 }
-
-// CHANGE DATE BUTTON
-const dateBtn = document.getElementById('date-btn');
-dateBtn.addEventListener('click', () => {
-  // Create a modal container
-  const modalContainer = document.createElement('div');
-  modalContainer.classList.add('date-picker');
-
-  // Create a date picker
-  const datePicker = document.createElement('input');
-  datePicker.type = 'date';
-
-  datePicker.addEventListener('change', () => {
-    const userDateInput = datePicker.value;
-    const userDate = new Date(userDateInput);
-
-    // Add one day to the userDate (weird date picker output)
-    userDate.setDate(userDate.getDate() + 1);
-
-    var storedXmlContent = localStorage.getItem('loadedXML');
-    var parser = new DOMParser();
-    var xmlDoc = parser.parseFromString(storedXmlContent, 'application/xml');
-    clearDragMeDivs('.dragInto');
-    removeHighlights();
-    populateDayLabels(userDate);
-    highlightToday();
-    updateMachinesInData(xmlDoc);
-    parseXML(storedXmlContent);
-    // Remove the modal after date is picked
-    document.body.removeChild(modalContainer);
-  });
-
-  // Close button
-  const closeButton = document.createElement('button');
-  closeButton.textContent = 'Cancel';
-  closeButton.addEventListener('click', () => {
-    document.body.removeChild(modalContainer);
-  });
-
-  // Append the date picker and the close button to the modal container
-  modalContainer.appendChild(datePicker);
-  modalContainer.appendChild(closeButton);
-
-  // Append the modal container to the body
-  document.body.appendChild(modalContainer);
-});
 
 function clearDragMeDivs(selector) {
   const dragMeDivs = document.querySelectorAll(selector);
