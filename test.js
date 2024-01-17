@@ -26,43 +26,6 @@ window.onload = function () {
   localStorage.setItem('loadedXML', initialXmlString);
 };
 
-function appendJobToXML(xmlDoc, draggedBlock) {
-  // Create a new job element
-  var jobElement = xmlDoc.createElement('job');
-
-  // Extract data attributes from dragged block and set as attributes in job element
-  for (var attribute in draggedBlock.dataset) {
-    var attributeElement = xmlDoc.createElement(attribute);
-    attributeElement.textContent = draggedBlock.dataset[attribute];
-    jobElement.appendChild(attributeElement);
-  }
-
-  // Find or create the <data> element
-  var dataElement = xmlDoc.querySelector('data');
-  if (!dataElement) {
-    dataElement = xmlDoc.createElement('data');
-    xmlDoc.documentElement.appendChild(dataElement);
-  }
-
-  // Append the new job element to the <data> element
-  dataElement.appendChild(jobElement);
-}
-
-// to make sure each div id is unique
-function findMaxId() {
-  const dragDivs = document.querySelectorAll('.dragMe');
-  let maxId = 0;
-
-  dragDivs.forEach((div) => {
-    const currentId = parseInt(div.id.replace('drag', ''), 10);
-    if (!isNaN(currentId) && currentId > maxId) {
-      maxId = currentId;
-    }
-  });
-
-  return maxId;
-}
-
 // INITIALIZING GLOBAL CONSTANTS AND VARIABLES
 // Form Inputs  (text)
 const jobNum = document.getElementById('JobNum');
@@ -433,31 +396,6 @@ function resetForm() {
   });
 }
 
-// called on clicking "load schedule" and then selecting an xml file
-function loadExistingXML(callback) {
-  var fileInput = document.createElement('input');
-  fileInput.type = 'file';
-  fileInput.accept = '.xml';
-
-  fileInput.addEventListener('change', function (event) {
-    var file = event.target.files[0];
-
-    if (file) {
-      var reader = new FileReader();
-
-      reader.onload = function (e) {
-        var xmlContent = e.target.result;
-        if (typeof callback === 'function') {
-          callback(xmlContent);
-        }
-      };
-      reader.readAsText(file);
-    }
-  });
-
-  fileInput.click();
-}
-
 //load XML from file and save its contents to local storage
 function loadXMLintoLocalStorage() {
   var fileInput = document.createElement('input');
@@ -474,7 +412,8 @@ function loadXMLintoLocalStorage() {
         var xmlContent = e.target.result;
         localStorage.setItem('loadedXML', xmlContent);
         clearDragMeDivs('.dragInto');
-        parseXML2(xmlContent);
+        grabLoadedMachineName(xmlContent);
+        parseXML(xmlContent);
       };
       reader.readAsText(file);
     }
@@ -483,7 +422,29 @@ function loadXMLintoLocalStorage() {
   fileInput.click();
 }
 
-// any other time the local storage needs to be parsed onto the screen
+function grabLoadedMachineName(xmlContent) {
+  var parser = new DOMParser();
+  var xmlDoc = parser.parseFromString(xmlContent, 'application/xml');
+  var machine1 = xmlDoc.querySelector('machine1').textContent;
+  var machine2 = xmlDoc.querySelector('machine2').textContent;
+  var machine3 = xmlDoc.querySelector('machine3').textContent;
+  var machine4 = xmlDoc.querySelector('machine4').textContent;
+  var machine5 = xmlDoc.querySelector('machine5').textContent;
+
+  var machine1DOM = document.getElementById('machine1');
+  var machine2DOM = document.getElementById('machine2');
+  var machine3DOM = document.getElementById('machine3');
+  var machine4DOM = document.getElementById('machine4');
+  var machine5DOM = document.getElementById('machine5');
+
+  machine1DOM.innerHTML = machine1;
+  machine2DOM.innerHTML = machine2;
+  machine3DOM.innerHTML = machine3;
+  machine4DOM.innerHTML = machine4;
+  machine5DOM.innerHTML = machine5;
+}
+
+// Populate grid by parsing the XML
 function parseXML(xmlContent) {
   var parser = new DOMParser();
   var xmlDoc = parser.parseFromString(xmlContent, 'application/xml');
@@ -518,59 +479,7 @@ function parseXML(xmlContent) {
   makeDivsDraggable();
 }
 
-//  for loading in using the load schedule button -- this one grabs the machine names from the XML doc and populates the row headers 
-function parseXML2(xmlContent) {
-  var parser = new DOMParser();
-  var xmlDoc = parser.parseFromString(xmlContent, 'application/xml');
-
-  var machine1 = xmlDoc.querySelector('machine1').textContent;
-  var machine2 = xmlDoc.querySelector('machine2').textContent;
-  var machine3 = xmlDoc.querySelector('machine3').textContent;
-  var machine4 = xmlDoc.querySelector('machine4').textContent;
-  var machine5 = xmlDoc.querySelector('machine5').textContent;
-
-  var machine1DOM = document.getElementById('machine1');
-  var machine2DOM = document.getElementById('machine2');
-  var machine3DOM = document.getElementById('machine3');
-  var machine4DOM = document.getElementById('machine4');
-  var machine5DOM = document.getElementById('machine5');
-
-  machine1DOM.innerHTML = machine1;
-  machine2DOM.innerHTML = machine2;
-  machine3DOM.innerHTML = machine3;
-  machine4DOM.innerHTML = machine4;
-  machine5DOM.innerHTML = machine5;
-
-  var jobs = xmlDoc.querySelectorAll('job');
-  jobs.forEach(function (job) {
-    var jobNum = job.querySelector('jobNum').textContent;
-    var customer = job.querySelector('customer').textContent;
-    var runTime = job.querySelector('runTime').textContent;
-    var shipDate = job.querySelector('shipDate').textContent;
-    var gridCol = job.querySelector('gridColheader').textContent;
-    var gridRow = job.querySelector('gridRowheader').textContent;
-    var description = job.querySelector('generalDesc').textContent;
-    var numCopies = job.querySelector('numCopies').textContent;
-    var linearFootage = job.querySelector('linearFootage').textContent;
-    var numColors = job.querySelector('numColors').textContent;
-    var dollarValue = job.querySelector('dollarValue').textContent;
-    var printCyl = job.querySelector('printCyl').textContent;
-    var toolCyl = job.querySelector('toolCyl').textContent;
-    var artValue = job.querySelector('art').textContent;
-    var proofsentValue = job.querySelector('proofSent').textContent;
-    var proofappValue = job.querySelector('proofApp').textContent;
-    var matsValue = job.querySelector('mats').textContent;
-    var diesValue = job.querySelector('dies').textContent;
-    var platesValue = job.querySelector('plates').textContent;
-    var purchaseValue = job.querySelector('purchase').textContent;
-
-    console.log(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue);
-
-    placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue);
-  });
-  makeDivsDraggable();
-}
-
+// places individual jobs from xml onto grid by matching the column headers text content and the row headers ID
 function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, description, numCopies, linearFootage, numColors, dollarValue, printCyl, toolCyl, artValue, proofsentValue, proofappValue, matsValue, diesValue, platesValue, purchaseValue) {
 
   var columnHeaders = Array.from(document.getElementsByClassName('day-label'));
@@ -592,6 +501,19 @@ function placeDivOnGrid(jobNum, customer, runTime, shipDate, gridCol, gridRow, d
   });
 }
 
+// Creates a job element, grabs the attributes from the block, and appends it to the data
+function appendJobToXML(xmlDoc, draggedBlock) {
+  var jobElement = xmlDoc.createElement('job');
+
+  for (var attribute in draggedBlock.dataset) {
+    var attributeElement = xmlDoc.createElement(attribute);
+    attributeElement.textContent = draggedBlock.dataset[attribute];
+    jobElement.appendChild(attributeElement);
+  }
+  var dataElement = xmlDoc.querySelector('data');
+  dataElement.appendChild(jobElement);
+}
+
 // Set machine names in the xml doc to be the text of the row headers
 function updateMachinesInData(xmlDoc) {
   var editableParagraphs = document.querySelectorAll('.editable');
@@ -599,14 +521,13 @@ function updateMachinesInData(xmlDoc) {
 
   editableParagraphs.forEach(function (paragraph, index) {
     var machineElement = dataElement.querySelector('machine' + (index + 1));
-
     if (machineElement) {
       machineElement.textContent = paragraph.textContent;
     }
   });
 }
 
-// Save over an existing load file, or save a fresh file
+// Save local storage to XML
 function saveToXML() {
   var fileName = prompt('Enter a filename:', 'ScheduleData');
 
@@ -622,7 +543,6 @@ function saveToXML() {
 
   downloadLink.download = fileName + '.xml';
   downloadLink.href = window.URL.createObjectURL(blob);
-
   downloadLink.click();
 }
 
@@ -631,53 +551,36 @@ const dateBtn = document.getElementById('date-btn');
 dateBtn.addEventListener('click', () => {
   // Create a modal container
   const modalContainer = document.createElement('div');
-  modalContainer.style.position = 'fixed';
-  modalContainer.style.top = '0';
-  modalContainer.style.left = '0';
-  modalContainer.style.width = '100%';
-  modalContainer.style.height = '100%';
-  modalContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-  modalContainer.style.display = 'flex';
-  modalContainer.style.justifyContent = 'center';
-  modalContainer.style.alignItems = 'center';
+  modalContainer.classList.add('date-picker');
 
   // Create a date picker
   const datePicker = document.createElement('input');
   datePicker.type = 'date';
 
-  // Close button
-  const closeButton = document.createElement('button');
-  closeButton.textContent = 'Cancel';
-  closeButton.addEventListener('click', () => {
-    // Remove the modal
-    document.body.removeChild(modalContainer);
-  });
-
-  // Add an event listener for when the user selects a date
   datePicker.addEventListener('change', () => {
     const userDateInput = datePicker.value;
     const userDate = new Date(userDateInput);
 
-    if (userDateInput === "" || isNaN(userDate.getTime())) {
-      alert('Invalid date input. Please enter a valid date.');
-    } else {
-      // Add one day to the userDate
-      userDate.setDate(userDate.getDate() + 1);
+    // Add one day to the userDate (weird date picker output)
+    userDate.setDate(userDate.getDate() + 1);
 
-      // Check if loadedXML content exists in local storage
-      var storedXmlContent = localStorage.getItem('loadedXML');
-      var parser = new DOMParser();
-      var xmlDoc = parser.parseFromString(storedXmlContent, 'application/xml');
-      if (storedXmlContent) {
-        clearDragMeDivs('.dragInto');
-        removeHighlights();
-        populateDayLabels(userDate);
-        highlightToday();
-        updateMachinesInData(xmlDoc);
-        parseXML(storedXmlContent);
-      }
-    }
-    // Remove the modal
+    var storedXmlContent = localStorage.getItem('loadedXML');
+    var parser = new DOMParser();
+    var xmlDoc = parser.parseFromString(storedXmlContent, 'application/xml');
+    clearDragMeDivs('.dragInto');
+    removeHighlights();
+    populateDayLabels(userDate);
+    highlightToday();
+    updateMachinesInData(xmlDoc);
+    parseXML(storedXmlContent);
+    // Remove the modal after date is picked
+    document.body.removeChild(modalContainer);
+  });
+
+  // Close button
+  const closeButton = document.createElement('button');
+  closeButton.textContent = 'Cancel';
+  closeButton.addEventListener('click', () => {
     document.body.removeChild(modalContainer);
   });
 
@@ -697,15 +600,28 @@ function clearDragMeDivs(selector) {
   return
 }
 
-// DRAG AND DROP FUNCTIONALITY
+// find the max dragdiv ID to ensure uniqueness 
+function findMaxId() {
+  const dragDivs = document.querySelectorAll('.dragMe');
+  let maxId = 0;
 
+  dragDivs.forEach((div) => {
+    const currentId = parseInt(div.id.replace('drag', ''), 10);
+    if (!isNaN(currentId) && currentId > maxId) {
+      maxId = currentId;
+    }
+  });
+
+  return maxId;
+}
+
+// DRAG AND DROP FUNCTIONALITY
 function dragStart(event) {
   draggedBlock = event.target;
   event.dataTransfer.setData('text/plain', event.target.id);
+  const draggedElement = document.getElementById(event.target.id);
 
-  const draggedId = event.dataTransfer.getData('text/plain');
-  const draggedElement = document.getElementById(draggedId);
-
+  // remove job from local storage on drag start
   if (draggedElement) {
     // Access data attributes using the dataset property
     const draggedJobNum = draggedElement.dataset.jobNum;
@@ -713,7 +629,7 @@ function dragStart(event) {
     const draggedGenDesc = draggedElement.dataset.generalDesc;
     const draggedHeader = draggedElement.dataset.gridColheader;
 
-    // remove job from local storage and remove job from the DOM
+    // remove job from local storage
     removeJobFromLocalStorage(draggedJobNum, draggedCustomer, draggedGenDesc, draggedHeader);
   }
 }
@@ -814,7 +730,7 @@ function deleteDraggedElement(event) {
   }
 }
 
-// Function to remove a job from local storage based on multiple attributes
+// Function to remove a job from local storage based on SOME attributes (need to fix later)
 function removeJobFromLocalStorage(jobNum, customer, generalDesc, gridColHeader) {
   // Retrieve the existing XML content from local storage
   var storedXmlContent = localStorage.getItem('loadedXML');
@@ -875,18 +791,23 @@ function populateDayLabels(selectedDate) {
   });
 }
 
-function isToday(textContent) {
+function highlightToday() {
+  const paragraphs = document.querySelectorAll('.day-label');
   const todayDate = new Date();
   const formattedToday = formatDate(todayDate);
-  return textContent === formattedToday;
+
+  paragraphs.forEach(paragraph => {
+    if (paragraph.textContent.trim() === formattedToday) {
+      paragraph.classList.add('highlight');
+    }
+  });
 }
 
 // FUNCTIONS FOR FORMATTING
-// called on drop to see if data-shipDate attribute is before the grid column header 
+// Check if data-shipDate attribute is before the grid column header 
 function pastDateChecker(div) {
   var shipDatestr = div.getAttribute('data-ship-date');
   var schedDatestr = div.getAttribute('data-grid-colheader');
-
   var shipDate = new Date(shipDatestr);
   var schedDate = new Date(schedDatestr);
 
@@ -922,16 +843,6 @@ function statusChecker(div) {
       div.classList.remove('yellowToRun')
     }
   }
-}
-
-function highlightToday() {
-  const paragraphs = document.querySelectorAll('.day-label');
-
-  paragraphs.forEach(paragraph => {
-    if (isToday(paragraph.textContent.trim())) {
-      paragraph.classList.add('highlight');
-    }
-  });
 }
 
 function removeHighlights() {
