@@ -17,6 +17,7 @@
     <header>
         <div class="flex-container start">
             <h1>Equipment Scheduler</h1>
+            <button class="button-howTo" id="howTo-button">?</button>
             <button class="button-addNote" id="notes-btn">Add Print Note</button>
             <button class="button-print" id="print-btn">Print Schedule</button>
             <button class="button-date" id="date-btn">Change Date</button>
@@ -452,6 +453,32 @@
     </div>
 
     <div id="print-note"></div>
+    <div id="how-to-modal">
+        <div class="flex-container">
+            <h2>How To Use The Equipment Scheduler</h2>
+        </div>
+        <div class="modal-text">
+            <ol>
+                <li>Fill out the form at the bottom.</li>
+                <li>Click the "+" sign to add the job to the screen.</li>
+                <li>Drag the job onto the day you'd like to schedule it for.</li>
+                <li>Click to copy the job into the form and re-add it to the screen. Feel free to make edits to the form and delete the old job accordingly by dragging it to the trash can. </li>
+                <li>The "-" button will clear the form inputs so you can start fresh.</li>
+                <li>Click the labels on the left-hand side to edit the names of the machines.</li>
+                <li>If you'd like to schedule a job for a later date, use the "Change Date" button and follow the first 3 steps.</li>
+                <li>Click "Save All" at the top when you're happy with how the schedule looks and follow the prompts to save the XML file to your computer.</li>
+                <li>Load in a previously saved schedule using the "Load Schedule" button.</li>
+                <li>Add a print note with the "Add Print Note" button. It will only display when you go to print the schedule using the "Print Schedule" button.</li>
+                <li>If you'd like to make edits to the note, click "Add Print Note" again to edit the note.</li>
+            </ol>
+            <div class="flex-container"> 
+                <div class="dragMe dragged goodToRun">All statues are yes/received</div>
+                <div class="dragMe dragged yellowToRun">Something hasn't been received yet</div>
+                <div class="dragMe dragged badToRun">Something hasn't been ordered yet</div>
+                <div class="dragMe dragged pastDate">Ship Date is on or before the scheduled date</div>
+            </div>
+        </div>
+    </div>
 
 </body>
 

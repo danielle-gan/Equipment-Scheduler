@@ -20,7 +20,6 @@ window.onload = function () {
   <machine2>Machine 2</machine2>
   <machine3>Machine 3</machine3>
   <machine4>Machine 4</machine4>
-  <machine5>Machine 5</machine5>
   </data>`;
 
   localStorage.setItem('loadedXML', initialXmlString);
@@ -529,19 +528,17 @@ function grabLoadedMachineName(xmlContent) {
   var machine2 = xmlDoc.querySelector('machine2').textContent;
   var machine3 = xmlDoc.querySelector('machine3').textContent;
   var machine4 = xmlDoc.querySelector('machine4').textContent;
-  var machine5 = xmlDoc.querySelector('machine5').textContent;
 
   var machine1DOM = document.getElementById('machine1');
   var machine2DOM = document.getElementById('machine2');
   var machine3DOM = document.getElementById('machine3');
   var machine4DOM = document.getElementById('machine4');
-  var machine5DOM = document.getElementById('machine5');
 
   machine1DOM.innerHTML = machine1;
   machine2DOM.innerHTML = machine2;
   machine3DOM.innerHTML = machine3;
   machine4DOM.innerHTML = machine4;
-  machine5DOM.innerHTML = machine5;
+
 }
 
 // Populate grid by parsing the XML
@@ -909,6 +906,7 @@ function removeHighlights() {
 // HOW TO USE BUTTON AND MODAL
 const howToButton = document.getElementById('howTo-button');
 const modalHowTo = document.getElementById('how-to-modal');
+
 howToButton.addEventListener('click', () => {
   if (modalHowTo.style.display === 'flex') {
     modalHowTo.style.display = 'none';
@@ -916,6 +914,7 @@ howToButton.addEventListener('click', () => {
     modalHowTo.style.display = 'flex';
   }
 });
+
 modalHowTo.addEventListener('click', () => {
   modalHowTo.style.display = 'none';
 });

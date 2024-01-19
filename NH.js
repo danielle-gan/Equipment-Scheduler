@@ -917,3 +917,19 @@ function removeHighlights() {
     div.classList.remove('highlight');
   });
 }
+
+// HOW TO USE BUTTON AND MODAL
+const howToButton = document.getElementById('howTo-button');
+const modalHowTo = document.getElementById('how-to-modal');
+
+howToButton.addEventListener('click', () => {
+  if (modalHowTo.style.display === 'flex') {
+    modalHowTo.style.display = 'none';
+  } else {
+    modalHowTo.style.display = 'flex';
+  }
+});
+
+modalHowTo.addEventListener('click', () => {
+  modalHowTo.style.display = 'none';
+});

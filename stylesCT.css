@@ -1,14 +1,13 @@
 .grid {
   display: grid;
-  grid-template-columns: 200px repeat(14, 20rem);
-  grid-template-rows: 100px repeat(5, 142px);
-  height: 715px;
+  grid-template-columns: 170px repeat(14, 20rem);
+  grid-template-rows: 60px repeat(4, 142px);
+  height: auto;
   grid-column-gap: 7px;
   grid-row-gap: 7px;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
-  margin-top: 3%;
   text-align: center;
   padding-left: 5px;
 }
