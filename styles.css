@@ -387,6 +387,15 @@ h3 {
   align-items: center;
 }
 
+.date-picker button{
+ color: red;
+ font-size: 2rem;
+}
+
+.date-picker input {
+  font-size: 2rem;
+}
+
 #print-note {
   display:none;
 }
@@ -422,3 +431,4 @@ h3 {
   flex-direction: column;
   display:none;
 }
+
