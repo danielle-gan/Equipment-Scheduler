@@ -24,6 +24,8 @@ window.onload = function () {
   <machine6>Machine 6</machine6>
   <machine7>Machine 7</machine7>
   <machine8>Machine 8</machine8>
+  <machine9>Machine 9</machine9>
+  <machine10>Machine 10</machine10>
   </data>`;
 
   localStorage.setItem('loadedXML', initialXmlString);
@@ -536,6 +538,8 @@ function grabLoadedMachineName(xmlContent) {
   var machine6 = xmlDoc.querySelector('machine6').textContent;
   var machine7 = xmlDoc.querySelector('machine7').textContent;
   var machine8 = xmlDoc.querySelector('machine8').textContent;
+  var machine9 = xmlDoc.querySelector('machine9').textContent;
+  var machine10 = xmlDoc.querySelector('machine10').textContent;
 
   var machine1DOM = document.getElementById('machine1');
   var machine2DOM = document.getElementById('machine2');
@@ -545,6 +549,8 @@ function grabLoadedMachineName(xmlContent) {
   var machine6DOM = document.getElementById('machine6');
   var machine7DOM = document.getElementById('machine7');
   var machine8DOM = document.getElementById('machine8');
+  var machine9DOM = document.getElementById('machine9');
+  var machine10DOM = document.getElementById('machine10');
 
   machine1DOM.innerHTML = machine1;
   machine2DOM.innerHTML = machine2;
@@ -554,6 +560,8 @@ function grabLoadedMachineName(xmlContent) {
   machine6DOM.innerHTML = machine6;
   machine7DOM.innerHTML = machine7;
   machine8DOM.innerHTML = machine8;
+  machine9DOM.innerHTML = machine9;
+  machine10DOM.innerHTML = machine10;
 }
 
 // Populate grid by parsing the XML

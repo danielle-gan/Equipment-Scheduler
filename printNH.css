@@ -16,10 +16,10 @@ header {
 .grid {
     display: grid;
     grid-template-columns: 140px repeat(14, 9.4rem);
-    grid-template-rows: 40px repeat(9, 75px);
-    height: 700px;
-    grid-column-gap: 7px;
-    grid-row-gap: 7px;
+    grid-template-rows: 35px repeat(11, 75px);
+    height: 800px;
+    grid-column-gap: 2px;
+    grid-row-gap: 2px;
     overflow-x: hidden;
     overflow-y: hidden;
     white-space: nowrap;
@@ -28,18 +28,18 @@ header {
   }
 
   .editable {
-    font-size: 15pt;
+    font-size: 12pt;
   }
 
   .dragMe {
     display: flex;
     font-family: monospace;
-    font-size: .6rem;
+    font-size: .4rem;
     justify-content: center;
     align-items: center;
     word-break: break-word;
     margin-left: 1%;
-    height: 36px;
+    height: 32px;
     width: 140px;
     text-wrap: pretty;
     /* margin-top: 1%; */
