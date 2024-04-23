@@ -441,7 +441,7 @@ h3 {
   background-color: white;
   z-index: 1000;
   color: var(--navy);
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   border: double 10px;
   display: flex;
   flex-direction: column;

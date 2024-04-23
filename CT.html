@@ -421,6 +421,7 @@
                 <li>Load in a previously saved schedule using the "Load Schedule" button.</li>
                 <li>Add a print note with the "Add Print Note" button. It will only display when you go to print the schedule using the "Print Schedule" button.</li>
                 <li>If you'd like to make edits to the note, click "Add Print Note" again to edit the note.</li>
+                <li>Search for a Job Number using the "Search for a Job#" button. Type in the job you're searching for and press go. It will display the date(s) for when that job is scheduled.</li>
             </ol>
             <div class="flex-container"> 
                 <div class="dragMe dragged goodToRun">All statues are yes/received</div>
@@ -429,6 +430,15 @@
                 <div class="dragMe dragged pastDate">Ship Date is on or before the scheduled date</div>
             </div>
         </div>
+    </div>
+    <div id = "search-modal">
+        <button id="btn-close-modal">X</button>
+        <div class="flex-container">
+            <h2>Search for a Job: </h2>
+            <textarea id="job-search" rows="1" cols="4" placeholder="1234"></textarea>
+            <button id="btn-go" class="button-go">Go</button>
+        </div>
+        <p id="job-found"></p>
     </div>
 
 </body>
