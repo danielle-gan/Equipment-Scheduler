@@ -919,3 +919,47 @@ howToButton.addEventListener('click', () => {
 modalHowTo.addEventListener('click', () => {
   modalHowTo.style.display = 'none';
 });
+
+// SEARCH FOR A JOB MODAL OPEN
+const btnSearch = document.getElementById('search-btn');
+const modalSearch = document.getElementById('search-modal');
+btnSearch.addEventListener('click', () => {
+  if (modalSearch.style.display === 'flex') {
+    modalSearch.style.display = 'none';
+  } else {
+    modalSearch.style.display = 'flex';
+  }
+});
+//Parse through loaded xml to find all grid col headers associated with given jobNum
+document.getElementById("btn-go").addEventListener("click", function() {
+  var loadedXML = localStorage.getItem("loadedXML");
+  var parser = new DOMParser();
+  var xmlDoc = parser.parseFromString(loadedXML, "text/xml");
+
+  var jobNumber = document.getElementById("job-search").value;
+  var gridColHeaders = xmlDoc.getElementsByTagName("job");
+  var foundHeaders = [];
+
+  for (var i = 0; i < gridColHeaders.length; i++) {
+      var jobNode = gridColHeaders[i];
+      var jobNum = jobNode.querySelector("jobNum").textContent;
+
+      if (jobNum === jobNumber) {
+          var gridColheader = jobNode.querySelector("gridColheader").textContent;
+          foundHeaders.push(gridColheader);
+      }
+  }
+
+  if (foundHeaders.length > 0) {
+      console.log("Found gridColHeaders for job number", jobNumber, ":", foundHeaders);
+      document.getElementById("job-found").textContent = foundHeaders;
+  } else {
+      console.log("GridColHeaders not found for job number", jobNumber);
+  }
+});
+//close the search modal on button-close-modal click
+const btnClose = document.getElementById("btn-close-modal")
+btnClose.addEventListener("click", function() {
+  modalSearch.style.display = "none";
+});
+

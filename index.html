@@ -23,6 +23,7 @@
             <button class="button-date" id="date-btn">Change Date</button>
             <button class="button-save" id="save-btn">Save All</button>
             <button class="button-load" id="load-btn">Load Schedule</button>
+            <button class="button-search" id="search-btn">Search for a Job#</button>
         </div>
     </header>
 
@@ -478,6 +479,15 @@
                 <div class="dragMe dragged pastDate">Ship Date is on or before the scheduled date</div>
             </div>
         </div>
+    </div>
+    <div id = "search-modal">
+        <button id="btn-close-modal">X</button>
+        <div class="flex-container">
+            <h2>Search for a Job: </h2>
+            <textarea id="job-search" rows="1" cols="4" placeholder="1234"></textarea>
+            <button id="btn-go" class="button-go">Go</button>
+        </div>
+        <p id="job-found"></p>
     </div>
 
 </body>
